@@ -121,3 +121,7 @@ USE_TZ = True
 
 STATIC_URL = '/assets/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
+
+
+# A new User model overriding the default one
+AUTH_USER_MODEL = 'accounts.User'

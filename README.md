@@ -29,7 +29,7 @@ prefaced with a bullet point is an extra feature that can be added
 
 - [x] Create site wide static files and templates
 
-- [ ] Add a custom User model that includes an avatar, bio, skills, and username
+- [x] Add a custom User model that includes an avatar, bio, and username
 
 - [ ] Allow users to register for an account
 * - [ ] Sign up email validation and complete the user's profile shortly
