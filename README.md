@@ -36,9 +36,9 @@ prefaced with a bullet point is an extra feature that can be added
 after sign up
 
 
-- [ ] Allow users to login with valid credentials
+- [x] Allow users to login with valid credentials
 
-- [ ] Let user's logout
+- [x] Let user's logout
 
 - [ ] Allow users to edit profile
 * - [ ]Users can use Markdown in the "about me" part of the profile
