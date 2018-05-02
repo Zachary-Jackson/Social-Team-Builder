@@ -61,4 +61,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_long_name(self):
         """Returns username"""
-        return self.username
+        return "{} | {}".format(self.email, self.username)
