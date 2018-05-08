@@ -10,4 +10,7 @@ def profile_edit(request):
 
 def profile_view(request):
     """Lets any user view a person's profile"""
-    return render(request, 'profiles/profile.html', {'profile': True})
+    # Get all the skill for the user
+    skills = [skill for skill in request.user.profile.skills.all()]
+    return render(
+        request, 'profiles/profile.html', {'profile': True, 'skills': skills})

@@ -5,7 +5,7 @@ post their own projects for others to join. Each user has their own custom
 profile showcasing interests and tallent. Upon attempting to join a project
 the owner can accept or deny the application.
 
-This website was built in part with HTML, CSS, and Javascript originally
+This website was built in part with HTML, CSS, and JavaScript originally
 supplied from www.Teamtreehouse.com for a Python Web Development Tech Degree
 Project. The HTML, CSS and JavaScript is to be considered built by Teamtreehouse for this project, but may be edited by me at some point.
 

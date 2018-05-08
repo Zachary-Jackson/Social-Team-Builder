@@ -37,8 +37,6 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """This is a new default User class"""
-    avatar = models.ImageField(blank=True, null=True)
-    bio = models.CharField(max_length=200, blank=True, default='')
     date_joined = models.DateTimeField(default=timezone.now)
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)
