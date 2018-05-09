@@ -9,7 +9,7 @@
         <li>
           <a {% if applications %} class="selected" {% endif %} href="applications.html">Applications</a>
         </li>
-        <li><a {% if profile %} class="selected" {% endif %} href={% url 'profiles:profile' %}>Profile</a></li>
+        <li><a {% if profile %} class="selected" {% endif %} href={% url 'profiles:profile' pk=user.pk %}>Profile</a></li>
       </ul>
     </nav>
   </div>

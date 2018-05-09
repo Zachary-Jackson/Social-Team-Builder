@@ -4,9 +4,10 @@ from django.db import models
 
 class Profile(models.Model):
     """This is the profile model for a user"""
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
-    avatar = models.ImageField()
-    bio = models.CharField(max_length=250)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
+    avatar = models.ImageField(null=True, blank=True)
+    bio = models.CharField(max_length=250, blank=True)
     skills = models.ManyToManyField('Skill', blank=True)
 
     def __str__(self):

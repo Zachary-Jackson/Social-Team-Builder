@@ -9,8 +9,8 @@ from . import forms
 class LoginView(generic.FormView):
     """This class logs in a user and redirects them to the homepage"""
     form_class = AuthenticationForm
-    success_url = reverse_lazy("homepage")
-    template_name = "accounts/sign_up_login.html"
+    success_url = reverse_lazy("profiles:edit")
+    template_name = "accounts/sign_in.html"
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -34,4 +34,4 @@ class SignUp(generic.CreateView):
     """Allows the user to sign up for an account"""
     form_class = forms.UserCreateForm
     success_url = reverse_lazy("accounts:login")
-    template_name = "accounts/sign_up_login.html"
+    template_name = "accounts/sign_up.html"
