@@ -53,14 +53,13 @@
     <div class="grid-25 grid-push-5">
 
       <div class="circle--secondary--module">
-        {# <img class="circle--primary--avatar" src= "{% static 'media/hattie.jpg' %}">#}
-        {# <img class="circle--primary--avatar" src= "{{ user.profile.avatar.url }}">#}
+          <img class="circle--primary--avatar" src= {{ image_url }}>
       </div>
 
       <div class="circle--secondary--module">
         <h4>My Skills</h4>
         <ul class="unloaded">
-          {% for skill in skills %}
+          {% for skill in user_profile.profile.skills.all %}
             <li>{{ skill }}</li>
           {% endfor %}
         </ul>

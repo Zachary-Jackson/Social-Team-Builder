@@ -10,7 +10,7 @@ from django.utils import timezone
 class UserManager(BaseUserManager):
     """Allows for the creation of Users and SuperUsers"""
 
-    def create_user(self, email, password, **kwargs):
+    def create_user(self, email, password):
         """Creates and saves a User with the given email and password"""
         if not email:
             raise ValueError("An email adress must be provided")
@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
-    def create_superuser(self, email, password, **kwargs):
+    def create_superuser(self, email, password):
         """Creates and saves a SuperUser"""
         user = self.create_user(
             email,

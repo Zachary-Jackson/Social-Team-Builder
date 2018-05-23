@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import ProfileForm
@@ -32,7 +33,7 @@ def profile_view(request, pk):
     """Lets any user view a person's profile"""
     # Get the User model that matches the pk
     user_profile = get_object_or_404(get_user_model(), pk=pk)
-    skills = [skill for skill in user_profile.profile.skills.all()]
+    image_url = static(user_profile.profile.avatar.url)
     return render(
         request, 'profiles/profile.html',
-        {'profile': True, 'user_profile': user_profile, 'skills': skills})
+        {'profile': True, 'user_profile': user_profile, 'image_url': image_url})
