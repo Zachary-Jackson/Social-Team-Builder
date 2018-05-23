@@ -8,7 +8,7 @@ from . import models
 
 @login_required
 def profile_edit(request):
-    """Alows a profile to be edited"""
+    """Allows a profile to be edited"""
     # Checks to see if the user has a profile, and if not creates it.
     try:
         instance = request.user.profile
@@ -18,6 +18,7 @@ def profile_edit(request):
 
     form = ProfileForm(request.POST or None, instance=instance)
 
+    # The form is currently not capturing images properly.
     if request.method == 'POST':
         if form.is_valid():
             form.save()

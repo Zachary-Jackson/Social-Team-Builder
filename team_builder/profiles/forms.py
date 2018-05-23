@@ -11,5 +11,6 @@ class ProfileForm(forms.ModelForm):
         fields = [
             'avatar',
             'bio',
-            'skills'
+            'skills',
+            'username'
         ]

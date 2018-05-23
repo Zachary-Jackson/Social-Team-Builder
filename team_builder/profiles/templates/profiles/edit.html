@@ -4,7 +4,7 @@
 
 {% block profiles_content %}
 
-  <form method="post">
+  <form method="post" enctype="multipart/form-data" action="">
     {% csrf_token %}
 
     <div class="bounds circle--page">
@@ -18,7 +18,7 @@
       </div>
 
       <div class="grid-70">
-        <input type="text" value="{{ user.username }}" placeholder="Full Name" class="circle--input--h1">
+        {{ form.username }}
         <div class="circle--article--body">
           <p>Bio</p>
           {{ form.bio }}
@@ -79,7 +79,7 @@
           <h4>My Skills</h4>
           <ul class="circle--clone--list">
             <li>
-              <input type="text" placeholder="Skill" />
+              <input type="text" placeholder="Temporary" />
               <a class="circle--clone--add">Add Skill</a>
               <a class="circle--clone--remove">Remove</a>
             </li>

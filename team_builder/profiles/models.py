@@ -6,12 +6,13 @@ class Profile(models.Model):
     """This is the profile model for a user"""
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
+    username = models.CharField(max_length=100, unique=True)
     avatar = models.ImageField(null=True, blank=True)
     bio = models.CharField(max_length=250, blank=True)
     skills = models.ManyToManyField('Skill', blank=True)
 
     def __str__(self):
-        return "{}'s profile".format(self.user.username)
+        return "{}'s profile".format(self.username)
 
 
 class Skill(models.Model):
