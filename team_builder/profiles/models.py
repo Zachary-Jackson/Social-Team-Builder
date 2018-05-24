@@ -17,7 +17,7 @@ class Profile(models.Model):
 
 class Skill(models.Model):
     """A class that represents a single skill"""
-    skill = models.CharField(max_length=100)
+    skill = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.skill

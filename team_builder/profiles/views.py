@@ -33,7 +33,13 @@ def profile_view(request, pk):
     """Lets any user view a person's profile"""
     # Get the User model that matches the pk
     user_profile = get_object_or_404(get_user_model(), pk=pk)
-    image_url = static(user_profile.profile.avatar.url)
+
+    # Checks to see if the User has an avatar if not user default media
+    try:
+        image_url = static(user_profile.profile.avatar.url)
+    except ValueError:
+        image_url = static('profiles_media/default_profile_image.png')
+
     return render(
         request, 'profiles/profile.html',
         {'profile': True, 'user_profile': user_profile, 'image_url': image_url})

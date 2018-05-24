@@ -8,16 +8,22 @@
   <div class="bounds circle--page">
     <div class="circle--page--header circle--fluid">
       <div class="circle--fluid--cell circle--fluid--primary">
-        <h2>Profile</h2>
+        <h2>{{user_profile.profile.username}}'s profile</h2>
       </div>
-      <div class="circle--fluid--cell circle--fluid--secondary">
-        <a class="button icon-on-left" href="{% url 'profiles:edit' %}">Edit</a>
-      </div>
+
+      {# If the logged in user is not the same as the user_profile don't show an edit button#}
+      {% if user.profile.username == user_profile.profile.username %}
+        <div class="circle--fluid--cell circle--fluid--secondary">
+          <a class="button icon-on-left" href="{% url 'profiles:edit' %}">Edit</a>
+        </div>
+      {% endif %}
+
+
     </div>
 
     <div class="grid-70">
-      <h1>{{ user_profile.profile.username }}</h1>
       <div class="circle--article--body">
+        <h2>Bio</h2>
         <p>{{ user_profile.profile.bio }}</p>
       </div>
 
@@ -52,9 +58,11 @@
 
     <div class="grid-25 grid-push-5">
 
-      <div class="circle--secondary--module">
-          <img class="circle--primary--avatar" src= {{ image_url }}>
-      </div>
+      {% if image_url %}
+        <div class="circle--secondary--module">
+            <img class="circle--primary--avatar" src= {{ image_url }}>
+        </div>
+      {% endif %}
 
       <div class="circle--secondary--module">
         <h4>My Skills</h4>
