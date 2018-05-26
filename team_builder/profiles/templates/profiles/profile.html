@@ -8,11 +8,11 @@
   <div class="bounds circle--page">
     <div class="circle--page--header circle--fluid">
       <div class="circle--fluid--cell circle--fluid--primary">
-        <h2>{{user_profile.profile.username}}'s profile</h2>
+        <h2>{{user_profile.username}}'s profile</h2>
       </div>
 
       {# If the logged in user is not the same as the user_profile don't show an edit button#}
-      {% if user.profile.username == user_profile.profile.username %}
+      {% if user.profile.username == user_profile.username %}
         <div class="circle--fluid--cell circle--fluid--secondary">
           <a class="button icon-on-left" href="{% url 'profiles:edit' %}">Edit</a>
         </div>
@@ -24,7 +24,7 @@
     <div class="grid-70">
       <div class="circle--article--body">
         <h2>Bio</h2>
-        <p>{{ user_profile.profile.bio }}</p>
+        <p>{{ user_profile.bio }}</p>
       </div>
 
       <h2>Past Projects</h2>
@@ -67,7 +67,7 @@
       <div class="circle--secondary--module">
         <h4>My Skills</h4>
         <ul class="unloaded">
-          {% for skill in user_profile.profile.skills.all %}
+          {% for skill in user_profile.skills.all %}
             <li>{{ skill }}</li>
           {% endfor %}
         </ul>

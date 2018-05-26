@@ -2,7 +2,7 @@
 This is a website to help people find projects or create projects that
 require a specific set of skills. Users can sign up to find projects or
 post their own projects for others to join. Each user has their own custom
-profile showcasing interests and tallent. Upon attempting to join a project
+profile showcasing interests and talent. Upon attempting to join a project
 the owner can accept or deny the application.
 
 This website was built in part with HTML, CSS, and JavaScript originally
@@ -24,7 +24,7 @@ start the website on your local host.
 
 ## Todo List
 
-This is the todo list for the Social Team Builder project. Any checkmark
+This is the todo list for the Social Team Builder project. Any check mark
 prefaced with a bullet point is an extra feature that can be added
 
 - [x] Create site wide static files and templates

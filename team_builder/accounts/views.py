@@ -9,7 +9,7 @@ from . import forms
 class LoginView(generic.FormView):
     """This class logs in a user and redirects them to the homepage"""
     form_class = AuthenticationForm
-    success_url = reverse_lazy("profiles:edit")
+    success_url = reverse_lazy("profiles:login_router")
     template_name = "accounts/sign_in.html"
 
     def get_form(self, form_class=None):
