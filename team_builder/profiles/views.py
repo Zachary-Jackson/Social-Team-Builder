@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.shortcuts import get_object_or_404, redirect, render
@@ -11,12 +10,11 @@ from . import models
 def login_router(request):
     """This checks to see if a Profile has been created.
     If not create and redirect to edit page"""
-    # Checks to see if the user has a profile, and if not creates it.
     try:
         request.user.profile
     except AttributeError:
+        # create a Profile and redirect the user to the edit page
         models.Profile(user=request.user, username=request.user.email).save()
-        # redirect to profile edit page
         return redirect('profiles:edit')
     else:
         # redirect to main profile page
@@ -37,7 +35,7 @@ def profile_edit(request):
             return redirect('profiles:profile', pk=request.user.pk)
 
     return render(
-        request, 'profiles/edit.html', {'form': form, 'profile': True})
+        request, 'profiles/edit.html', {'form': form, 'current_tab': 'Profile'})
 
 
 def profile_view(request, pk):
@@ -53,4 +51,4 @@ def profile_view(request, pk):
 
     return render(
         request, 'profiles/profile.html',
-        {'profile': True, 'user_profile': user_profile, 'image_url': image_url})
+        {'current_tab': 'Profile', 'user_profile': user_profile, 'image_url': image_url})

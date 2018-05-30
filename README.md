@@ -83,3 +83,10 @@ after sign up
 - [ ] Can apply for a position
 * - [ ]Can't apply for the same position twice, and filled positions are
 displayed differently
+
+
+Miscellaneous things to clean_up/add
+
+- [ ] Add custom migrations to pre-add some Skills to the database
+
+- [ ] Clear up error text on sign_up

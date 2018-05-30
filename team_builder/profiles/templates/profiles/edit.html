@@ -7,6 +7,8 @@
   <form method="post" enctype="multipart/form-data" action="">
     {% csrf_token %}
 
+      {{ form.honey_pot }}
+
     <div class="bounds circle--page">
       <div class="circle--page--header circle--fluid">
         <div class="circle--fluid--cell circle--fluid--primary">
@@ -71,17 +73,6 @@
           <ul class="circle--clone--list">
             <li>
               {{ form.skills }}
-              <a class="circle--clone--add">Add Skill</a>
-              <a class="circle--clone--remove">Remove</a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="circle--secondary--module">
-          <h4>My Skills</h4>
-          <ul class="circle--clone--list">
-            <li>
-              <input type="text" placeholder="Temporary" />
               <a class="circle--clone--add">Add Skill</a>
               <a class="circle--clone--remove">Remove</a>
             </li>
