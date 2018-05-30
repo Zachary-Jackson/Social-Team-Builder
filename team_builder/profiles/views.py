@@ -6,6 +6,11 @@ from .forms import ProfileForm
 from . import models
 
 
+def homepage(request):
+    """This is the homepage for the profiles app"""
+    return render(request, 'profiles/homepage.html')
+
+
 @login_required
 def login_router(request):
     """This checks to see if a Profile has been created.

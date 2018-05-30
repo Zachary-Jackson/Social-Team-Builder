@@ -21,3 +21,18 @@ class Skill(models.Model):
 
     def __str__(self):
         return self.skill
+
+
+class Project(models.Model):
+    """This is the model for a Project"""
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=30)
+    positions = models.ManyToManyField('Position')
+    time_line = models.CharField(max_length=100)
+    requirements = models.CharField(max_length=200)
+
+
+class Position(models.Model):
+    """This holds onto position information for a Project"""
+    skill = models.ForeignKey('Skill', on_delete=models.CASCADE)
+    information = models.CharField(max_length=500)

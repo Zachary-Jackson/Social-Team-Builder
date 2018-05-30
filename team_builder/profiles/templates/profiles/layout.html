@@ -7,7 +7,7 @@
     <nav class="bounds">
       <ul class="circle--pill--list">
         <li>
-          <a {% if current_tab == "Applications" %} class="selected" {% endif %} href="applications.html">Applications</a>
+          <a {% if current_tab == "Applications" %} class="selected" {% endif %} href={% url 'profiles:homepage'%}>Applications</a>
         </li>
         <li><a {% if current_tab == "Profile" %} class="selected" {% endif %} href={% url 'profiles:profile' pk=user.pk %}>Profile</a></li>
       </ul>

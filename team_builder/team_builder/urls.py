@@ -17,11 +17,9 @@ from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
 
-from . import views
 
 urlpatterns = [
-    path('', views.homepage, name='homepage'),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls'),),
-    path('profiles/', include('profiles.urls'))
+    path('', include('profiles.urls'))
 ]
