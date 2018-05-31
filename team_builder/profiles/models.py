@@ -12,7 +12,7 @@ class Profile(models.Model):
     skills = models.ManyToManyField('Skill', blank=True)
 
     def __str__(self):
-        return "{}'s profile".format(self.username)
+        return self.username
 
 
 class Skill(models.Model):
@@ -30,9 +30,18 @@ class Project(models.Model):
     positions = models.ManyToManyField('Position')
     time_line = models.CharField(max_length=100)
     requirements = models.CharField(max_length=200)
+    description = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.title
 
 
 class Position(models.Model):
     """This holds onto position information for a Project"""
     skill = models.ForeignKey('Skill', on_delete=models.CASCADE)
     information = models.CharField(max_length=500)
+    filled = models.BooleanField()
+
+
+    def __str__(self):
+        return str(self.skill)

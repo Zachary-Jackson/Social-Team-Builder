@@ -8,7 +8,12 @@ from . import models
 
 def homepage(request):
     """This is the homepage for the profiles app"""
-    return render(request, 'profiles/homepage.html')
+    skills = models.Skill.objects.all()
+    projects = models.Project.objects.all()
+    return render(
+        request,
+        'profiles/homepage.html',
+        {'skills': skills, 'projects': projects})
 
 
 @login_required
@@ -57,3 +62,10 @@ def profile_view(request, pk):
     return render(
         request, 'profiles/profile.html',
         {'current_tab': 'Profile', 'user_profile': user_profile, 'image_url': image_url})
+
+
+def project_view(request, pk):
+    """Lets any user view a project"""
+    # Get the Project that matches the pk
+    project = get_object_or_404(models.Project, pk = pk)
+    return render(request, 'profiles/project.html', {'project': project})
