@@ -7,8 +7,8 @@
     <div class="circle--actions--bar">
       <div class="bounds">
         <div class="grid-100">
-          <a class="button" href="project_edit.html">Edit Project</a>
-          <a class="button button-text" href="index.html">Delete Project</a>
+          <a class="button" href="{% url 'profiles:project_edit' pk=project.pk %}">Edit Project</a>
+          <a class="button button-text" href="{% url 'profiles:project_edit' pk=project.pk %}">Delete Project</a>
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@
       </div>
 
       <div class="circle--article--body">
-        {{ project.description }}
+        {{ project.description|linebreaks }}
       </div>
 
       <div class="circle--project--positions">

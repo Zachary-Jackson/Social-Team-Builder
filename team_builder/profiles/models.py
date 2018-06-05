@@ -40,8 +40,8 @@ class Position(models.Model):
     """This holds onto position information for a Project"""
     skill = models.ForeignKey('Skill', on_delete=models.CASCADE)
     information = models.CharField(max_length=500)
+    # Eventually filled will need to know who filled a position
     filled = models.BooleanField()
-
 
     def __str__(self):
         return str(self.skill)

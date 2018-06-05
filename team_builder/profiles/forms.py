@@ -23,3 +23,36 @@ class ProfileForm(forms.ModelForm):
             return honey_pot
         else:
             raise forms.ValidationError("Take that bot!")
+
+
+class ProjectForm(forms.ModelForm):
+    """Form for the Project model"""
+    def __init__(self, *args, **kwargs):
+        super(ProjectForm, self).__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs['placeholder'] = 'Project Title'
+        self.fields['description'].widget.attrs['placeholder'] = 'Project description...'
+        self.fields['time_line'].widget.attrs['placeholder'] = 'Project time line...'
+
+    class Meta:
+        model = models.Project
+        fields = [
+            'title',
+            'time_line',
+            'requirements',
+            'description'
+        ]
+
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 13, 'cols': 20}),
+            'requirements': forms.Textarea(attrs={'rows': 7, 'cols': 20})}
+
+
+class PositionForm(forms.ModelForm):
+    """Form for the Position model"""
+
+    class Meta:
+        model = models.Position
+        fields = [
+            'skill',
+            'information',
+        ]
