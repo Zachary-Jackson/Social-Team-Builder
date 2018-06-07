@@ -9,7 +9,12 @@
     <div class="bounds">
       <div class="grid-100">
         <input type="submit" class="button button-primary" href="project.html" value="Save Changes">
-        <a class="button button-text" href="index.html">Delete Project</a>
+
+{#        This allows the delete button to only appear for saved projects#}
+        {% if project.pk %}
+            <a class="button button-text" href="{% url 'profiles:project_delete' pk=project.pk%}">Delete Project</a>
+        {% endif %}
+
       </div>
     </div>
   </div>

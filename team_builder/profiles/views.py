@@ -71,11 +71,17 @@ def profile_view(request, pk):
 """Project related views"""
 
 
-def project_view(request, pk):
-    """Lets any user view a project"""
-    # Get the Project that matches the pk
-    project = get_object_or_404(models.Project, pk = pk)
-    return render(request, 'profiles/project.html', {'project': project})
+@login_required()
+def project_delete(request, pk):
+    """Allows a project owner to delete a project"""
+    project = get_object_or_404(models.Project, pk=pk)
+
+    # Checks if the logged in user owns the project. If not kick them out.
+    if project.owner.pk != request.user.pk:
+        raise Http404("You do not own this project.")
+
+    project.delete()
+    return redirect('profiles:homepage')
 
 
 @login_required()
@@ -89,7 +95,7 @@ def project_edit(request, pk):
 
     project_form = forms.ProjectForm(instance=project)
     # Currently only one position can be added per project. temporary
-    position_form = forms.PositionForm(instance=project.positions.get(id=1))
+    position_form = forms.PositionForm(instance=project.positions.all()[0])
 
     if request.method == 'POST':
         project_form = forms.ProjectForm(request.POST, instance=project)
@@ -105,7 +111,11 @@ def project_edit(request, pk):
     return render(
         request,
         'profiles/project_edit.html',
-        {'project_form': project_form, 'position_form': position_form})
+        {
+            'project_form': project_form,
+            'position_form': position_form,
+            'project': project
+        })
 
 
 @login_required()
@@ -131,3 +141,10 @@ def project_new(request):
         request,
         'profiles/project_edit.html',
         {'project_form': project_form, 'position_form': position_form})
+
+
+def project_view(request, pk):
+    """Lets any user view a project"""
+    # Get the Project that matches the pk
+    project = get_object_or_404(models.Project, pk = pk)
+    return render(request, 'profiles/project.html', {'project': project})

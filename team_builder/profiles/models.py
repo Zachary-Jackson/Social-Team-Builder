@@ -29,7 +29,7 @@ class Project(models.Model):
     title = models.CharField(max_length=60)
     positions = models.ManyToManyField('Position')
     time_line = models.CharField(max_length=50)
-    requirements = models.CharField(max_length=200)
+    requirements = models.CharField(max_length=150)
     description = models.CharField(max_length=1000)
 
     def __str__(self):
