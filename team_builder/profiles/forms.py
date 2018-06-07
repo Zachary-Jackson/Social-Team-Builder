@@ -30,8 +30,10 @@ class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
         self.fields['title'].widget.attrs['placeholder'] = 'Project Title'
-        self.fields['description'].widget.attrs['placeholder'] = 'Project description...'
-        self.fields['time_line'].widget.attrs['placeholder'] = 'Project time line...'
+        self.fields['description'].widget.attrs['placeholder'] = \
+            'Project description...'
+        self.fields['time_line'].widget.attrs['placeholder'] = \
+            'Project time line...'
 
     class Meta:
         model = models.Project

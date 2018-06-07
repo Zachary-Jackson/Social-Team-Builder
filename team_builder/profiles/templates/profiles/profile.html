@@ -14,7 +14,9 @@
       {# If the logged in user is not the same as the user_profile don't show an edit button#}
       {% if user.profile.username == user_profile.username %}
         <div class="circle--fluid--cell circle--fluid--secondary">
-          <a class="button icon-on-left" href="{% url 'profiles:edit' %}">Edit</a>
+          <a class="button icon-on-left" href="{% url 'profiles:edit' %}">
+              Edit
+          </a>
         </div>
       {% endif %}
 

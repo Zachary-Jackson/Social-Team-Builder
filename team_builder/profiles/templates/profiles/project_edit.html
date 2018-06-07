@@ -12,7 +12,10 @@
 
 {#        This allows the delete button to only appear for saved projects#}
         {% if project.pk %}
-            <a class="button button-text" href="{% url 'profiles:project_delete' pk=project.pk%}">Delete Project</a>
+            <a class="button button-text"
+               href="{% url 'profiles:project_delete_confirmation' pk=project.pk%}">
+                Delete Project
+            </a>
         {% endif %}
 
       </div>
@@ -25,7 +28,7 @@
     <div class="grid-70">
       <div class="circle--article--body">
         <div class="circle--input--h1">
-            <p>Temporary project owner for testing</p>
+            <p>Temporary project owner for development</p>
             {{ project_form.owner }}
           {{ project_form.title }}
         </div>

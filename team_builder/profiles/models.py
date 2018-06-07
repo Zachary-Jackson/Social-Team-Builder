@@ -44,4 +44,8 @@ class Position(models.Model):
     filled = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.skill)
+        """Returns the skill and information with ... if info is to long"""
+        information = self.information
+        if len(information) > 30:
+            return "{}: {}...".format(str(self.skill), self.information[:30])
+        return "{}: {}".format(str(self.skill), self.information)

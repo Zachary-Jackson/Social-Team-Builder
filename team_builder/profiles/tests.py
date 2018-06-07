@@ -134,6 +134,142 @@ class ProfileViewsTests(TestCase):
 
     """Project tests"""
 
+    def test_project_delete(self):
+        """Ensures a user can delete a project"""
+        self.client.login(username='test@test.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_delete', kwargs={'pk': self.project.pk}))
+
+        # Ensure that there is now zero Projects
+        self.assertEqual(len(Project.objects.all()), 0)
+
+    def test_project_delete_unowned(self):
+        """Ensures only the project owner can delete a project"""
+        self.client.login(username='no@profile.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_delete', kwargs={'pk': self.project.pk}))
+
+        # Ensure that there is now zero Projects
+        self.assertEqual(resp.status_code, 404)
+
+    def test_project_delete_confirmation_post(self):
+        """Ensures a user can go back to the edit page"""
+        # This tests to see if a user can go back
+        self.client.login(username='test@test.com', password='testpass')
+        resp = self.client.post(
+            reverse('profiles:project_delete_confirmation',
+                    kwargs={'pk': self.project.pk}),
+            data={'back': 'Go Back'}
+        )
+        self.assertRedirects(
+            resp, reverse('profiles:project_edit',
+                          kwargs={'pk': self.project.pk}))
+
+    def test_project_delete_confirmation_unowned(self):
+        """Ensures only the project owner can delete a project"""
+        self.client.login(username='no@profile.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_delete_confirmation',
+                    kwargs={'pk': self.project.pk}))
+
+        # Ensure that there is now zero Projects
+        self.assertEqual(resp.status_code, 404)
+
+
+    def test_project_edit_not_logged_in(self):
+        """We should be routed to the login page"""
+        resp = self.client.get(
+            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
+        self.assertEqual(resp.status_code, 302)
+
+    def test_project_edit(self):
+        """Ensures project_edit appears correctly"""
+        self.client.login(username='test@test.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
+
+        # project information
+        self.assertContains(resp, 'Team Builder')
+        self.assertContains(resp, 'Depends on the number of features')
+        self.assertContains(resp, 'See the README.md')
+        self.assertContains(resp, 'also see README.md')
+        self.assertContains(resp, 'See the README.md')
+        # page information
+        self.assertContains(resp, 'Project Timeline')
+        self.assertContains(resp, 'Save Changes')
+        self.assertContains(resp, 'Delete Project')
+
+    def test_project_edit_post(self):
+        """Ensures project_edit appears correctly"""
+        self.client.login(username='test@test.com', password='testpass')
+        resp = self.client.post(
+            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}),
+            data={
+                'title': 'test post', 'time_line': 'milliseconds',
+                'owner': self.user.pk,
+                'requirements': 'data to post', 'description': 'description',
+                'skill': self.skill_1.pk, 'information': 'This is a good skill'
+            }
+        )
+
+        # Get the updated Project
+        project = Project.objects.get(pk=self.project.pk)
+        self.assertEqual(project.title, 'test post')
+        self.assertEqual(project.time_line, 'milliseconds')
+        self.assertEqual(project.requirements, 'data to post')
+        self.assertEqual(project.description, 'description')
+
+        self.assertRedirects(
+            resp, reverse('profiles:project', kwargs={'pk': self.project.pk}))
+
+    def test_project_edit_unowned(self):
+        """Tests to make sure a logged in user can not edit other's Projects"""
+        self.client.login(username='no@profile.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
+
+        # Ensure we were kicked out
+        self.assertEqual(resp.status_code, 404)
+
+    def test_project_new(self):
+        """Ensures project_new looks correct."""
+        self.client.login(username='test@test.com', password='testpass')
+        resp = self.client.get(reverse('profiles:project_new'))
+
+        # page information
+        self.assertContains(resp, 'Save Changes')
+        self.assertContains(resp, 'Positions')
+        self.assertContains(resp, 'Project Title')
+        self.assertContains(resp, 'Application Requirements')
+
+        self.assertNotContains(resp, 'Delete Project')
+
+    def test_project_post(self):
+        """Ensures a user can post a new project"""
+        self.client.login(username='test@test.com', password='testpass')
+        resp = self.client.post(
+            reverse('profiles:project_new'),
+            data={
+                'title': 'Second Project', 'time_line': 'very small',
+                'owner': self.user.pk,
+                'requirements': 'data to post', 'description': 'description',
+                'skill': self.skill_3.pk,
+                'information': 'Maybe you are on the wrong site.'
+            })
+
+        # In addition to the project/position created in SetUp
+        # we should have these two
+        self.assertEqual(len(Project.objects.all()), 2)
+        self.assertEqual(len(Position.objects.all()), 2)
+
+        project_2 = Project.objects.get(pk=2)
+        self.assertEqual(project_2.title, 'Second Project')
+        self.assertEqual(project_2.description, 'description')
+
+        position_2 = Position.objects.get(pk=2)
+        self.assertEqual(
+            position_2.information, 'Maybe you are on the wrong site.')
+
     def test_project_view_not_logged_in(self):
         """Ensures that the project view page is working"""
         resp = self.client.get(
@@ -168,53 +304,4 @@ class ProfileViewsTests(TestCase):
         """We should get a 404 error"""
         resp = self.client.get(
             reverse('profiles:project', kwargs={'pk': 10947}))
-        self.assertEqual(resp.status_code, 404)
-
-    def test_project_edit_not_logged_in(self):
-        """We should be routed to the login page"""
-        resp = self.client.get(
-            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
-        self.assertEqual(resp.status_code, 302)
-
-    def test_project_edit(self):
-        """Ensures project_edit appears correctly"""
-        self.client.login(username='test@test.com', password='testpass')
-        resp = self.client.get(
-            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
-
-        # project information
-        self.assertContains(resp, 'Team Builder')
-        self.assertContains(resp, 'Depends on the number of features')
-        self.assertContains(resp, 'See the README.md')
-        self.assertContains(resp, 'also see README.md')
-        # page information
-        self.assertContains(resp, 'Project Timeline')
-        self.assertContains(resp, 'Save Changes')
-        self.assertContains(resp, 'Delete Project')
-
-    def test_project_edit_post(self):
-        """Ensures project_edit appears correctly"""
-        self.client.login(username='test@test.com', password='testpass')
-        resp = self.client.post(
-            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}),
-            data={
-                'title': 'test post', 'time_line': 'milliseconds',
-                'requirements': 'data to post', 'description': 'description'
-            }
-        )
-
-        # Get the updated Project
-        project = Project.objects.get(pk=self.project.pk)
-        self.assertEqual(project.title, 'test post')
-        self.assertEqual(project.time_line, 'milliseconds')
-        self.assertEqual(project.requirements, 'data to post')
-        self.assertEqual(project.description, 'description')
-
-    def test_project_edit_unowned(self):
-        """Tests to make sure a loged in user can not edit other's Projects"""
-        self.client.login(username='no@profile.com', password='testpass')
-        resp = self.client.get(
-            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
-
-        # Ensure we were kicked out
         self.assertEqual(resp.status_code, 404)

@@ -2105,3 +2105,13 @@ input[type="email"].circle--input--h6, input[type="number"].circle--input--h6, i
 .logo:hover {
   box-shadow: 0 0 0 15px #fff inset;
 }
+
+/*Custom CSS added for this project*/
+/* line 64, ../sass/circle/core/buttons.sass */
+.button.button-secondary, input[type="submit"].button-secondary,
+input[type="reset"].button-secondary,
+input[type="button"].button-secondary,
+button.button-secondary {
+  color: #fff;
+  background-color: #C70039;
+}

@@ -7,6 +7,9 @@ from . import forms
 from . import models
 
 
+"""Miscellaneous views"""
+
+
 def homepage(request):
     """This is the homepage for the profiles app"""
     skills = models.Skill.objects.all()
@@ -64,8 +67,12 @@ def profile_view(request, pk):
         image_url = static('profiles_media/default_profile_image.png')
 
     return render(
-        request, 'profiles/profile.html',
-        {'current_tab': 'Profile', 'user_profile': user_profile, 'image_url': image_url})
+        request,
+        'profiles/profile.html',
+        {
+            'current_tab': 'Profile',
+            'user_profile': user_profile,
+            'image_url': image_url})
 
 
 """Project related views"""
@@ -85,6 +92,30 @@ def project_delete(request, pk):
 
 
 @login_required()
+def project_delete_confirmation(request, pk):
+    """Checks if a user really want to delete a project"""
+    project = get_object_or_404(models.Project, pk=pk)
+
+    # Checks if the logged in user owns the project. If not kick them out.
+    if project.owner.pk != request.user.pk:
+        raise Http404("You do not own this project.")
+
+    if request.method == 'POST':
+        # If the user deleted the project return to homepage
+        if request.POST.get('delete'):
+            return redirect('profiles:project_delete', pk=pk)
+
+        # If the user went back, go to the edit screen
+        if request.POST.get('back'):
+            return redirect('profiles:project_edit', pk=pk)
+
+    return render (
+        request,
+        'profiles/project_delete_confirmation.html',
+        {'project': project})
+
+
+@login_required()
 def project_edit(request, pk):
     """Allows only the project's owner to edit a project"""
     project = get_object_or_404(models.Project, pk=pk)
@@ -101,7 +132,7 @@ def project_edit(request, pk):
         project_form = forms.ProjectForm(request.POST, instance=project)
         # temporary only get first position
         position_form = forms.PositionForm(
-            request.POST, instance=project.positions.get(id=1)
+            request.POST, instance=project.positions.all()[0]
         )
         if project_form.is_valid() and position_form.is_valid():
             project_form.save()
