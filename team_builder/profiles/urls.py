@@ -10,5 +10,6 @@ urlpatterns = [
     path('profile/view/<int:pk>/', views.profile_view, name='profile'),
     path('project/view/<int:pk>/', views.project_view, name='project'),
     path('project/edit/<int:pk>', views.project_edit, name='project_edit'),
+    path('project/new', views.project_new, name='project_new'),
     path('login_router', views.login_router, name='login_router')
 ]

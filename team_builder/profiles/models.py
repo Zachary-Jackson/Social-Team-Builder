@@ -26,9 +26,9 @@ class Skill(models.Model):
 class Project(models.Model):
     """This is the model for a Project"""
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=60)
     positions = models.ManyToManyField('Position')
-    time_line = models.CharField(max_length=100)
+    time_line = models.CharField(max_length=50)
     requirements = models.CharField(max_length=200)
     description = models.CharField(max_length=1000)
 
@@ -41,7 +41,7 @@ class Position(models.Model):
     skill = models.ForeignKey('Skill', on_delete=models.CASCADE)
     information = models.CharField(max_length=500)
     # Eventually filled will need to know who filled a position
-    filled = models.BooleanField()
+    filled = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.skill)

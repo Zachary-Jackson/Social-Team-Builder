@@ -88,16 +88,46 @@ def project_edit(request, pk):
         raise Http404("You do not own this project.")
 
     project_form = forms.ProjectForm(instance=project)
-    position_form = forms.PositionForm(instance=project)
+    # Currently only one position can be added per project. temporary
+    position_form = forms.PositionForm(instance=project.positions.get(id=1))
 
     if request.method == 'POST':
         project_form = forms.ProjectForm(request.POST, instance=project)
-        if project_form.is_valid():
+        # temporary only get first position
+        position_form = forms.PositionForm(
+            request.POST, instance=project.positions.get(id=1)
+        )
+        if project_form.is_valid() and position_form.is_valid():
             project_form.save()
+            position_form.save()
             return redirect('profiles:project', pk=pk)
 
     return render(
         request,
         'profiles/project_edit.html',
-        {'project_form': project_form, 'position_form': position_form,
-         'project': project})
+        {'project_form': project_form, 'position_form': position_form})
+
+
+@login_required()
+def project_new(request):
+    """Allows for the creation of a new project"""
+    project_form = forms.ProjectForm()
+    position_form = forms.PositionForm()
+
+    if request.method == 'POST':
+        project_form = forms.ProjectForm(request.POST)
+        position_form = forms.PositionForm(request.POST)
+
+        if project_form.is_valid() and position_form.is_valid():
+            position_form.save()
+            project_form.save()
+
+            # Get the saved position and add it to the project
+            project = project_form.instance
+            project.positions.add(position_form.instance)
+            return redirect('profiles:project', pk=project.pk)
+
+    return render(
+        request,
+        'profiles/project_edit.html',
+        {'project_form': project_form, 'position_form': position_form})

@@ -44,7 +44,7 @@ after sign up
 * - [ ]Users can use Markdown in the "about me" part of the profile
 
 
-- [ ] Users can upload an avatar
+- [x] Users can upload an avatar
 * - [ ]The avatar image can be edited with tools like resize, crop, rotate and flip
 
 
@@ -52,7 +52,7 @@ after sign up
 * - [ ]They can also create custom skills
 
 
-- [ ] Create a project
+- [x] Create a project
 * - [ ]Markdown can be used in the project description
 
 
@@ -83,10 +83,3 @@ after sign up
 - [ ] Can apply for a position
 * - [ ]Can't apply for the same position twice, and filled positions are
 displayed differently
-
-
-Miscellaneous things to clean_up/add
-
-- [ ] Add custom migrations to pre-add some Skills to the database
-
-- [ ] Clear up error text on sign_up

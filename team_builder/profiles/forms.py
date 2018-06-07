@@ -36,6 +36,7 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = models.Project
         fields = [
+            'owner',
             'title',
             'time_line',
             'requirements',
@@ -56,3 +57,5 @@ class PositionForm(forms.ModelForm):
             'skill',
             'information',
         ]
+
+        widgets = {'information': forms.Textarea(attrs={'rows': 10})}
