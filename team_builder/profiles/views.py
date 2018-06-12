@@ -1,5 +1,8 @@
+from operator import attrgetter
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -12,7 +15,7 @@ from . import models
 
 def homepage(request):
     """This is the homepage for the profiles app"""
-    skills = models.Skill.objects.all()
+    skills = sorted(models.Skill.objects.all(), key=attrgetter('skill'))
     projects = models.Project.objects.all()
     return render(
         request,
@@ -179,3 +182,26 @@ def project_view(request, pk):
     # Get the Project that matches the pk
     project = get_object_or_404(models.Project, pk = pk)
     return render(request, 'profiles/project.html', {'project': project})
+
+
+"""searching related views"""
+
+
+def search(request):
+    """Searches all projects and returns the results"""
+    search_term = request.GET.get('search_term')
+    # If no search term is provided reroute to homepage
+    if not search_term:
+        return redirect('profiles:homepage')
+
+    projects = models.Project.objects.all().filter(
+        Q(title__icontains=search_term) | Q(time_line__icontains=search_term) |
+        Q(requirements__icontains=search_term) | Q(description__icontains=search_term)
+    )
+
+    skills = sorted(models.Skill.objects.all(), key=attrgetter('skill'))
+
+    return render(
+        request,
+        'profiles/homepage.html',
+        {'skills': skills, 'projects': projects, 'search_term': search_term})
