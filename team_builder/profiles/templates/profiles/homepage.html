@@ -23,14 +23,14 @@
       <ul class="circle--filter--list">
         <li><a class="selected">All Needs</a></li>
         {% for skill in skills %}
-          <li><a>{{ skill }}</a></li>
+          <li><a href="{% url 'profiles:search_by_skill' skill=skill.readable_to_url %}">{{ skill }}</a></li>
         {% endfor %}
       </ul>
     </div>
   </div>
 
   <div class="grid-70 grid-push-5">
-    {% if search_term %} <h2>Search by: {{ search_term }}</h2> {% endif %}
+    {% if search_results %} <h2>{{ search_results }}</h2> {% endif %}
     <table class="u-full-width circle--table">
       <thead>
         <tr>

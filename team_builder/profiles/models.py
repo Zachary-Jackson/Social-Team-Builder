@@ -22,6 +22,10 @@ class Skill(models.Model):
     def __str__(self):
         return self.skill
 
+    def readable_to_url(self):
+        """Takes the name of the skill and changes spaces to underlines"""
+        return self.skill.replace(' ', '_')
+
 
 class Project(models.Model):
     """This is the model for a Project"""

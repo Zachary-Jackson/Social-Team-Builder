@@ -15,8 +15,9 @@ from . import models
 
 def homepage(request):
     """This is the homepage for the profiles app"""
+    projects = models.Project.objects.all().prefetch_related('positions')
     skills = sorted(models.Skill.objects.all(), key=attrgetter('skill'))
-    projects = models.Project.objects.all()
+
     return render(
         request,
         'profiles/homepage.html',
@@ -190,18 +191,69 @@ def project_view(request, pk):
 def search(request):
     """Searches all projects and returns the results"""
     search_term = request.GET.get('search_term')
+
     # If no search term is provided reroute to homepage
     if not search_term:
         return redirect('profiles:homepage')
 
-    projects = models.Project.objects.all().filter(
+    projects = models.Project.objects.all().prefetch_related('positions')\
+        .filter(
         Q(title__icontains=search_term) | Q(time_line__icontains=search_term) |
-        Q(requirements__icontains=search_term) | Q(description__icontains=search_term)
+        Q(requirements__icontains=search_term) |
+        Q(description__icontains=search_term) |
+        Q(positions__information__icontains=search_term)
     )
 
     skills = sorted(models.Skill.objects.all(), key=attrgetter('skill'))
 
+    # Creates what search results information is shown to the user.
+    if not projects:
+        search_results = 'No results were found with: {}'.format(search_term)
+    else:
+        search_results = '{} results were found with: {}'.format(
+            len(projects), search_term)
+
     return render(
         request,
         'profiles/homepage.html',
-        {'skills': skills, 'projects': projects, 'search_term': search_term})
+        {
+            'skills': skills, 'projects': projects,
+            'search_results': search_results}
+    )
+
+
+def search_by_skill(request, skill):
+    """Searches projects by skills needed"""
+    # The skill might be in a url acceptable format without spaces
+    # if so we need to remove the spaces
+    # See Skill's readable_to_url method
+    skill = skill.replace('_', ' ')
+
+    skills = models.Skill.objects.all()
+
+    # If the searched skill is not in skills, return no results
+    try:
+        found_skill = skills.get(skill=skill)
+    except models.Skill.DoesNotExist:
+        search_results = 'No results were found with the skill: {}'.format(
+            skill)
+        return render(request, 'profiles/homepage.html',
+                      {'search_results': search_results, 'skills': skills})
+
+    # Get all projects that need a position with the searched skill
+    projects = models.Project.objects.all() \
+        .filter(
+        Q(positions__skill__skill__contains=skill)
+    ).distinct()
+
+    # Creates what search results information is shown to the user.
+    if not projects:
+        search_results = 'No results were found with the skill: {}'.format(skill)
+    else:
+        search_results = '{} results for the skill: {}'.format(
+            len(projects), skill)
+
+    return render(request, 'profiles/homepage.html',
+                  {'projects': projects,
+                   'search_results': search_results,
+                   'skills': skills})

@@ -24,5 +24,10 @@ urlpatterns = [
     path('project/view/<int:pk>/', views.project_view, name='project'),
 
     # Search related paths
-    path('search', views.search, name='search')
+    path('search', views.search, name='search'),
+    path(
+        'search/skill/<str:skill>',
+        views.search_by_skill,
+        name='search_by_skill'
+    )
 ]
