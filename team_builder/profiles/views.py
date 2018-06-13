@@ -202,7 +202,7 @@ def search(request):
         Q(requirements__icontains=search_term) |
         Q(description__icontains=search_term) |
         Q(positions__information__icontains=search_term)
-    )
+    ).distinct()
 
     skills = sorted(models.Skill.objects.all(), key=attrgetter('skill'))
 
@@ -230,15 +230,16 @@ def search_by_skill(request, skill):
     skill = skill.replace('_', ' ')
 
     skills = models.Skill.objects.all()
+    sorted_skills = sorted(skills, key=attrgetter('skill'))
 
     # If the searched skill is not in skills, return no results
     try:
-        found_skill = skills.get(skill=skill)
+        skills.get(skill=skill)
     except models.Skill.DoesNotExist:
         search_results = 'No results were found with the skill: {}'.format(
             skill)
         return render(request, 'profiles/homepage.html',
-                      {'search_results': search_results, 'skills': skills})
+                      {'search_results': search_results, 'skills': sorted_skills})
 
     # Get all projects that need a position with the searched skill
     projects = models.Project.objects.all() \
@@ -256,4 +257,4 @@ def search_by_skill(request, skill):
     return render(request, 'profiles/homepage.html',
                   {'projects': projects,
                    'search_results': search_results,
-                   'skills': skills})
+                   'skills': sorted_skills})

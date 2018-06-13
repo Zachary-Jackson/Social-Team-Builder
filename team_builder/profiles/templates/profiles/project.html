@@ -45,7 +45,7 @@
           {% for position in project.positions.all %}
             <li>
               <h3>{{ position.skill }}</h3>
-              <p>{{ position.information }}</p>
+              <p>{{ position.information|linebreaks }}</p>
               {% if position.filled == False %}
                 <a class="button button-primary">Apply</a>
               {% endif %}

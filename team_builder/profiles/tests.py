@@ -175,7 +175,6 @@ class ProfileViewsTests(TestCase):
         # Ensure that there is now zero Projects
         self.assertEqual(resp.status_code, 404)
 
-
     def test_project_edit_not_logged_in(self):
         """We should be routed to the login page"""
         resp = self.client.get(
@@ -208,6 +207,7 @@ class ProfileViewsTests(TestCase):
                 'title': 'test post', 'time_line': 'milliseconds',
                 'owner': self.user.pk,
                 'requirements': 'data to post', 'description': 'description',
+                # The following line is for the Position
                 'skill': self.skill_1.pk, 'information': 'This is a good skill'
             }
         )
