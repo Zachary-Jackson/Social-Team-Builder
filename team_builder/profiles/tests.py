@@ -38,7 +38,8 @@ class ProfileViewsTests(TestCase):
 
         # Creates a Position to attach to a Project
         self.position = Position.objects.create(
-            skill=self.skill_1, information='this is the position', filled=False
+            skill=self.skill_1, information='this is the position',
+            filled=False
         )
 
         # Creates a Project
@@ -66,7 +67,8 @@ class ProfileViewsTests(TestCase):
         self.client.login(username='test@test.com', password='testpass')
         resp = self.client.get(reverse('profiles:login_router'))
         self.assertRedirects(
-            resp, reverse('profiles:profile', kwargs={'pk': self.profile.pk}))
+            resp, reverse('profiles:profile', kwargs={'pk': self.profile.pk})
+        )
 
     def test_login_router_without_profile(self):
         """Tests the router if the user does not have a profile"""

@@ -52,6 +52,10 @@ class ProjectForm(forms.ModelForm):
 
 class PositionForm(forms.ModelForm):
     """Form for the Position model"""
+    def __init__(self, *args, **kwargs):
+        super(PositionForm, self).__init__(*args, **kwargs)
+        self.fields['information'].widget.attrs['placeholder'] = \
+            'Position Information...'
 
     class Meta:
         model = models.Position

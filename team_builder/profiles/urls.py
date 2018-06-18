@@ -8,12 +8,19 @@ urlpatterns = [
     path('', views.homepage, name='homepage'),
     path('login_router', views.login_router, name='login_router'),
 
+    # Applications related paths
+    path('applications', views.applications, name='applications'),
+
     # Profile related paths
     path('profile/edit/', views.profile_edit, name='edit'),
     path('profile/view/<int:pk>/', views.profile_view, name='profile'),
 
     # Project related paths
-    path('project/delete/<int:pk>', views.project_delete, name='project_delete'),
+    path(
+        'project/delete/<int:pk>',
+        views.project_delete,
+        name='project_delete'
+    ),
     path(
         'project/delete_confirmation/<int:pk>',
         views.project_delete_confirmation,

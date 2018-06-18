@@ -40,7 +40,7 @@ after sign up
 
 - [x] Let user's logout
 
-- [ ] Allow users to edit profile
+- [x] Allow users to edit profile
 * - [ ]Users can use Markdown in the "about me" part of the profile
 
 
@@ -74,9 +74,9 @@ after sign up
 
 - [ ] I get notified if I am approved or denied a position
 
-- [ ] Can search by terms that match a project name or description. Search is also case-insensitive
+- [x] Can search by terms that match a project name or description. Search is also case-insensitive
 
-- [ ] Can filter open projects by skills needed
+- [x] Can filter open projects by skills needed
 * - [ ]Their is a "projects for you" list with projects filtered by your skill set
 
 

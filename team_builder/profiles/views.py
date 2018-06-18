@@ -39,6 +39,36 @@ def login_router(request):
         return redirect('profiles:profile', pk=request.user.pk)
 
 
+"""applications related views"""
+
+
+@login_required
+def applications(request):
+    """This is the main applications page"""
+    # Get all of the logged in user's Projects
+    projects = models.Project.objects.all()\
+        .filter(owner=request.user.profile).prefetch_related('positions')
+
+    # Get all of the desired skills for the projects
+    needs = set()
+    for project in projects:
+        positions = project.positions.all()
+        skills = [position.skill for position in positions]
+
+        # Update needs with all unique skills
+        for skill in skills:
+            needs.add(skill.skill)
+
+    return render(
+        request,
+        'profiles/applications.html',
+        {
+            'current_tab': 'Applications',
+            'needs': list(needs),
+            'projects': projects
+        })
+
+
 """Profile related views"""
 
 
@@ -50,13 +80,17 @@ def profile_edit(request):
 
     # The form is currently not capturing images properly.
     if request.method == 'POST':
-        form = forms.ProfileForm(request.POST, request.FILES, instance=instance)
+        form = forms.ProfileForm(
+            request.POST, request.FILES, instance=instance
+        )
+
         if form.is_valid():
             form.save()
             return redirect('profiles:profile', pk=request.user.pk)
 
     return render(
-        request, 'profiles/edit.html', {'form': form, 'current_tab': 'Profile'})
+        request, 'profiles/edit.html', {'form': form,
+                                        'current_tab': 'Profile'})
 
 
 def profile_view(request, pk):
@@ -64,7 +98,7 @@ def profile_view(request, pk):
     # Get the User model that matches the pk
     user_profile = get_object_or_404(models.Profile, pk=pk)
 
-    # Checks to see if the User has an avatar if not user default media
+    # Checks to see if the User has an avatar if not use default media
     try:
         image_url = static(user_profile.avatar.url)
     except ValueError:
@@ -134,10 +168,12 @@ def project_edit(request, pk):
 
     if request.method == 'POST':
         project_form = forms.ProjectForm(request.POST, instance=project)
-        # temporary only get first position
+
+        # temporary, only get first position
         position_form = forms.PositionForm(
             request.POST, instance=project.positions.all()[0]
         )
+
         if project_form.is_valid() and position_form.is_valid():
             project_form.save()
             position_form.save()
@@ -147,8 +183,8 @@ def project_edit(request, pk):
         request,
         'profiles/project_edit.html',
         {
-            'project_form': project_form,
             'position_form': position_form,
+            'project_form': project_form,
             'project': project
         })
 
@@ -181,7 +217,7 @@ def project_new(request):
 def project_view(request, pk):
     """Lets any user view a project"""
     # Get the Project that matches the pk
-    project = get_object_or_404(models.Project, pk = pk)
+    project = get_object_or_404(models.Project, pk=pk)
     return render(request, 'profiles/project.html', {'project': project})
 
 
@@ -198,10 +234,11 @@ def search(request):
 
     projects = models.Project.objects.all().prefetch_related('positions')\
         .filter(
-        Q(title__icontains=search_term) | Q(time_line__icontains=search_term) |
-        Q(requirements__icontains=search_term) |
-        Q(description__icontains=search_term) |
-        Q(positions__information__icontains=search_term)
+            Q(title__icontains=search_term) |
+            Q(time_line__icontains=search_term) |
+            Q(requirements__icontains=search_term) |
+            Q(description__icontains=search_term) |
+            Q(positions__information__icontains=search_term)
     ).distinct()
 
     skills = sorted(models.Skill.objects.all(), key=attrgetter('skill'))
@@ -236,20 +273,21 @@ def search_by_skill(request, skill):
     try:
         skills.get(skill=skill)
     except models.Skill.DoesNotExist:
-        search_results = 'No results were found with the skill: {}'.format(
-            skill)
+        search_results = 'No results were found with the skill: {}'\
+            .format(skill)
+
         return render(request, 'profiles/homepage.html',
-                      {'search_results': search_results, 'skills': sorted_skills})
+                      {'search_results': search_results,
+                       'skills': sorted_skills})
 
     # Get all projects that need a position with the searched skill
-    projects = models.Project.objects.all() \
-        .filter(
-        Q(positions__skill__skill__contains=skill)
-    ).distinct()
+    projects = models.Project.objects.all().filter(
+        Q(positions__skill__skill__contains=skill)).distinct()
 
     # Creates what search results information is shown to the user.
     if not projects:
-        search_results = 'No results were found with the skill: {}'.format(skill)
+        search_results = 'No results were found with the skill: {}'\
+            .format(skill)
     else:
         search_results = '{} results for the skill: {}'.format(
             len(projects), skill)
