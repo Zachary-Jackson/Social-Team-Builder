@@ -51,18 +51,23 @@ def applications(request):
 
     # Get all of the desired skills for the projects
     needs = set()
-    for project in projects:
-        positions = project.positions.all()
-        skills = [position.skill for position in positions]
+    applicant_list = set()
 
-        # Update needs with all unique skills
-        for skill in skills:
-            needs.add(skill.skill)
+    positions = models.Position.objects.all()\
+        .filter(position_creator=request.user.profile)
+
+    for position in positions:
+        needs.add(position.skill)
+
+        # If there are applicants in a position add the position to applicants
+        if position.any_applicants:
+            applicant_list.add(position)
 
     return render(
         request,
         'profiles/applications.html',
         {
+            'applicant_list': applicant_list,
             'current_tab': 'Applications',
             'needs': list(needs),
             'projects': projects
@@ -200,12 +205,16 @@ def project_new(request):
         position_form = forms.PositionForm(request.POST)
 
         if project_form.is_valid() and position_form.is_valid():
-            position_form.save()
             project_form.save()
+            project = project_form.instance
+
+            # Position needs to know which Project it belongs to
+            position = position_form.save(commit=False)
+            position.related_project = project
+            position.save()
 
             # Get the saved position and add it to the project
-            project = project_form.instance
-            project.positions.add(position_form.instance)
+            project.positions.add(position)
             return redirect('profiles:project', pk=project.pk)
 
     return render(

@@ -25,7 +25,7 @@
         <h4>My Projects</h4>
         <ul class="circle--filter--list">
             {% for project in projects %}
-                <li><a href="{% url 'profiles:project' pk=project.pk %}">{{ project }}</a></li>
+                <li><a href="{% url 'profiles:project' pk=project.pk %}">{{ project|truncatechars:25 }}</a></li>
             {% endfor %}
         </ul>
       </div>
@@ -51,24 +51,26 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="clickable-row" data-href="profile.html">
-            <td>
-              <h3>Jim Horton</h3>
-              <p>Currency Calculator</p>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Rails Developer</span>
-            </td>
-          </tr>
-          <tr class="clickable-row" data-href="profile.html">
-            <td>
-              <h3>Jenny McMann</h3>
-              <p>Currency Calculator</p>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Designer</span>
-            </td>
-          </tr>
+
+        {% if not applicant_list %}
+            <h2>There are no applicants</h2>
+        {% endif %}
+
+        {% for applicants in applicant_list %}
+            {% for person in applicants.applicants.all %}
+              <tr class="clickable-row" data-href="">
+                <td>
+                    <h3><a href=" {% url 'profiles:profile' pk=person.pk %}">{{ person }}</a></h3>
+                    <p><a href=" {% url 'profiles:project' pk=applicants.related_project.pk  %}">{{ applicants.related_project }}</a></p>
+                </td>
+                <td class="circle--cell--right">
+                  <span class="secondary-label">{{ applicants.skill }}</span>
+                </td>
+              </tr>
+            {% endfor %}
+        {% endfor %}
+
+
         </tbody>
       </table>
 

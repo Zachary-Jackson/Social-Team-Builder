@@ -36,18 +36,20 @@ class ProfileViewsTests(TestCase):
         )
         self.profile.skills.add(self.skill_1, self.skill_2)
 
-        # Creates a Position to attach to a Project
-        self.position = Position.objects.create(
-            skill=self.skill_1, information='this is the position',
-            filled=False
-        )
-
         # Creates a Project
         self.project = Project.objects.create(
             owner=self.profile, title='Team Builder',
             time_line='Depends on the number of features',
             requirements='See the README.md', description='also see README.md'
         )
+
+        # Creates a Position to attach to a Project
+        self.position = Position.objects.create(
+            skill=self.skill_1, information='this is the position',
+            related_project=self.project
+        )
+
+        # add a position to the main project
         self.project.positions.add(self.position)
 
     def test_homepage(self):
