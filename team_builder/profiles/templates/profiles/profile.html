@@ -45,22 +45,21 @@
           </tr>
         </thead>
         <tbody>
+
+        {% for project in projects %}
           <tr class="clickable-row" data-href="project.html">
             <td>
-              <h3>Invoice Delivery Tool</h3>
+              <h3>{{ project }}</h3>
             </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Rails Developer</span>
-            </td>
+            {% for position in project.positions.all %}
+                <td class="circle--cell--right">
+                  <span class="secondary-label">{{ position.skill }}</span>
+                </td>
+            {% endfor %}
           </tr>
-          <tr class="clickable-row" data-href="project.html">
-            <td>
-              <h3>Twitter Client</h3>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Designer</span>
-            </td>
-          </tr>
+        {% endfor %}
+
+
         </tbody>
       </table>
     </div>

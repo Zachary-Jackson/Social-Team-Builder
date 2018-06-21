@@ -6,6 +6,7 @@
   <div class="circle--actions--bar">
     <nav class="bounds">
       <ul class="circle--pill--list">
+
         <li>
           <a {% if current_tab == "Applications" %} class="selected" {% endif %}
                   href={% url 'profiles:applications'%}>Applications</a>
@@ -16,6 +17,13 @@
                 Profile
             </a>
         </li>
+        <li>
+            <a {% if current_tab == "My Projects" %} class="selected" {% endif %}
+                    href={% url 'profiles:project_view_all' %}>
+                My Projects
+            </a>
+        </li>
+
       </ul>
     </nav>
   </div>

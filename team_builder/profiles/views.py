@@ -45,19 +45,20 @@ def login_router(request):
 @login_required
 def applications(request):
     """This is the main applications page"""
-    # Get all of the logged in user's Projects
-    projects = models.Project.objects.all()\
-        .filter(owner=request.user.profile).prefetch_related('positions')
+    # Get projects that do not have all positions filled
+    projects = models.Project.objects.all().filter(
+        Q(owner=request.user.profile) & Q(positions__filled=False))\
+        .prefetch_related('positions')
 
     # Get all of the desired skills for the projects
-    needs = set()
+    needed_skills = set()
     applicant_list = set()
 
     positions = models.Position.objects.all()\
         .filter(position_creator=request.user.profile)
 
     for position in positions:
-        needs.add(position.skill)
+        needed_skills.add(position.skill)
 
         # If there are applicants in a position add the position to applicants
         if position.any_applicants:
@@ -68,8 +69,8 @@ def applications(request):
         'profiles/applications.html',
         {
             'applicant_list': applicant_list,
-            'current_tab': 'Applications',
-            'needs': list(needs),
+            'current_tab': 'Applications',  # navigation bar selector
+            'needed_skills': list(needed_skills),
             'projects': projects
         })
 
@@ -94,14 +95,20 @@ def profile_edit(request):
             return redirect('profiles:profile', pk=request.user.pk)
 
     return render(
-        request, 'profiles/edit.html', {'form': form,
-                                        'current_tab': 'Profile'})
+        request,
+        'profiles/edit.html',
+        {
+            'form': form,
+            'current_tab': 'Profile'  # navigation bar selector
+        })
 
 
 def profile_view(request, pk):
     """Lets any user view a person's profile"""
     # Get the User model that matches the pk
     user_profile = get_object_or_404(models.Profile, pk=pk)
+    projects = models.Project.objects.all()\
+        .filter(owner=request.user.profile)
 
     # Checks to see if the User has an avatar if not use default media
     try:
@@ -113,9 +120,10 @@ def profile_view(request, pk):
         request,
         'profiles/profile.html',
         {
-            'current_tab': 'Profile',
-            'user_profile': user_profile,
-            'image_url': image_url})
+            'current_tab': 'Profile',  # navigation bar selector
+            'image_url': image_url,
+            'projects': projects,
+            'user_profile': user_profile})
 
 
 """Project related views"""
@@ -228,6 +236,31 @@ def project_view(request, pk):
     # Get the Project that matches the pk
     project = get_object_or_404(models.Project, pk=pk)
     return render(request, 'profiles/project.html', {'project': project})
+
+
+@login_required
+def project_view_all(request):
+    """Shows the user all of their Projects regardless of filled status"""
+    projects = models.Project.objects.all().filter(owner=request.user.profile)
+
+    # Get all of the desired skills for the projects
+    needed_skills = set()
+
+    positions = models.Position.objects.all()\
+        .filter(position_creator=request.user.profile)
+
+    for position in positions:
+        needed_skills.add(position.skill)
+
+    return render(
+        request,
+        'profiles/project_view_all.html',
+        {
+            'current_tab': 'My Projects',  # navigation bar selector
+            'needed_skills': needed_skills,
+            'projects': projects,
+        }
+    )
 
 
 """searching related views"""

@@ -7,7 +7,7 @@
 
   <div class="bounds circle--page">
     <div class="circle--page--header grid-100">
-      <h2>Applications</h2>
+      <h2>Open Applications</h2>
     </div>
 
     <div class="grid-25">
@@ -22,7 +22,7 @@
       </div>
 
       <div class="circle--filter circle--secondary--module">
-        <h4>My Projects</h4>
+        <h4>Unfilled Projects</h4>
         <ul class="circle--filter--list">
             {% for project in projects %}
                 <li><a href="{% url 'profiles:project' pk=project.pk %}">{{ project|truncatechars:25 }}</a></li>
@@ -34,7 +34,7 @@
         <h4>Project Needs</h4>
         <ul class="circle--filter--list">
             <li><a class="selected">All Needs</a></li>
-            {% for need in needs %}
+            {% for need in needed_skills %}
                 <li><a>{{ need }}</a></li>
             {% endfor %}
         </ul>

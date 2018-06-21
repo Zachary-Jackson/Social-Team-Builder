@@ -7,9 +7,9 @@ class Profile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
     avatar = models.ImageField(null=True, blank=True)
-    bio = models.CharField(max_length=250, blank=True)
+    bio = models.CharField(max_length=500, blank=True)
     skills = models.ManyToManyField('Skill', blank=True)
-    username = models.CharField(max_length=100, unique=True)
+    username = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.username
@@ -17,7 +17,7 @@ class Profile(models.Model):
 
 class Skill(models.Model):
     """A class that represents a single skill"""
-    skill = models.CharField(max_length=100, unique=True)
+    skill = models.CharField(max_length=35, unique=True)
 
     def __str__(self):
         return self.skill
@@ -32,9 +32,9 @@ class Project(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     description = models.CharField(max_length=1000)
     positions = models.ManyToManyField('Position', blank=True)
-    requirements = models.CharField(max_length=150)
-    time_line = models.CharField(max_length=50)
-    title = models.CharField(max_length=60)
+    requirements = models.CharField(max_length=100)
+    time_line = models.CharField(max_length=30)
+    title = models.CharField(max_length=40)
 
     def __str__(self):
         return self.title

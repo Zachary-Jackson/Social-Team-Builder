@@ -36,5 +36,6 @@ urlpatterns = [
         'search/skill/<str:skill>',
         views.search_by_skill,
         name='search_by_skill'
-    )
+    ),
+    path('project/view_all', views.project_view_all, name='project_view_all'),
 ]
