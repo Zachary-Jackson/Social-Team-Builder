@@ -26,7 +26,7 @@ def homepage(request):
 
 @login_required
 def login_router(request):
-    """This checks to see if a Profile has been created.
+    """Check to see if a Profile has been created.
     If not create and redirect to edit page"""
     try:
         request.user.profile
@@ -61,7 +61,7 @@ def applications(request):
         needed_skills.add(position.skill)
 
         # If there are applicants in a position add the position to applicants
-        if position.any_applicants:
+        if position.any_applicants and position.filled is False:
             applicant_list.add(position)
 
     return render(
@@ -108,7 +108,7 @@ def profile_view(request, pk):
     # Get the User model that matches the pk
     user_profile = get_object_or_404(models.Profile, pk=pk)
     projects = models.Project.objects.all()\
-        .filter(owner=request.user.profile)
+        .filter(owner=pk)
 
     # Checks to see if the User has an avatar if not use default media
     try:
@@ -257,7 +257,7 @@ def project_view_all(request):
         'profiles/project_view_all.html',
         {
             'current_tab': 'My Projects',  # navigation bar selector
-            'needed_skills': needed_skills,
+            'needed_skills': list(needed_skills),
             'projects': projects,
         }
     )
