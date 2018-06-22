@@ -14,13 +14,7 @@
           <a class="button"
              href="{% url 'profiles:project_edit' pk=project.pk %}">Edit Project
           </a>
-
-          <a class="button button-text"
-             href="{% url 'profiles:project_delete_confirmation' pk=project.pk %}">
-              Delete Project
-          </a>
        {% endblock delete_confirmation_header %}
-
 
 
         </div>
@@ -53,7 +47,7 @@
               <h3>{{ position.skill }}</h3>
               <p>{{ position.information|linebreaks }}</p>
               {% if position.filled == False %}
-                <a class="button button-primary">Apply</a>
+                <a class="button button-primary" href="{% url 'profiles:applications_request' pk=project.pk %}">Apply</a>
               {% endif %}
               {% if position.filled == True %}
                 <a class="button button-primary button-inactive">Position Filled</a>

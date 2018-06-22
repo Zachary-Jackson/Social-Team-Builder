@@ -2116,3 +2116,7 @@ button.button-secondary {
   color: #fff;
   background-color: #C70039;
 }
+
+.extra_vertical_margin {
+  margin-top: 10px;
+}

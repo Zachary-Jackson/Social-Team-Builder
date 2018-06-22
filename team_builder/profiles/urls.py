@@ -11,6 +11,14 @@ urlpatterns = [
     # Applications related paths
     path('applications', views.applications, name='applications'),
 
+    path('applications/accept/<int:position_pk>/<int:profile_pk>',
+         views.applications_accept,
+         name='applications_accept'),
+
+    path('applications/request/<int:pk>',
+         views.applications_request,
+         name='applications_request'),
+
     # Profile related paths
     path('profile/edit/', views.profile_edit, name='edit'),
     path('profile/view/<int:pk>/', views.profile_view, name='profile'),

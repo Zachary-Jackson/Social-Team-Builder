@@ -52,7 +52,7 @@ def applications(request):
 
     # Get all of the desired skills for the projects
     needed_skills = set()
-    applicant_list = set()
+    unfilled_positions = set()
 
     positions = models.Position.objects.all()\
         .filter(position_creator=request.user.profile)
@@ -62,17 +62,76 @@ def applications(request):
 
         # If there are applicants in a position add the position to applicants
         if position.any_applicants and position.filled is False:
-            applicant_list.add(position)
+            unfilled_positions.add(position)
 
     return render(
         request,
         'profiles/applications.html',
         {
-            'applicant_list': applicant_list,
+            'unfilled_positions': unfilled_positions,
             'current_tab': 'Applications',  # navigation bar selector
             'needed_skills': list(needed_skills),
             'projects': projects
         })
+
+
+@login_required
+def applications_accept(request, position_pk, profile_pk):
+    """Allows the owner of a project to accept an applicant"""
+    # if the current user does not own the project kick them out
+    user = request.user.profile
+    position = get_object_or_404(models.Position, pk=position_pk)
+    profile = get_object_or_404(models.Profile, pk=profile_pk)
+
+    if user != position.position_creator:
+        raise Http404("You do not own this project")
+
+    # Get and update the Applicants model
+    found_applicant = ''
+
+    for applicant in position.applicants.all():
+        if applicant.applicant.pk == profile_pk:
+            found_applicant = applicant
+            break
+
+    # If an applicant is not found, 404
+    if not found_applicant:
+        raise Http404("An applicant was not found.")
+
+    # Update the Applicant object
+    found_applicant.accepted = True
+    found_applicant.save()
+
+    # Update the Position object
+    position.filled_by = profile
+    position.save()
+
+    return redirect('profiles:applications')
+
+
+@login_required
+def applications_request(request, pk):
+    """Allows a user to submit an application request"""
+    # Ensures that the Position model exists or 404
+    position = get_object_or_404(models.Position, pk=pk)
+    user = request.user.profile
+
+    # If the user has already applied, prevent another application
+    for applicant in position.applicants.all():
+        if applicant.applicant == user:
+            raise Http404("You can only apply once.")
+
+    # Create an Applicant model
+    applicant = models.Applicants.objects.create(
+        applicant=user,
+
+    )
+
+    # Attach the applicant to a Position
+    position.applicants.add(applicant)
+
+    # Return the user back to the Project's page
+    return redirect('profiles:project', pk=pk)
 
 
 """Profile related views"""

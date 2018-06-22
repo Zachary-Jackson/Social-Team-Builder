@@ -58,7 +58,7 @@ class Position(models.Model):
 
     # applicants hold every Profile that has applied to this position
     applicants = models.ManyToManyField(
-        Profile,
+        'Applicants',
         related_name='position_applicants',
         blank=True,
     )
@@ -103,11 +103,34 @@ class Position(models.Model):
 
         self.position_creator = self.related_project.owner
 
-        # if there are any applicants set any_applicants to True
-        try:
-            if len(self.applicants.values()):
-                self.any_applicants = True
-        except ValueError:
-            pass
-
         super(Position, self).save(*args, **kwargs)
+
+        # If you are trying to save the first applicant to Position the
+        # .values() method may not work, so trying again here
+
+        # if there are any applicants set any_applicants to True
+        # only if any_applicants is false to prevent a database save
+
+        if not self.any_applicants:
+            try:
+                if len(self.applicants.values()):
+                    self.any_applicants = True
+
+                    # resave the Position
+                    super(Position, self).save(*args, **kwargs)
+
+            except ValueError:
+                pass
+
+
+class Applicants(models.Model):
+    """Contains an applicant and what project they belong to"""
+    applicant = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    accepted = models.BooleanField(default=False)
+    new_applicant = models.BooleanField(default=True)
+    rejected = models.BooleanField(default=False)
+
+    def __str__(self):
+        """Shows the User's name and Applicant pk"""
+        return str(self.applicant)
