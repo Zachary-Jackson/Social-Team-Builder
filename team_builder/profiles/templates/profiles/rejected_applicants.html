@@ -1,0 +1,40 @@
+{%  extends "profiles/applications.html" %}
+
+{#There are various tags that need to be renamed which the following accomplishes#}
+
+{% block header %}<h2>Accepted Applicants</h2>{% endblock header %}
+
+
+{% block projects %}
+  <div class="circle--filter circle--secondary--module">
+    <h4>Filled Projects</h4>
+    <ul class="circle--filter--list">
+        {% for project in projects %}
+            <li><a href="{% url 'profiles:project' pk=project.pk %}">{{ project|truncatechars:25 }}</a></li>
+        {% endfor %}
+        {% if not projects %}
+            <li>You have no projects with rejections.</li>
+        {% endif %}
+    </ul>
+  </div>
+{% endblock projects %}
+
+
+{% block applicants %}
+    {% if not found_positions %}
+        <h2>You have no rejected positions</h2>
+    {% endif %}
+
+    {% for applicant in found_positions %}
+          <tr class="clickable-row" data-href="">
+            <td>
+                <h3><a href=" {% url 'profiles:profile' pk=applicant.pk %}">{{ applicant }}</a></h3>
+                <p><a href=" {% url 'profiles:project' pk=applicant.position.related_project.pk  %}">{{ applicant.position.related_project }}</a></p>
+
+            </td>
+            <td class="circle--cell--right">
+              <span class="secondary-label">{{ applicant.position.skill }}</span>
+            </td>
+          </tr>
+    {% endfor %}
+{% endblock applicants %}

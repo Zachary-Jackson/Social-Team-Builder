@@ -105,27 +105,15 @@ class Position(models.Model):
 
         super(Position, self).save(*args, **kwargs)
 
-        # If you are trying to save the first applicant to Position the
-        # .values() method may not work, so trying again here
-
-        # if there are any applicants set any_applicants to True
-        # only if any_applicants is false to prevent a database save
-
-        if not self.any_applicants:
-            try:
-                if len(self.applicants.values()):
-                    self.any_applicants = True
-
-                    # resave the Position
-                    super(Position, self).save(*args, **kwargs)
-
-            except ValueError:
-                pass
-
 
 class Applicants(models.Model):
     """Contains an applicant and what project they belong to"""
     applicant = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    position = models.ForeignKey(
+        Position,
+        on_delete=models.CASCADE,
+        related_name='applicants_position'
+    )
 
     accepted = models.BooleanField(default=False)
     new_applicant = models.BooleanField(default=True)

@@ -15,9 +15,21 @@ urlpatterns = [
          views.applications_accept,
          name='applications_accept'),
 
+    path('applications/reject/<int:position_pk>/<int:profile_pk>',
+         views.applications_reject,
+         name='applications_reject'),
+
     path('applications/request/<int:pk>',
          views.applications_request,
          name='applications_request'),
+
+    path('applications/view/accepted',
+         views.applications_view_accepted,
+         name='applications_view_accepted'),
+
+    path('applications/view/rejected',
+         views.applications_view_rejected,
+         name='applications_view_rejected'),
 
     # Profile related paths
     path('profile/edit/', views.profile_edit, name='edit'),

@@ -36,23 +36,49 @@ def login_router(request):
         return redirect('profiles:edit')
     else:
         # redirect to main profile page
-        return redirect('profiles:profile', pk=request.user.pk)
+        return redirect('profiles:profile', pk=request.user.profile.pk)
 
 
 """applications related views"""
 
 
-@login_required
-def applications(request):
-    """This is the main applications page"""
-    # Get projects that do not have all positions filled
-    projects = models.Project.objects.all().filter(
-        Q(owner=request.user.profile) & Q(positions__filled=False))\
-        .prefetch_related('positions')
+def get_applicant(position, profile_pk: int):
+    """Checks to see if an applicant is in a position if not 404"""
+    # Get and update the Applicants model
+    found_applicant = ''
 
+    for applicant in position.applicants.all():
+        if applicant.applicant.pk == profile_pk:
+            found_applicant = applicant
+            break
+
+    # If an applicant is not found, 404
+    if not found_applicant:
+        raise Http404("An applicant was not found.")
+
+    return found_applicant
+
+
+def get_projects_with_filled_or_unfilled_positions(is_filled: bool, request):
+    """Searches all of the User's projects and checks if they have
+    filled or unfilled positions in them
+
+    Returns found projects"""
+    projects = models.Project.objects.all().filter(
+        Q(owner=request.user.profile) & Q(positions__filled=is_filled))\
+        .prefetch_related('positions')
+    return projects
+
+
+def get_needed_skills_and_found_positions(
+        request, is_accepted: bool, is_filled: bool):
+    """Gets all of the User's Positions
+    Finds all of the applicants using is_filled
+
+    returns the found_skills and needed_positions"""
     # Get all of the desired skills for the projects
+    found_positions = set()
     needed_skills = set()
-    unfilled_positions = set()
 
     positions = models.Position.objects.all()\
         .filter(position_creator=request.user.profile)
@@ -60,15 +86,32 @@ def applications(request):
     for position in positions:
         needed_skills.add(position.skill)
 
-        # If there are applicants in a position add the position to applicants
-        if position.any_applicants and position.filled is False:
-            unfilled_positions.add(position)
+        if position.any_applicants and position.filled == is_filled:
+            for applicant in position.applicants.all():
+                if applicant.accepted == is_accepted and not applicant.rejected:
+                    found_positions.add(applicant)
+
+
+    return found_positions, needed_skills
+
+
+@login_required
+def applications(request):
+    """This is the main applications page"""
+    # Get projects that have all positions unfilled
+    projects = get_projects_with_filled_or_unfilled_positions(False, request)
+
+    # Get found_positions and needed_skills where the position is not filled
+    found_positions, needed_skills = get_needed_skills_and_found_positions(
+        request, is_accepted=False, is_filled=False
+    )
 
     return render(
         request,
         'profiles/applications.html',
         {
-            'unfilled_positions': unfilled_positions,
+            'applications_tab': 'All',
+            'found_positions': found_positions,
             'current_tab': 'Applications',  # navigation bar selector
             'needed_skills': list(needed_skills),
             'projects': projects
@@ -86,17 +129,8 @@ def applications_accept(request, position_pk, profile_pk):
     if user != position.position_creator:
         raise Http404("You do not own this project")
 
-    # Get and update the Applicants model
-    found_applicant = ''
-
-    for applicant in position.applicants.all():
-        if applicant.applicant.pk == profile_pk:
-            found_applicant = applicant
-            break
-
-    # If an applicant is not found, 404
-    if not found_applicant:
-        raise Http404("An applicant was not found.")
+    # Find the applicant or 404
+    found_applicant = get_applicant(position, profile_pk)
 
     # Update the Applicant object
     found_applicant.accepted = True
@@ -105,6 +139,30 @@ def applications_accept(request, position_pk, profile_pk):
     # Update the Position object
     position.filled_by = profile
     position.save()
+
+    return redirect('profiles:applications')
+
+
+@login_required
+def applications_reject(request, position_pk, profile_pk):
+    """Allows the owner of a project to reject an applicant
+
+    Redirects to main applications page"""
+    # if the current user does not own the project kick them out
+    user = request.user.profile
+    position = get_object_or_404(models.Position, pk=position_pk)
+    get_object_or_404(models.Profile, pk=profile_pk)
+
+    if user != position.position_creator:
+        raise Http404("You do not own this project")
+
+    # Find the applicant or 404
+    found_applicant = get_applicant(position, profile_pk)
+
+    # Update the Applicant object
+    found_applicant.accepted = False
+    found_applicant.rejected = True
+    found_applicant.save()
 
     return redirect('profiles:applications')
 
@@ -124,14 +182,74 @@ def applications_request(request, pk):
     # Create an Applicant model
     applicant = models.Applicants.objects.create(
         applicant=user,
+        position=position
 
     )
 
     # Attach the applicant to a Position
     position.applicants.add(applicant)
+    position.any_applicants = True
+    position.save()
 
     # Return the user back to the Project's page
     return redirect('profiles:project', pk=pk)
+
+
+@login_required
+def applications_view_accepted(request):
+    """Shows the user all of the applicants they have accepted"""
+    # Get projects that have all positions filled
+    projects = get_projects_with_filled_or_unfilled_positions(True, request)
+
+    # Get found_positions and needed_skills where the position is filled
+    found_positions, needed_skills = get_needed_skills_and_found_positions(
+        request, is_accepted=True, is_filled=True
+    )
+
+    return render(
+        request,
+        'profiles/accepted_applicants.html',
+        {
+            'applications_tab': 'Accepted',
+            'found_positions': found_positions,
+            'current_tab': 'Applications',  # navigation bar selector
+            'needed_skills': list(needed_skills),
+            'projects': projects
+        })
+
+
+@login_required
+def applications_view_rejected(request):
+    """Shows the user all of the applicants they have rejected"""
+    projects = []
+
+    # Get all of the desired skills for the projects
+    found_positions = set()
+    needed_skills = set()
+
+    # Get all of a user's positions
+    positions = models.Position.objects.all()\
+        .filter(position_creator=request.user.profile)
+
+    for position in positions:
+        needed_skills.add(position.skill)
+
+        # If there are applicants in a position add the position to applicants
+        if position.any_applicants:
+            for applicant in position.applicants.all():
+                if applicant.rejected:
+                    found_positions.add(applicant)
+
+    return render(
+        request,
+        'profiles/rejected_applicants.html',
+        {
+            'applications_tab': 'Rejected',
+            'found_positions': found_positions,
+            'current_tab': 'Applications',  # navigation bar selector
+            'needed_skills': list(needed_skills),
+            'projects': projects
+        })
 
 
 """Profile related views"""
@@ -151,7 +269,7 @@ def profile_edit(request):
 
         if form.is_valid():
             form.save()
-            return redirect('profiles:profile', pk=request.user.pk)
+            return redirect('profiles:profile', pk=request.user.profile.pk)
 
     return render(
         request,
@@ -194,7 +312,7 @@ def project_delete(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
 
     # Checks if the logged in user owns the project. If not kick them out.
-    if project.owner.pk != request.user.pk:
+    if project.owner.pk != request.user.profile.pk:
         raise Http404("You do not own this project.")
 
     project.delete()
@@ -207,7 +325,7 @@ def project_delete_confirmation(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
 
     # Checks if the logged in user owns the project. If not kick them out.
-    if project.owner.pk != request.user.pk:
+    if project.owner.pk != request.user.profile.pk:
         raise Http404("You do not own this project.")
 
     if request.method == 'POST':
@@ -231,7 +349,7 @@ def project_edit(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
 
     # Checks if the logged in user owns the project. If not kick them out.
-    if project.owner.pk != request.user.pk:
+    if project.owner.pk != request.user.profile.pk:
         raise Http404("You do not own this project.")
 
     project_form = forms.ProjectForm(instance=project)
