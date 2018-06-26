@@ -84,13 +84,13 @@ def get_needed_skills_and_found_positions(
         .filter(position_creator=request.user.profile)
 
     for position in positions:
-        needed_skills.add(position.skill)
 
         if position.any_applicants and position.filled == is_filled:
             for applicant in position.applicants.all():
-                if applicant.accepted == is_accepted and not applicant.rejected:
+                if applicant.accepted == is_accepted and \
+                        not applicant.rejected:
                     found_positions.add(applicant)
-
+                    needed_skills.add(position.skill)
 
     return found_positions, needed_skills
 
@@ -232,13 +232,14 @@ def applications_view_rejected(request):
         .filter(position_creator=request.user.profile)
 
     for position in positions:
-        needed_skills.add(position.skill)
 
         # If there are applicants in a position add the position to applicants
         if position.any_applicants:
             for applicant in position.applicants.all():
                 if applicant.rejected:
                     found_positions.add(applicant)
+                    projects.append(position.related_project)
+                    needed_skills.add(position.skill)
 
     return render(
         request,

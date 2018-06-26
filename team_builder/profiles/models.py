@@ -116,7 +116,6 @@ class Applicants(models.Model):
     )
 
     accepted = models.BooleanField(default=False)
-    new_applicant = models.BooleanField(default=True)
     rejected = models.BooleanField(default=False)
 
     def __str__(self):

@@ -2,12 +2,12 @@
 
 {#There are various tags that need to be renamed which the following accomplishes#}
 
-{% block header %}<h2>Accepted Applicants</h2>{% endblock header %}
+{% block header %}<h2>Rejected Applicants</h2>{% endblock header %}
 
 
 {% block projects %}
   <div class="circle--filter circle--secondary--module">
-    <h4>Filled Projects</h4>
+    <h4>Rejected Projects</h4>
     <ul class="circle--filter--list">
         {% for project in projects %}
             <li><a href="{% url 'profiles:project' pk=project.pk %}">{{ project|truncatechars:25 }}</a></li>
@@ -38,3 +38,6 @@
           </tr>
     {% endfor %}
 {% endblock applicants %}
+
+
+{% block needs %}<h4>Rejected Needs</h4>{% endblock needs %}

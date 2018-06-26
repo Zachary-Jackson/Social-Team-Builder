@@ -8,8 +8,8 @@ def add_default_skills(apps, schema_editor):
     skills = apps.get_model('profiles', 'Skill')
 
     positions = ['Android Developer', 'Designer', 'Java Developer',
-              'PHP Developer', 'Python Developer', 'Rails Developer',
-              'WordPress Developer', 'iOS Developer']
+                 'JavaScript Developer','PHP Developer', 'Python Developer',
+                 'Rails Developer','WordPress Developer', 'iOS Developer']
     for position in positions:
         skills.objects.create(skill=position)
 
