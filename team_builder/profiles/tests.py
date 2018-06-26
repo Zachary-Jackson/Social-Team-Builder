@@ -147,6 +147,89 @@ class ProfileViewsTests(TestCase):
 
         self.assertTemplateUsed('profiles/applications.html')
 
+    def test_applications_accept(self):
+        """Ensures a user can accept an application"""
+        # Create an application for self.project from self.user_2
+        self.client.login(username='user2@user2.com', password='testpass')
+        self.client.get(
+            reverse('profiles:applications_request',
+                    kwargs={'pk': self.project.pk}))
+
+        # Now that we have an applicant accept that application
+        self.client.login(username='test@test.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:applications_accept',
+                    kwargs={
+                        'position_pk': self.position.pk,
+                        'profile_pk': self.user_2.profile.pk
+            }
+        ))
+
+        # Ensure the applicant was updated properly
+        applicant = Applicants.objects.get(pk=1)
+        self.assertEqual(True, applicant.accepted)
+        self.assertEqual(False, applicant.rejected)
+
+        # Ensure the Position was updated properly
+        position = Position.objects.get(pk=self.position.pk)
+        self.assertEqual(True, position.filled)
+        self.assertEqual(position.filled_by, applicant.applicant)
+
+        # We should have been rerouted back to the main applications page
+        self.assertRedirects(
+            resp, reverse('profiles:applications'))
+
+    def test_applications_rejected(self):
+        """Ensures a user can reject an application"""
+        # Create an application for self.project from self.user_2
+        self.client.login(username='user2@user2.com', password='testpass')
+        self.client.get(
+            reverse('profiles:applications_request',
+                    kwargs={'pk': self.project.pk}))
+
+        # Now that we have an applicant accept that application
+        self.client.login(username='test@test.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:applications_reject',
+                    kwargs={
+                        'position_pk': self.position.pk,
+                        'profile_pk': self.user_2.profile.pk
+            }
+        ))
+
+        # Ensure the applicant was updated properly
+        applicant = Applicants.objects.get(pk=1)
+        self.assertEqual(False, applicant.accepted)
+        self.assertEqual(True, applicant.rejected)
+
+        # Ensure the Position was updated properly
+        position = Position.objects.get(pk=self.position.pk)
+        self.assertEqual(False, position.filled)
+
+        # We should have been rerouted back to the main applications page
+        self.assertRedirects(
+            resp, reverse('profiles:applications'))
+
+    def test_applications_request(self):
+        """Ensures a user can submit an application request"""
+        self.client.login(username='user2@user2.com', password='testpass')
+
+        # There should be no applications
+        self.assertEqual(0, len(Applicants.objects.all()))
+
+        resp = self.client.get(
+            reverse('profiles:applications_request',
+                    kwargs={'pk': self.project.pk}))
+
+        # We should have one application
+        self.assertEqual(1, len(Applicants.objects.all()))
+
+        # We should have been rerouted back to the project
+        self.assertRedirects(
+            resp, reverse('profiles:project',
+                          kwargs={'pk': self.project.pk}))
+
+
     def test_applications_view_accepted_with_data(self):
         """Ensures that an accepted applicant can be found"""
         self.client.login(username='test@test.com', password='testpass')

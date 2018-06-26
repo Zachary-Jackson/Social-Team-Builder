@@ -43,7 +43,8 @@ def login_router(request):
 
 
 def get_applicant(position, profile_pk: int):
-    """Checks to see if an applicant is in a position if not 404"""
+    """Checks to see if an applicant is in a position if not 404
+    Returns the found_applicant or 404"""
     # Get and update the Applicants model
     found_applicant = ''
 
@@ -87,6 +88,7 @@ def get_needed_skills_and_found_positions(
 
         if position.any_applicants and position.filled == is_filled:
             for applicant in position.applicants.all():
+                
                 if applicant.accepted == is_accepted and \
                         not applicant.rejected:
                     found_positions.add(applicant)

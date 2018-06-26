@@ -28,8 +28,13 @@
     {% for applicant in found_positions %}
           <tr class="clickable-row" data-href="">
             <td>
-                <h3><a href=" {% url 'profiles:profile' pk=applicant.pk %}">{{ applicant }}</a></h3>
-                <p><a href=" {% url 'profiles:project' pk=applicant.position.related_project.pk  %}">{{ applicant.position.related_project }}</a></p>
+
+                <h3>
+                    <a href=" {% url 'profiles:profile' pk=applicant.pk %}">{{ applicant }}</a>
+                </h3>
+                <p>
+                    <a href=" {% url 'profiles:project' pk=applicant.position.related_project.pk  %}">{{ applicant.position.related_project }}</a>
+                </p>
 
             </td>
             <td class="circle--cell--right">

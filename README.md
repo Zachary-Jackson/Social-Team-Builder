@@ -60,16 +60,16 @@ after sign up
 * - [ ]Can provide a time commitment for the position and use Markdown
 
 
-- [ ] Can see applications for a project position
+- [x] Can see applications for a project position
 * - [ ]Allows user's to filter applicants
 
 
-- [ ] Users can approve an applicant
-* - [ ]They can approve applicants directly from the list page
+- [x] Users can approve an applicant
+* - [x]They can approve applicants directly from the list page
 
 
-- [ ] Users can reject an applicant
-* - [ ]They can reject applicants directly from the list page
+- [x] Users can reject an applicant
+* - [x]They can reject applicants directly from the list page
 
 
 - [ ] I get notified if I am approved or denied a position
@@ -80,6 +80,6 @@ after sign up
 * - [ ]Their is a "projects for you" list with projects filtered by your skill set
 
 
-- [ ] Can apply for a position
+- [x] Can apply for a position
 * - [ ]Can't apply for the same position twice, and filled positions are
 displayed differently

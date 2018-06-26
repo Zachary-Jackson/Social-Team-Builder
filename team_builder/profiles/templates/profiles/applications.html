@@ -3,6 +3,7 @@
 
 {% block title_tag %}Team Builder | profile{% endblock %}
 
+
 Profile/layout.html takes one parameter
 1) current_tab
     Allows the main profile header bar to change in html
@@ -21,15 +22,12 @@ Applications.html takes a couple of parameters
 
 
 
-
 {% block profiles_content %}
 
   <div class="bounds circle--page">
     <div class="circle--page--header grid-100">
-
 {#      Allows the header to be changed   #}
       {% block header %}<h2>Open Applications</h2>{% endblock header %}
-
     </div>
 
     <div class="grid-25">
@@ -46,7 +44,7 @@ Applications.html takes a couple of parameters
               <a  {% if applications_tab == "Accepted" %} class="selected" {% endif %}
                       href="{% url 'profiles:applications_view_accepted' %}">Accepted</a>
           </li>
-        <li>
+          <li>
               <a  {% if applications_tab == "Rejected" %} class="selected" {% endif %}
                       href="{% url 'profiles:applications_view_rejected' %}">Rejected</a>
           </li>
@@ -106,7 +104,6 @@ Applications.html takes a couple of parameters
 
                         <a class="button button-primary extra_vertical_margin"
                             href="{% url 'profiles:applications_accept' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">Accept</a>
-
                         <a class="button button-primary extra_vertical_margin"
                             href="{% url 'profiles:applications_reject' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">Reject</a>
 
