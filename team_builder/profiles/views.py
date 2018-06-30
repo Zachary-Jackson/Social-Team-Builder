@@ -15,7 +15,8 @@ from . import models
 
 def homepage(request):
     """This is the homepage for the profiles app"""
-    projects = models.Project.objects.all().prefetch_related('positions')
+    projects = models.Project.objects.all().prefetch_related(
+        'positions__skill')
     skills = sorted(models.Skill.objects.all(), key=attrgetter('skill'))
 
     return render(
@@ -66,8 +67,7 @@ def get_projects_with_filled_or_unfilled_positions(is_filled: bool, request):
 
     Returns found projects"""
     projects = models.Project.objects.all().filter(
-        Q(owner=request.user.profile) & Q(positions__filled=is_filled))\
-        .prefetch_related('positions')
+        Q(owner=request.user.profile) & Q(positions__filled=is_filled))
     return projects
 
 
@@ -287,8 +287,8 @@ def profile_view(request, pk):
     """Lets any user view a person's profile"""
     # Get the User model that matches the pk
     user_profile = get_object_or_404(models.Profile, pk=pk)
-    projects = models.Project.objects.all()\
-        .filter(owner=pk)
+    projects = models.Project.objects.all().filter(owner=pk)\
+        .prefetch_related('positions__skill')
 
     # Checks to see if the User has an avatar if not use default media
     try:
@@ -421,16 +421,18 @@ def project_view(request, pk):
 @login_required
 def project_view_all(request):
     """Shows the user all of their Projects regardless of filled status"""
-    projects = models.Project.objects.all().filter(owner=request.user.profile)
+    projects = models.Project.objects.all().filter(owner=request.user.profile)\
+        .prefetch_related('positions__skill')
 
     # Get all of the desired skills for the projects
     needed_skills = set()
 
-    positions = models.Position.objects.all()\
-        .filter(position_creator=request.user.profile)
+    positions = [project.positions.all() for project in projects]
 
     for position in positions:
-        needed_skills.add(position.skill)
+        # Because positions is a list of queries we need to get
+        # the first item with [0]
+        needed_skills.add(position[0].skill)
 
     return render(
         request,
