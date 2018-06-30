@@ -12,7 +12,8 @@
 {#      Lets the header content be changed for delete_confirmation  #}
       {% block delete_confirmation_header %}
           <a class="button"
-             href="{% url 'profiles:project_edit' pk=project.pk %}">Edit Project
+             href="{% url 'profiles:project_edit' pk=project.pk %}">
+              Edit Project
           </a>
        {% endblock delete_confirmation_header %}
 
@@ -28,7 +29,9 @@
         <h4 class="circle--article--section">Project</h4>
         <h1 class="circle--article--title">{{ project }}</h1>
         <p class="circle--article--byline">Project Owner:
-            <a href="{% url 'profiles:profile' pk=project.owner.pk %}">{{ project.owner }}</a>
+            <a href="{% url 'profiles:profile' pk=project.owner.pk %}">
+                {{ project.owner }}
+            </a>
         </p>
       </div>
 
@@ -46,12 +49,28 @@
             <li>
               <h3>{{ position.skill }}</h3>
               <p>{{ position.information|linebreaks }}</p>
+
+
+{#              Allows a Position's applicant buttons to change #}
+{#                based on who is logged in  #}
+            {% block applicant_buttons %}
               {% if position.filled == False %}
-                <a class="button button-primary" href="{% url 'profiles:applications_request' pk=project.pk %}">Apply</a>
+                <a class="button button-primary"
+                   href="{% url
+                    'profiles:applications_request'
+                    pk=project.pk %}"
+                >
+                    Apply
+                </a>
               {% endif %}
               {% if position.filled == True %}
-                <a class="button button-primary button-inactive">Position Filled</a>
+                <a class="button button-primary button-inactive">
+                    Position Filled
+                </a>
               {% endif %}
+            {% endblock applicant_buttons %}
+
+
             </li>
           {% endfor %}
 

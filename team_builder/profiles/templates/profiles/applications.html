@@ -38,15 +38,21 @@ Applications.html takes a couple of parameters
 {#          Allows the class to change based on the applications_tab#}
           <li>
               <a {% if applications_tab == "All" %} class="selected" {% endif %}
-                      href="{% url 'profiles:applications' %}">All Open Applications</a>
+                      href="{% url 'profiles:applications' %}">
+                  All Open Applications
+              </a>
           </li>
           <li>
               <a  {% if applications_tab == "Accepted" %} class="selected" {% endif %}
-                      href="{% url 'profiles:applications_view_accepted' %}">Accepted</a>
+                      href="{% url 'profiles:applications_view_accepted' %}">
+                  Accepted
+              </a>
           </li>
           <li>
               <a  {% if applications_tab == "Rejected" %} class="selected" {% endif %}
-                      href="{% url 'profiles:applications_view_rejected' %}">Rejected</a>
+                      href="{% url 'profiles:applications_view_rejected' %}">
+                  Rejected
+              </a>
           </li>
 
         </ul>
@@ -58,7 +64,9 @@ Applications.html takes a couple of parameters
             <h4>Open Projects</h4>
             <ul class="circle--filter--list">
                 {% for project in projects %}
-                    <li><a href="{% url 'profiles:project' pk=project.pk %}">{{ project|truncatechars:25 }}</a></li>
+                    <li><a href="{% url 'profiles:project' pk=project.pk %}">
+                        {{ project|truncatechars:25 }}
+                    </a></li>
                 {% endfor %}
                 {% if not projects %}
                     <li>You have no unfilled projects</li>
@@ -99,17 +107,29 @@ Applications.html takes a couple of parameters
             {% for applicant in found_positions %}
                   <tr class="clickable-row" data-href="">
                     <td>
-                        <h3><a href=" {% url 'profiles:profile' pk=applicant.pk %}">{{ applicant }}</a></h3>
-                        <p><a href=" {% url 'profiles:project' pk=applicant.position.related_project.pk  %}">{{ applicant.position.related_project }}</a></p>
+                        <h3>
+                            <a href="{% url 'profiles:profile' pk=applicant.pk %}">
+                                {{ applicant }}
+                            </a>
+                        </h3>
+                        <p><a href="{% url 'profiles:project' pk=applicant.position.related_project.pk  %}">
+                            {{ applicant.position.related_project }}
+                        </a></p>
 
                         <a class="button button-primary extra_vertical_margin"
-                            href="{% url 'profiles:applications_accept' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">Accept</a>
+                            href="{% url 'profiles:applications_accept' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">
+                            Accept
+                        </a>
                         <a class="button button-primary extra_vertical_margin"
-                            href="{% url 'profiles:applications_reject' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">Reject</a>
+                            href="{% url 'profiles:applications_reject' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">
+                            Reject
+                        </a>
 
                     </td>
                     <td class="circle--cell--right">
-                      <span class="secondary-label">{{ applicant.position.skill }}</span>
+                      <span class="secondary-label">
+                          {{ applicant.position.skill }}
+                      </span>
                     </td>
                   </tr>
             {% endfor %}

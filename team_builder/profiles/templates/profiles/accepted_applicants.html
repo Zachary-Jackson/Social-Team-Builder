@@ -1,6 +1,5 @@
 {%  extends "profiles/applications.html" %}
 
-{#There are various tags that need to be renamed which the following accomplishes#}
 
 {% block header %}<h2>Accepted Applicants</h2>{% endblock header %}
 
@@ -10,7 +9,11 @@
     <h4>Filled Projects</h4>
     <ul class="circle--filter--list">
         {% for project in projects %}
-            <li><a href="{% url 'profiles:project' pk=project.pk %}">{{ project|truncatechars:25 }}</a></li>
+            <li>
+                <a href="{% url 'profiles:project' pk=project.pk %}">
+                    {{ project|truncatechars:25 }}
+                </a>
+            </li>
         {% endfor %}
         {% if not projects %}
             <li>You have no filled projects.</li>
@@ -30,15 +33,21 @@
             <td>
 
                 <h3>
-                    <a href=" {% url 'profiles:profile' pk=applicant.pk %}">{{ applicant }}</a>
+                    <a href=" {% url 'profiles:profile' pk=applicant.pk %}">
+                        {{ applicant }}
+                    </a>
                 </h3>
                 <p>
-                    <a href=" {% url 'profiles:project' pk=applicant.position.related_project.pk  %}">{{ applicant.position.related_project }}</a>
+                    <a href=" {% url 'profiles:project' pk=applicant.position.related_project.pk  %}">
+                        {{ applicant.position.related_project }}
+                    </a>
                 </p>
 
             </td>
             <td class="circle--cell--right">
-              <span class="secondary-label">{{ applicant.position.skill }}</span>
+              <span class="secondary-label">
+                  {{ applicant.position.skill }}
+              </span>
             </td>
           </tr>
     {% endfor %}

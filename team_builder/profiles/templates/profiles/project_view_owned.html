@@ -1,0 +1,20 @@
+{% extends "profiles/project.html" %}
+
+{% block applicant_buttons %}
+
+  {% if position.filled == False %}
+    <a class="button button-primary">Accepting applicants</a>
+    <a class="button button-primary"
+       href="{% url 'profiles:applications_request' pk=project.pk %}">
+        Dev Application
+    </a>
+  {% endif %}
+
+  {% if position.filled == True %}
+    <a class="button button-primary button-inactive"
+       href="{% url 'profiles:profile' pk=position.filled_by.pk %}">
+        Position Filled by {{ position.filled_by }}
+    </a>
+  {% endif %}
+
+{% endblock applicant_buttons %}

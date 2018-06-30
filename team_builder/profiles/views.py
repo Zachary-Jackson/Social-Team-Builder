@@ -412,9 +412,24 @@ def project_new(request):
 
 
 def project_view(request, pk):
-    """Lets any user view a project"""
+    """Checks to see if the logged in user owns this project.
+    If so show special owner template. If not show normal project template"""
     # Get the Project that matches the pk
     project = get_object_or_404(models.Project, pk=pk)
+
+    # Makes sure there is a logged in user
+    try:
+        request.user.profile
+    except AttributeError:
+        pass
+    else:
+        if request.user.profile == project.owner:
+            return render(
+                request,
+                'profiles/project_view_owned.html',
+                {'project': project}
+            )
+    # If no logged in user or the wrong user the following happens
     return render(request, 'profiles/project.html', {'project': project})
 
 

@@ -53,7 +53,9 @@
             </td>
             {% for position in project.positions.all %}
                 <td class="circle--cell--right">
-                  <span class="secondary-label">{{ position.skill }}</span>
+                  <span class="secondary-label">
+                      {{ position.skill }}
+                  </span>
                 </td>
             {% endfor %}
           </tr>

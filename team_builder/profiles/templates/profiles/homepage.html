@@ -29,7 +29,11 @@
       <ul class="circle--filter--list">
         <li><a class="selected">All Needs</a></li>
         {% for skill in skills %}
-          <li><a href="{% url 'profiles:search_by_skill' skill=skill.readable_to_url %}">{{ skill }}</a></li>
+          <li>
+              <a href="{% url 'profiles:search_by_skill' skill=skill.readable_to_url %}">
+                  {{ skill }}
+              </a>
+          </li>
         {% endfor %}
       </ul>
     </div>
