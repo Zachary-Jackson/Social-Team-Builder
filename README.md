@@ -81,5 +81,5 @@ after sign up
 
 
 - [x] Can apply for a position
-* - [ ]Can't apply for the same position twice, and filled positions are
+* - [x]Can't apply for the same position twice, and filled positions are
 displayed differently

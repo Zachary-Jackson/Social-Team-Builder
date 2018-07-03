@@ -27,13 +27,52 @@
     <div class="circle--filter circle--secondary--module">
       <h4>Project Needs</h4>
       <ul class="circle--filter--list">
-        <li><a class="selected">All Needs</a></li>
-        {% for skill in skills %}
+        <li>
+
+
+{#          If there is not a skill_selector bold 'All Needs'#}
+          {% if not skill_selector %}
+             <a class="selected" href="{% url 'profiles:homepage' %}">
+          {% else %}
+            <a href="{% url 'profiles:homepage' %}">
+          {% endif %}
+
+            All Needs
+          </a>
+        </li>
+        {% if request.user %}
           <li>
+
+
+{#          If skill_selector is 'Your Projects' then bold 'Projects that need you'#}
+          {% if skill_selector == 'Your Projects' %}
+             <a class="selected" href="{% url 'profiles:search_your_skills' %}">
+          {% else %}
+            <a href="{% url 'profiles:search_your_skills' %}">
+          {% endif %}
+
+
+                Projects that need you
+            </a>
+          </li>
+        {% endif %}
+        {% for skill in skills %}
+
+
+          <li>
+            <!--If the skill_selector is the current skill, bold it-->
+            {% if skill_selector == skill %}
+              <a class = "selected" href="{% url 'profiles:search_by_skill' skill=skill.readable_to_url %}">
+            {% else %}
               <a href="{% url 'profiles:search_by_skill' skill=skill.readable_to_url %}">
+            {% endif %}
                   {{ skill }}
               </a>
+
+
           </li>
+
+
         {% endfor %}
       </ul>
     </div>

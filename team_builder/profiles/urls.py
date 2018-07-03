@@ -57,5 +57,9 @@ urlpatterns = [
         views.search_by_skill,
         name='search_by_skill'
     ),
+    path('search/your_skills',
+         views.search_your_skills,
+         name='search_your_skills'
+    ),
     path('project/view_all', views.project_view_all, name='project_view_all'),
 ]

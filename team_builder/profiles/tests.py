@@ -578,7 +578,7 @@ class ProfileViewsTests(TestCase):
 
         # projects that matches the search term Django
         self.assertContains(resp, 'Team Builder')
-        self.assertContains(resp, '1 results for the skill: Django')
+        self.assertContains(resp, '1 results were found with: Django')
         # various page information
         self.assertContains(resp, 'Projects')
         self.assertContains(resp, 'All Needs')
@@ -595,7 +595,7 @@ class ProfileViewsTests(TestCase):
         # verify that the project informs the user to no results
         self.assertContains(
             resp,
-            'No results were found with the skill: bad search')
+            'No results were found with: bad search')
 
         # various page information
         self.assertContains(resp, 'Projects')

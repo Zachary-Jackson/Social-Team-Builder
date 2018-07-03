@@ -34,6 +34,8 @@ class ProjectForm(forms.ModelForm):
             'Project description...'
         self.fields['time_line'].widget.attrs['placeholder'] = \
             'Project time line...'
+        self.fields['requirements'].widget.attrs['placeholder'] =\
+            'Project Requirements...'
 
     class Meta:
         model = models.Project
