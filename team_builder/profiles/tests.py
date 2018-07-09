@@ -229,7 +229,6 @@ class ProfileViewsTests(TestCase):
             resp, reverse('profiles:project',
                           kwargs={'pk': self.project.pk}))
 
-
     def test_applications_view_accepted_with_data(self):
         """Ensures that an accepted applicant can be found"""
         self.client.login(username='test@test.com', password='testpass')
@@ -282,7 +281,7 @@ class ProfileViewsTests(TestCase):
         resp = self.client.get(reverse('profiles:applications_view_rejected'))
 
         # Various page information
-        self.assertContains(resp, 'Rejected Applicants')
+        self.assertContains(resp, 'Project Needs')
         self.assertContains(resp, 'Rejected Projects')
         self.assertContains(resp, 'Rejected Needs')
         self.assertContains(resp, 'Django')

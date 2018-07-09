@@ -56,9 +56,7 @@
             {% block applicant_buttons %}
               {% if position.filled == False %}
                 <a class="button button-primary"
-                   href="{% url
-                    'profiles:applications_request'
-                    pk=project.pk %}"
+                   href="{% url 'profiles:applications_request' pk=project.pk %}"
                 >
                     Apply
                 </a>

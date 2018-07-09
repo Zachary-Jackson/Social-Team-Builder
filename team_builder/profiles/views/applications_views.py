@@ -78,10 +78,9 @@ def applications(request):
         request,
         'profiles/applications.html',
         {
-            'applications_tab': 'All',
             'found_positions': found_positions,
             'current_tab': 'Applications',  # navigation bar selector
-            'needed_skills': list(needed_skills),
+            'needed_skills': needed_skills,
             'projects': projects
         })
 
@@ -178,7 +177,6 @@ def applications_view_accepted(request):
         request,
         'profiles/templates/profiles/applicants_accepted.html',
         {
-            'applications_tab': 'Accepted',
             'found_positions': found_positions,
             'current_tab': 'Applications',  # navigation bar selector
             'needed_skills': list(needed_skills),
@@ -213,7 +211,6 @@ def applications_view_rejected(request):
         request,
         'profiles/templates/profiles/applicants_rejected.html',
         {
-            'applications_tab': 'Rejected',
             'found_positions': found_positions,
             'current_tab': 'Applications',  # navigation bar selector
             'needed_skills': list(needed_skills),

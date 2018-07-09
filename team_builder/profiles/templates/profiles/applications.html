@@ -1,7 +1,4 @@
-{% extends "profiles/layout.html" %}
-{% load static %}
-
-{% block title_tag %}Team Builder | profile{% endblock %}
+{% extends "profiles/selectable_list.html" %}
 
 
 Profile/layout.html takes one parameter
@@ -9,137 +6,117 @@ Profile/layout.html takes one parameter
     Allows the main profile header bar to change in html
 
 
-Applications.html takes a couple of parameters
+applications.html takes a couple of parameters
 
-1) applications_tab
-    Allows the status tab to change in html
-2) found_positions
+1) found_positions
     All of the Applicants that meet the search criteria
-3) needed_skills
-    All of the skills that the applicants applied for
-4) projects
+2) needed skills
+    This is all of the skills that applicants have applied for
+3) projects
     All of the projects that meet the search criteria
 
 
+{% block title_tag %}Team Builder | Applications{% endblock %}
 
-{% block profiles_content %}
 
-  <div class="bounds circle--page">
-    <div class="circle--page--header grid-100">
-{#      Allows the header to be changed   #}
-      {% block header %}<h2>Open Applications</h2>{% endblock header %}
-    </div>
+{% block header %}<h2>Open Applications</h2>{% endblock header %}
 
-    <div class="grid-25">
-      <div class="circle--filter circle--secondary--module">
-        <h4>Status</h4>
+
+{% block first_sidebar %}
+    <li>
+      <a class="selected" href="{% url 'profiles:applications' %}">
+          All Open Applications
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'profiles:applications_view_accepted' %}">
+          Accepted
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'profiles:applications_view_rejected' %}">
+          Rejected
+      </a>
+    </li>
+{% endblock first_sidebar %}
+
+
+{% block second_sidebar %}
+    <h4>Projects</h4>
+    <ul class="circle--filter--list">
+
+        <h4>Open Projects</h4>
         <ul class="circle--filter--list">
-
-{#          Allows the class to change based on the applications_tab#}
-          <li>
-              <a {% if applications_tab == "All" %} class="selected" {% endif %}
-                      href="{% url 'profiles:applications' %}">
-                  All Open Applications
-              </a>
-          </li>
-          <li>
-              <a  {% if applications_tab == "Accepted" %} class="selected" {% endif %}
-                      href="{% url 'profiles:applications_view_accepted' %}">
-                  Accepted
-              </a>
-          </li>
-          <li>
-              <a  {% if applications_tab == "Rejected" %} class="selected" {% endif %}
-                      href="{% url 'profiles:applications_view_rejected' %}">
-                  Rejected
-              </a>
-          </li>
-
-        </ul>
-      </div>
-
-{#      Allows the projects block to be changed#}
-      {% block projects %}
-          <div class="circle--filter circle--secondary--module">
-            <h4>Open Projects</h4>
-            <ul class="circle--filter--list">
-                {% for project in projects %}
-                    <li><a href="{% url 'profiles:project' pk=project.pk %}">
-                        {{ project|truncatechars:25 }}
-                    </a></li>
-                {% endfor %}
-                {% if not projects %}
-                    <li>You have no unfilled projects</li>
-                {% endif %}
-            </ul>
-          </div>
-      {% endblock projects %}
-
-      <div class="circle--filter circle--secondary--module">
-{#        Allows the the needs tag to be changed#}
-        {% block needs %}<h4>Project Needs</h4>{% endblock needs %}
-        <ul class="circle--filter--list">
-            <li><a class="selected">All Needs</a></li>
-            {% for need in needed_skills %}
-                <li><a>{{ need }}</a></li>
+            {% for project in projects %}
+                <li><a href="{% url 'profiles:project' pk=project.pk %}">
+                    {{ project|truncatechars:25 }}
+                </a></li>
             {% endfor %}
-        </ul>
-      </div>
-
-    </div>
-
-    <div class="grid-70 grid-push-5">
-      <table class="u-full-width circle--table">
-        <thead>
-          <tr>
-            <th>Applicant</th>
-            <th class="circle--cell--right">Applicant Position</th>
-          </tr>
-        </thead>
-        <tbody>
-
-{#        Allows the applicants block to be changed#}
-        {% block applicants %}
-            {% if not found_positions %}
-                <h2>You have no open positions</h2>
+            {% if not projects %}
+                <li>You have no unfilled projects</li>
             {% endif %}
+        </ul>
 
-            {% for applicant in found_positions %}
-                  <tr class="clickable-row" data-href="">
-                    <td>
-                        <h3>
-                            <a href="{% url 'profiles:profile' pk=applicant.pk %}">
-                                {{ applicant }}
-                            </a>
-                        </h3>
-                        <p><a href="{% url 'profiles:project' pk=applicant.position.related_project.pk  %}">
-                            {{ applicant.position.related_project }}
-                        </a></p>
-
-                        <a class="button button-primary extra_vertical_margin"
-                            href="{% url 'profiles:applications_accept' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">
-                            Accept
-                        </a>
-                        <a class="button button-primary extra_vertical_margin"
-                            href="{% url 'profiles:applications_reject' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">
-                            Reject
-                        </a>
-
-                    </td>
-                    <td class="circle--cell--right">
-                      <span class="secondary-label">
-                          {{ applicant.position.skill }}
-                      </span>
-                    </td>
-                  </tr>
-            {% endfor %}
-        {% endblock applicants %}
+    </ul>
+{% endblock second_sidebar %}
 
 
-        </tbody>
-      </table>
+{% block third_sidebar %}
+    <div class="circle--filter circle--secondary--module">
+        <h4>Project Needs</h4>
+        <ul class="circle--filter--list">
+        <li><a class="selected">All Needs</a></li>
+        {% for need in needed_skills %}
+         <li>
+             <a>{{ need }}</a>
+         </li>
+        {% endfor %}
 
+        {% if not needed_skills %}
+            <p>There are no applicants</p>
+        {% endif %}
+    </ul>
     </div>
+{% endblock third_sidebar %}
 
-  </div>
-{% endblock profiles_content %}
+
+{% block body_header %}
+    <th>Applicant</th>
+    <th class="circle--cell--right">Applicant Position</th>
+{% endblock body_header %}
+
+{% block body %}
+    {% if not found_positions %}
+        <h2>You have no open positions</h2>
+    {% endif %}
+
+    {% for applicant in found_positions %}
+          <tr class="clickable-row" data-href="">
+            <td>
+                <h3>
+                    <a href="{% url 'profiles:profile' pk=applicant.pk %}">
+                        {{ applicant }}
+                    </a>
+                </h3>
+                <p><a href="{% url 'profiles:project' pk=applicant.position.related_project.pk  %}">
+                    {{ applicant.position.related_project }}
+                </a></p>
+
+                <a class="button button-primary extra_vertical_margin"
+                    href="{% url 'profiles:applications_accept' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">
+                    Accept
+                </a>
+                <a class="button button-primary extra_vertical_margin"
+                    href="{% url 'profiles:applications_reject' position_pk=applicant.position.pk profile_pk=applicant.applicant.pk %}">
+                    Reject
+                </a>
+
+            </td>
+            <td class="circle--cell--right">
+              <span class="secondary-label">
+                  {{ applicant.position.skill }}
+              </span>
+            </td>
+          </tr>
+    {% endfor %}
+{% endblock body %}

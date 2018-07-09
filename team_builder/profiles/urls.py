@@ -62,4 +62,7 @@ urlpatterns = [
          name='search_your_skills'
     ),
     path('project/view_all', views.project_view_all, name='project_view_all'),
+
+    # Notifications related paths
+    path('notifications', views.notifications, name='notifications')
 ]

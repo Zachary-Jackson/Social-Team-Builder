@@ -37,7 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # The following are third party packages
     'debug_toolbar',
+    'notifications',
+
+    # Normal django apps
     'team_builder',
     'accounts',
     'profiles'

@@ -1,8 +1,8 @@
-{% extends "profiles/layout.html" %}
+{% extends "profiles/nav_bar.html" %}
 
 {% block title_tag %}Team Builder | profile{% endblock %}
 
-{% block profiles_content %}
+{% block nav_bar %}
 
   <form method="post" enctype="multipart/form-data" action="">
     {% csrf_token %}
@@ -97,4 +97,4 @@
 
   </form>
 
-{% endblock profiles_content %}
+{% endblock nav_bar %}

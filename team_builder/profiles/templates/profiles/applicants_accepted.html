@@ -1,29 +1,93 @@
-{%  extends "profiles/applications.html" %}
+{% extends "profiles/selectable_list.html" %}
+
+Profile/layout.html takes one parameter
+1) current_tab
+    Allows the main profile header bar to change in html
+
+
+applicants_accepted.html takes a couple of parameters
+
+1) found_positions
+    All of the Applicants that meet the search criteria
+2) needed skills
+    This is all of the skills that applicants have applied for
+3) projects
+    All of the projects that meet the search criteria
+
+
+{% block title_tag %}Team Builder | Applications{% endblock %}
 
 
 {% block header %}<h2>Accepted Applicants</h2>{% endblock header %}
 
 
-{% block projects %}
-  <div class="circle--filter circle--secondary--module">
-    <h4>Filled Projects</h4>
+{% block first_sidebar %}
+    <li>
+      <a href="{% url 'profiles:applications' %}">
+          All Open Applications
+      </a>
+    </li>
+    <li>
+      <a class="selected" href="{% url 'profiles:applications_view_accepted' %}">
+          Accepted
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'profiles:applications_view_rejected' %}">
+          Rejected
+      </a>
+    </li>
+{% endblock first_sidebar %}
+
+
+{% block second_sidebar %}
+    <h4>Projects</h4>
     <ul class="circle--filter--list">
-        {% for project in projects %}
-            <li>
-                <a href="{% url 'profiles:project' pk=project.pk %}">
-                    {{ project|truncatechars:25 }}
-                </a>
-            </li>
+
+        <h4>Filled Projects</h4>
+        <ul class="circle--filter--list">
+            {% for project in projects %}
+                <li>
+                    <a href="{% url 'profiles:project' pk=project.pk %}">
+                        {{ project|truncatechars:25 }}
+                    </a>
+                </li>
+            {% endfor %}
+            {% if not projects %}
+                <li>You have no filled projects.</li>
+            {% endif %}
+        </ul>
+
+    </ul>
+{% endblock second_sidebar %}
+
+
+{% block third_sidebar %}
+    <div class="circle--filter circle--secondary--module">
+        <h4>Project Needs</h4>
+        <ul class="circle--filter--list">
+        <li><a class="selected">Filled Needs</a></li>
+        {% for need in needed_skills %}
+         <li>
+             <a>{{ need }}</a>
+         </li>
         {% endfor %}
-        {% if not projects %}
-            <li>You have no filled projects.</li>
+
+        {% if not needed_skills %}
+            <p>There are no applicants</p>
         {% endif %}
     </ul>
-  </div>
-{% endblock projects %}
+    </div>
+{% endblock third_sidebar %}
 
 
-{% block applicants %}
+{% block body_header %}
+    <th>Applicant</th>
+    <th class="circle--cell--right">Applicant Position</th>
+{% endblock body_header %}
+
+
+{% block body %}
     {% if not found_positions %}
         <h2>You have no accepted positions</h2>
     {% endif %}
@@ -51,7 +115,4 @@
             </td>
           </tr>
     {% endfor %}
-{% endblock applicants %}
-
-
-{% block needs %}<h4>Filled Needs</h4>{% endblock needs %}
+{% endblock body %}

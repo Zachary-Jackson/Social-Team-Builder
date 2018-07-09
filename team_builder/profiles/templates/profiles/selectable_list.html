@@ -1,0 +1,91 @@
+{% extends "profiles/nav_bar.html" %}
+{% load static %}
+
+{% block title_tag %}Team Builder | profile{% endblock %}
+
+
+Profile/nav_bar.html takes one parameter
+1) current_tab
+    Allows the main profile header bar to change in html
+
+The selectable_list.html template takes up to
+
+1) block title_tab: This allows the title tag to be changed
+
+2) block header: Allows the primary title to be changed
+
+3) first_sidebar: The primary navigation for the sidebar
+
+4) second_sidebar: This is the second sidebar
+
+5) third_sidebar: This is the third sidebar
+
+6) body_header: The main title for the body
+
+7) body: This is the main body content
+
+
+{% block nav_bar %}
+  <div class="bounds circle--page">
+    <div class="circle--page--header grid-100">
+{#      Allows the header to be changed   #}
+      {% block header %}{% endblock header %}
+    </div>
+
+    <div class="grid-25">
+      <div class="circle--filter circle--secondary--module">
+        <h4>Status</h4>
+        <ul class="circle--filter--list">
+
+{#          Allows the user to customize the first sidebar#}
+        {% block first_sidebar %}
+        {% endblock first_sidebar %}
+
+
+        </ul>
+      </div>
+
+          <div class="circle--filter circle--secondary--module">
+{#          Allows the second sidebar to be changed#}
+           {% block second_sidebar %}
+           {% endblock second_sidebar %}
+          </div>
+
+      <div class="circle--filter circle--secondary--module">
+
+{#        Allows the third sidebar to be changed#}
+{#        Allows the the needs tag to be changed#}
+        {% block third_sidebar %}
+        {% endblock third_sidebar %}
+      </div>
+
+    </div>
+
+    <div class="grid-70 grid-push-5">
+      <table class="u-full-width circle--table">
+        <thead>
+          <tr>
+{#              Allows the body_header to change  #}
+              {% block body_header %}
+
+{#                This is the format the body_header should be in  #}
+                <th>Applicant</th>
+                <th class="circle--cell--right">Applicant Position</th>
+              {% endblock body_header %}
+
+          </tr>
+        </thead>
+        <tbody>
+
+{#        Allows the main body content to be changed#}
+        {% block body %}
+        {% endblock body %}
+
+
+        </tbody>
+      </table>
+
+    </div>
+
+    </div>
+{% endblock nav_bar %}

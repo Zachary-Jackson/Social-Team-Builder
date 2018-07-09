@@ -18,10 +18,15 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 
+# django-notifications
+import notifications.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls'),),
+    url('^inbox/notifications/',
+        include(notifications.urls, namespace='notifications')
+        ),
     path('', include('profiles.urls'))
 ]
 
