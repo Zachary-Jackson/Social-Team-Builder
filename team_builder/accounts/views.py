@@ -30,7 +30,7 @@ class LogoutView(generic.RedirectView):
         return super().get(request, *args, **kwargs)
 
 
-class SignUp(generic.CreateView):
+class SignUpView(generic.CreateView):
     """Allows the user to sign up for an account"""
     form_class = forms.UserCreateForm
     success_url = reverse_lazy("accounts:login")

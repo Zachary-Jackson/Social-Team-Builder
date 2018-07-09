@@ -259,7 +259,7 @@ class ProfileViewsTests(TestCase):
         # Ensure we get the second user's name
         self.assertContains(resp, 'Hattie')
 
-        self.assertTemplateUsed('profiles/accepted_applicants.html')
+        self.assertTemplateUsed('profiles/applicants_accepted.html')
 
     def test_applications_view_rejected_with_data(self):
         """Ensures that an accepted applicant can be found"""
@@ -290,7 +290,7 @@ class ProfileViewsTests(TestCase):
         # Ensure we get the second user's name
         self.assertContains(resp, 'Hattie')
 
-        self.assertTemplateUsed('profiles/rejected_applicants.html')
+        self.assertTemplateUsed('profiles/applicants_rejected.html')
 
     """Profile tests"""
 
@@ -302,7 +302,7 @@ class ProfileViewsTests(TestCase):
         # The user has not logged in, so we should get redirected
         self.assertEqual(resp.status_code, 302)
 
-        self.assertTemplateNotUsed('profiles/edit.html')
+        self.assertTemplateNotUsed('profiles/profile_edit.html')
 
     def test_profile_edit(self):
         """Ensures that profile_edit appears correctly"""
@@ -319,7 +319,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'Save Changes')
         self.assertContains(resp, 'Profile')
 
-        self.assertTemplateUsed('profiles/edit.html')
+        self.assertTemplateUsed('profiles/profile_edit.html')
 
     def test_profile_edit_post(self):
         """Ensures that profile_edit can update the Profile"""
@@ -334,7 +334,7 @@ class ProfileViewsTests(TestCase):
         self.assertEqual(profile.bio, 'new bio')
         self.assertEqual(profile.username, 'editor')
 
-        self.assertTemplateUsed('profiles/edit.html')
+        self.assertTemplateUsed('profiles/profile_edit.html')
 
     def test_profile_view(self):
         """Ensures the profile_view is working"""
