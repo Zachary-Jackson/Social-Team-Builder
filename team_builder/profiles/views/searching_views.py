@@ -107,10 +107,10 @@ def search_your_skills(request):
     found_projects = set()
 
     for skill in skills:
-        found_projects.add(
-            all_projects.filter(
-                Q(positions__skill__skill__contains=skill)
-            ))
+        query = all_projects.filter(Q(positions__skill__skill__contains=skill))
+        # If the query is empty, do not add to found_projects
+        if len(query):
+            found_projects.add(query)
 
     projects = []
     for queryset in found_projects:

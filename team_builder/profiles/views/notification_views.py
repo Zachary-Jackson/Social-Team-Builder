@@ -8,7 +8,7 @@ from django.shortcuts import render
 def notifications(request):
     """This is the main notification view for a user"""
     notification_query = request.user.notifications.all()\
-        .prefetch_related('actor__profile')
+        .prefetch_related("actor")
 
     return render(
         request,
@@ -23,8 +23,7 @@ def notifications(request):
 @login_required
 def notifications_read(request):
     """Shows the user all their opened notifications"""
-    notification_query = request.user.notifications.read()\
-        .prefetch_related('actor__profile')
+    notification_query = request.user.notifications.read()
 
     return render(
         request,
@@ -39,8 +38,7 @@ def notifications_read(request):
 @login_required
 def notifications_unread(request):
     """Shows the user all their unopened notifications"""
-    notification_query = request.user.notifications.unread()\
-        .prefetch_related('actor__profile')
+    notification_query = request.user.notifications.unread()
 
     return render(
         request,

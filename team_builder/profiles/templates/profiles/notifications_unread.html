@@ -44,7 +44,7 @@ Notifications.html takes a couple of parameters
 
 
 {% block body_header %}
-    <th>Notification</th>
+    <th>Unread Notifications</th>
     <th class="circle--cell--right">Time of notification</th>
 {% endblock body_header %}
 
@@ -63,8 +63,8 @@ Notifications.html takes a couple of parameters
                     </a>
                 </h3>
                 <p>
-                    <a>
-                    {{ notification.actor.profile}}
+                    <a href={% url 'profiles:profile' pk=notification.actor.pk%}>
+                        From: {{ notification.actor}}
                     </a>
                 </p>
 

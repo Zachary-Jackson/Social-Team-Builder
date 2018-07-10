@@ -1,6 +1,6 @@
-## Todo List
+## Checklist List
 
-This is the todo list for the Social Team Builder project. Any check mark
+This is the todo/checklist for the Social Team Builder project. Any check mark
 prefaced with a bullet point is an extra feature that can be added
 
 - [x] Create site wide static files and templates
@@ -48,7 +48,7 @@ after sign up
 * - [x]They can reject applicants directly from the list page
 
 
-- [ ] I get notified if I am approved or denied a position
+- [x] I get notified if I am approved or denied a position
 
 - [x] Can search by terms that match a project name or description. Search is also case-insensitive
 

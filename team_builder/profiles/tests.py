@@ -55,7 +55,7 @@ class ProfileViewsTests(TestCase):
 
         # Creates a Project
         self.project = Project.objects.create(
-            owner=self.profile, title='Team Builder',
+            owner=self.profile, title='Test Project',
             time_line='Depends on the number of features',
             requirements='See the README.md', description='also see README.md'
         )
@@ -76,7 +76,7 @@ class ProfileViewsTests(TestCase):
         resp = self.client.get(reverse('profiles:homepage'))
 
         # projects that need field and their needs
-        self.assertContains(resp, 'Team Builder')
+        self.assertContains(resp, 'Test Project')
         self.assertContains(resp, 'Django')
         # various page information
         self.assertContains(resp, 'Projects')
@@ -120,7 +120,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'You have no open positions')
         self.assertNotContains(resp, 'Hattie')
         # But we should have one open project
-        self.assertContains(resp, 'Team Builder')
+        self.assertContains(resp, 'Test Project')
 
     def test_applications_with_data(self):
         """Ensures that an applicant can be found"""
@@ -411,7 +411,7 @@ class ProfileViewsTests(TestCase):
             reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
 
         # project information
-        self.assertContains(resp, 'Team Builder')
+        self.assertContains(resp, 'Test Project')
         self.assertContains(resp, 'Depends on the number of features')
         self.assertContains(resp, 'See the README.md')
         self.assertContains(resp, 'also see README.md')
@@ -507,6 +507,7 @@ class ProfileViewsTests(TestCase):
 
         # This checks that all the project pieces are on the website
         self.assertContains(resp, 'Team Builder')
+        self.assertContains(resp, 'Test Project')
         self.assertContains(resp, 'Depends on the number of features')
         self.assertContains(resp, 'See the README.md')
         self.assertContains(resp, 'also see README.md')
@@ -545,7 +546,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'Applications')
         self.assertContains(resp, 'All Positions')
         # Project information
-        self.assertContains(resp, 'Team Builder')
+        self.assertContains(resp, 'Test Project')
         self.assertContains(resp, 'Django')
 
         self.assertTemplateUsed('profiles/project_view_all.html')
@@ -557,10 +558,10 @@ class ProfileViewsTests(TestCase):
         resp = self.client.get(
             reverse('profiles:search'),
             # search with a lowercase search term
-            data={'search_term': 'team builder'})
+            data={'search_term': 'Test Project'})
 
-        # projects that matches the search term "team builder"
-        self.assertContains(resp, 'Team Builder')
+        # projects that matches the search term "Test Project"
+        self.assertContains(resp, 'Test Project')
         self.assertContains(resp, 'Django')
         # various page information
         self.assertContains(resp, 'Projects')
@@ -576,7 +577,7 @@ class ProfileViewsTests(TestCase):
                     kwargs={'skill': 'Django'}))
 
         # projects that matches the search term Django
-        self.assertContains(resp, 'Team Builder')
+        self.assertContains(resp, 'Test Project')
         self.assertContains(resp, '1 results were found with: Django')
         # various page information
         self.assertContains(resp, 'Projects')
@@ -598,6 +599,26 @@ class ProfileViewsTests(TestCase):
 
         # various page information
         self.assertContains(resp, 'Projects')
+        self.assertContains(resp, 'All Needs')
+        self.assertContains(resp, 'Projects')
+
+        self.assertTemplateUsed('profiles:homepage.html')
+
+    def test_search_your_skills(self):
+        """Checks that all projects are found with your skills"""
+        self.client.login(username='user2@user2.com', password='testpass')
+
+        resp = self.client.get(reverse('profiles:search_your_skills'))
+
+        # self.user2 has a profile with the Django skill
+        # self.project has one open position for Django, so
+        # we should find one result
+        self.assertContains(
+            resp,
+            '1 results were found with: Your Skills')
+
+        # various page information
+        self.assertContains(resp, 'Test Project')
         self.assertContains(resp, 'All Needs')
         self.assertContains(resp, 'Projects')
 

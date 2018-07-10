@@ -44,14 +44,14 @@ Notifications.html takes a couple of parameters
 
 
 {% block body_header %}
-    <th>Notification</th>
+    <th>Notifications</th>
     <th class="circle--cell--right">Time of notification</th>
 {% endblock body_header %}
 
 
 {% block body %}
     {% if not notification_query %}
-        <h2>You are up to date on notifications!</h2>
+        <h2>You have no notifications.</h2>
     {% endif %}
 
     {% for notification in notification_query %}
@@ -63,8 +63,12 @@ Notifications.html takes a couple of parameters
                     </a>
                 </h3>
                 <p>
-                    <a>
-                    {{ notification.actor.profile}}
+                    <a href={% url 'profiles:profile' pk=notification.actor.pk%}>
+                        {% if notification.unread %}
+                            Unread from: {{ notification.actor}}
+                        {% else %}
+                            Read from: {{ notification.actor}}
+                        {% endif %}
                     </a>
                 </p>
 

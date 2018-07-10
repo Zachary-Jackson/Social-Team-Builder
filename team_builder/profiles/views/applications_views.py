@@ -3,6 +3,9 @@ from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
+# django-notifications-hq
+from notifications.signals import notify
+
 from .. import models
 
 
@@ -107,6 +110,12 @@ def applications_accept(request, position_pk, profile_pk):
     position.filled_by = profile
     position.save()
 
+    # Create a notification to send to the applicant
+    skill = position.skill
+    project = position.related_project
+    message = f'You have been accepted as a {skill} for the project: {project}'
+    notify.send(profile, recipient=profile.user, verb=message)
+
     return redirect('profiles:applications')
 
 
@@ -118,7 +127,7 @@ def applications_reject(request, position_pk, profile_pk):
     # if the current user does not own the project kick them out
     user = request.user.profile
     position = get_object_or_404(models.Position, pk=position_pk)
-    get_object_or_404(models.Profile, pk=profile_pk)
+    profile = get_object_or_404(models.Profile, pk=profile_pk)
 
     if user != position.position_creator:
         raise Http404("You do not own this project")
@@ -130,6 +139,12 @@ def applications_reject(request, position_pk, profile_pk):
     found_applicant.accepted = False
     found_applicant.rejected = True
     found_applicant.save()
+
+    # Create a notification to send to the applicant
+    skill = position.skill
+    project = position.related_project
+    message = f'You have been rejected as a {skill} for the project: {project}'
+    notify.send(profile, recipient=profile.user, verb=message)
 
     return redirect('profiles:applications')
 
@@ -157,6 +172,11 @@ def applications_request(request, pk):
     position.applicants.add(applicant)
     position.any_applicants = True
     position.save()
+
+    # Create a notification to send to the project owner
+    project = position.related_project
+    message = f'There is a pending application for the project: {project}'
+    notify.send(user, recipient=position.position_creator.user, verb=message)
 
     # Return the user back to the Project's page
     return redirect('profiles:project', pk=pk)

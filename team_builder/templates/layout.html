@@ -55,11 +55,34 @@
             <ul class="circle--inline">
 
               {% if not user.is_authenticated %}
-                <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>
-                <li><a href="{% url 'accounts:login' %}">Sign In</a></li>
+                <li>
+                    <a href="{% url 'accounts:signup' %}">
+                        Sign Up
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:login' %}">
+                        Sign In
+                    </a>
+                </li>
               {% else %}
-              <li><a href="{% url 'profiles:profile' pk=user.profile.pk %}">Your profile</a></li>
-              <li><a href="{% url 'accounts:logout' %}">Log out</a></li>
+                  {% if request.user.notifications.unread %}
+                      <li>
+                          <a style="color:white"  href="{% url 'profiles:notifications_unread' %}">
+                              <u >Unread Notifications!</u>
+                          </a>
+                      </li>
+                  {% endif %}
+                  <li>
+                      <a href="{% url 'profiles:profile' pk=user.profile.pk %}">
+                          Your profile
+                      </a>
+                  </li>
+                  <li>
+                      <a href="{% url 'accounts:logout' %}">
+                          Log out
+                      </a>
+                  </li>
               {% endif %}
 
 
