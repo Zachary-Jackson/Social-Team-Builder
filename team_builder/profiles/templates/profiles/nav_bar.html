@@ -26,6 +26,12 @@
                     My Projects
                 </a>
             </li>
+            <li>
+                <a {% if current_tab == "Notifications" %} class="selected" {% endif %}
+                        href={% url 'profiles:notifications' %}>
+                    Notifications
+                </a>
+            </li>
 
           </ul>
         </nav>

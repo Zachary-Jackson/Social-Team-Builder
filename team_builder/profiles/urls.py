@@ -64,5 +64,15 @@ urlpatterns = [
     path('project/view_all', views.project_view_all, name='project_view_all'),
 
     # Notifications related paths
-    path('notifications', views.notifications, name='notifications')
+    path('notifications', views.notifications, name='notifications'),
+    path(
+        'notifications/unread',
+        views.notifications_unread,
+        name='notifications_unread'
+    ),
+    path(
+        'notifications/read',
+        views.notifications_read,
+        name='notifications_read'
+    ),
 ]

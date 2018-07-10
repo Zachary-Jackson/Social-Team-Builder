@@ -14,7 +14,7 @@ Profile/layout.html takes one parameter
 Notifications.html takes a couple of parameters
 
 1) notification_query
-    The notifications that a user has
+    The unread notifications that a user has
 
 
 
@@ -26,12 +26,12 @@ Notifications.html takes a couple of parameters
 
 {% block first_sidebar %}
     <li>
-      <a class="selected" href="{% url 'profiles:notifications' %}">
+      <a href="{% url 'profiles:notifications' %}">
           All Notifications
       </a>
     </li>
     <li>
-      <a href="{% url 'profiles:notifications_unread' %}">
+      <a class="selected" href="{% url 'profiles:notifications_unread' %}">
           Unread
       </a>
     </li>
