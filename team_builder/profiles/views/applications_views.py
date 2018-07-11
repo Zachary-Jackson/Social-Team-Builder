@@ -66,6 +66,22 @@ def get_needed_skills_and_found_positions(
     return found_positions, needed_skills
 
 
+def if_owned_get_position_profile(request, position_pk, profile_pk):
+    """If the logged in user owns the position
+    Return: position, and profile
+    else:
+    Http 404"""
+    user = request.user.profile
+    position = get_object_or_404(models.Position, pk=position_pk)
+    profile = get_object_or_404(models.Profile, pk=profile_pk)
+
+    # if the current user does not own the project kick them out
+    if user != position.position_creator:
+        raise Http404("You do not own this project")
+
+    return position, profile
+
+
 @login_required
 def applications(request):
     """This is the main applications page"""
@@ -90,14 +106,13 @@ def applications(request):
 
 @login_required
 def applications_accept(request, position_pk, profile_pk):
-    """Allows the owner of a project to accept an applicant"""
-    # if the current user does not own the project kick them out
-    user = request.user.profile
-    position = get_object_or_404(models.Position, pk=position_pk)
-    profile = get_object_or_404(models.Profile, pk=profile_pk)
+    """Allows the owner of a project to accept an applicant
+    Redirects to main applications page"""
 
-    if user != position.position_creator:
-        raise Http404("You do not own this project")
+    # Get position, profile or 404
+    position, profile = if_owned_get_position_profile(
+        request, position_pk, profile_pk
+    )
 
     # Find the applicant or 404
     found_applicant = get_applicant(position, profile_pk)
@@ -122,15 +137,12 @@ def applications_accept(request, position_pk, profile_pk):
 @login_required
 def applications_reject(request, position_pk, profile_pk):
     """Allows the owner of a project to reject an applicant
-
     Redirects to main applications page"""
-    # if the current user does not own the project kick them out
-    user = request.user.profile
-    position = get_object_or_404(models.Position, pk=position_pk)
-    profile = get_object_or_404(models.Profile, pk=profile_pk)
 
-    if user != position.position_creator:
-        raise Http404("You do not own this project")
+    # Get position, profile or 404
+    position, profile = if_owned_get_position_profile(
+        request, position_pk, profile_pk
+    )
 
     # Find the applicant or 404
     found_applicant = get_applicant(position, profile_pk)

@@ -53,7 +53,7 @@ after sign up
 - [x] Can search by terms that match a project name or description. Search is also case-insensitive
 
 - [x] Can filter open projects by skills needed
-* - [ ]Their is a "projects for you" list with projects filtered by your skill set
+* - [x]Their is a "projects for you" list with projects filtered by your skill set
 
 
 - [x] Can apply for a position

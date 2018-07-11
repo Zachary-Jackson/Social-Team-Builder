@@ -1,12 +1,7 @@
 {% extends "profiles/selectable_list.html" %}
 
 
-Profile/layout.html takes one parameter
-1) current_tab
-    Allows the main profile header bar to change in html
-
-
-Profile/layout.html takes one parameter
+nav_bar.html takes one parameter
 1) current_tab
     Allows the main profile header bar to change in html
 
@@ -40,6 +35,11 @@ Notifications.html takes a couple of parameters
           Read
       </a>
     </li>
+    <li>
+      <a href="{% url 'profiles:notifications_deletion_view' %}">
+          Deletion View
+      </a>
+    </li>
 {% endblock first_sidebar %}
 
 
@@ -63,18 +63,22 @@ Notifications.html takes a couple of parameters
                     </a>
                 </h3>
                 <p>
+
                     <a href={% url 'profiles:profile' pk=notification.actor.pk%}>
                         From: {{ notification.actor}}
                     </a>
-                </p>
-
 
             </td>
             <td class="circle--cell--right">
               <span class="secondary-label">
                   {{ notification.timestamp }}
+                  <a class="button button-primary extra_vertical_margin"
+                  href = {% url 'profiles:notifications_mark_unread' pk=notification.pk %}>
+                    Mark unread
+                  </a>
               </span>
             </td>
+
           </tr>
     {% endfor %}
 {% endblock body %}
