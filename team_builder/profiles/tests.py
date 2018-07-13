@@ -2,6 +2,9 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
+# django-notifications-hq
+from notifications.signals import notify
+
 from .models import Applicants, Profile, Skill, Project, Position
 
 
@@ -32,7 +35,7 @@ class ProfileViewsTests(TestCase):
         )
 
         # Creates a couple of Skill(s)
-        self.skill_1 = Skill.objects.create(skill='Django')
+        self.skill_1 = Skill.objects.create(skill='Django developer')
         self.skill_2 = Skill.objects.create(skill='Angular')
         self.skill_3 = Skill.objects.create(skill='Mountain Climbing')
 
@@ -69,6 +72,34 @@ class ProfileViewsTests(TestCase):
         # add a position to the main project
         self.project.positions.add(self.position)
 
+        # The following is to create messages to test notifications
+
+        # Create a message to send to self.user
+        skill = self.skill_1
+        project = self.project
+        self.message_1 = (
+            f'You have been accepted as a {skill} for the project: {project}'
+        )
+
+        # Accepted message unread
+        notify.send(
+            self.profile_2,
+            recipient=self.user,
+            verb=self.message_1
+        )
+
+        # Declined message read
+        self.message_2 = (
+            f'You have been rejected as a {skill} for the project: {project}'
+        )
+
+        notify.send(
+            self.profile_2,
+            recipient=self.user,
+            verb=self.message_2
+        )
+        self.user.notifications.get(pk=2).mark_as_read()
+
     """Miscellaneous test"""
 
     def test_homepage(self):
@@ -77,11 +108,14 @@ class ProfileViewsTests(TestCase):
 
         # projects that need field and their needs
         self.assertContains(resp, 'Test Project')
-        self.assertContains(resp, 'Django')
+        self.assertContains(resp, 'Django developer')
         # various page information
         self.assertContains(resp, 'Projects')
         self.assertContains(resp, 'All Needs')
-        self.assertContains(resp, 'Projects')
+        self.assertContains(resp, 'Project Title')
+        # The skills should be found under the All Needs section
+        self.assertContains(resp, self.skill_1)
+        self.assertContains(resp, self.skill_2)
 
         self.assertTemplateUsed('profiles/homepage.html')
 
@@ -253,7 +287,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'Accepted Applicants')
         self.assertContains(resp, 'Filled Projects')
         self.assertContains(resp, 'Filled Needs')
-        self.assertContains(resp, 'Django')
+        self.assertContains(resp, 'Django developer')
 
         # Ensure we get the second user's name
         self.assertContains(resp, 'Hattie')
@@ -284,12 +318,142 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'Project Needs')
         self.assertContains(resp, 'Rejected Projects')
         self.assertContains(resp, 'Rejected Needs')
-        self.assertContains(resp, 'Django')
+        self.assertContains(resp, 'Django developer')
 
         # Ensure we get the second user's name
         self.assertContains(resp, 'Hattie')
 
         self.assertTemplateUsed('profiles/applicants_rejected.html')
+
+    """Notification tests"""
+
+    def test_notifications(self):
+        """Ensures the main notifications view is working"""
+        self.client.login(username='test@test.com', password='testpass')
+
+        resp = self.client.get(reverse('profiles:notifications'))
+
+        # various page information
+        self.assertContains(resp, 'Notifications')
+        self.assertContains(resp, 'Unread')
+        self.assertContains(resp, 'Read')
+        self.assertContains(resp, 'Deletion View')
+        self.assertContains(resp, 'Time of notification')
+        # notification information
+        self.assertContains(resp, self.message_1)
+        self.assertContains(resp, f'Unread from: {self.profile_2}')
+        self.assertContains(resp, self.message_2)
+        self.assertContains(resp, f'Read from: {self.profile_2}')
+
+        self.assertTemplateUsed('profiles/notifications.html')
+
+    def test_notification_delete(self):
+        """Ensures that a user can delete a notification"""
+        self.client.login(username='test@test.com', password='testpass')
+
+        resp = self.client.get(
+            reverse('profiles:notifications_delete',
+                    kwargs={'pk': 1}))
+
+        self.assertEqual(len(self.user.notifications.all()), 1)
+        self.assertRedirects(
+            resp,
+            reverse('profiles:notifications_deletion_view')
+        )
+
+    def test_notifications_deletion_view(self):
+        """Ensures the read notifications view is working"""
+        self.client.login(username='test@test.com', password='testpass')
+
+        resp = self.client.get(reverse('profiles:notifications_deletion_view'))
+
+        # various page information
+        self.assertContains(resp, 'Notifications')
+        self.assertContains(resp, 'Unread')
+        self.assertContains(resp, 'Read')
+        self.assertContains(resp, 'Deletion View')
+        self.assertContains(resp, 'Read notifications for deletion')
+        self.assertContains(resp, 'Time of notification')
+        # notification information
+        self.assertContains(resp, self.message_2)
+        self.assertContains(resp, 'Delete')
+        self.assertContains(resp, f'From: {self.profile_2}')
+
+        self.assertTemplateUsed('profiles/notifications_deletion.html')
+
+    def test_notification_mark_read(self):
+        """Ensures that a user can mark a notification as read"""
+        self.client.login(username='test@test.com', password='testpass')
+
+        resp = self.client.get(
+            reverse('profiles:notifications_mark_read',
+                    kwargs={'pk': 1}))
+
+        # We should not have deleted a notification
+        self.assertEqual(len(self.user.notifications.all()), 2)
+        self.assertEqual(self.user.notifications.get(pk=1).unread, False)
+
+        self.assertRedirects(
+            resp,
+            reverse('profiles:notifications_unread')
+        )
+
+    def test_notification_mark_unread(self):
+        """Ensures that a user can mark a notification as unread"""
+        self.client.login(username='test@test.com', password='testpass')
+
+        resp = self.client.get(
+            reverse('profiles:notifications_mark_unread',
+                    kwargs={'pk': 2}))
+
+        # We should not have deleted a notification
+        self.assertEqual(len(self.user.notifications.all()), 2)
+        self.assertEqual(self.user.notifications.get(pk=2).unread, True)
+
+        self.assertRedirects(
+            resp,
+            reverse('profiles:notifications_read')
+        )
+
+    def test_notifications_read(self):
+        """Ensures the read notifications view is working"""
+        self.client.login(username='test@test.com', password='testpass')
+
+        resp = self.client.get(reverse('profiles:notifications_read'))
+
+        # various page information
+        self.assertContains(resp, 'Notifications')
+        self.assertContains(resp, 'Unread')
+        self.assertContains(resp, 'Read')
+        self.assertContains(resp, 'Deletion View')
+        self.assertContains(resp, 'Read Notifications')
+        self.assertContains(resp, 'Time of notification')
+        # notification information
+        self.assertContains(resp, self.message_2)
+        self.assertContains(resp, 'Mark unread')
+        self.assertContains(resp, f'From: {self.profile_2}')
+
+        self.assertTemplateUsed('profiles/notifications_read.html')
+
+    def test_notifications_unread(self):
+        """Ensures the unread notifications view is working"""
+        self.client.login(username='test@test.com', password='testpass')
+
+        resp = self.client.get(reverse('profiles:notifications_unread'))
+
+        # various page information
+        self.assertContains(resp, 'Notifications')
+        self.assertContains(resp, 'Unread')
+        self.assertContains(resp, 'Read')
+        self.assertContains(resp, 'Deletion View')
+        self.assertContains(resp, 'Unread Notifications')
+        self.assertContains(resp, 'Time of notification')
+        # notification information
+        self.assertContains(resp, self.message_1)
+        self.assertContains(resp, 'Mark read')
+        self.assertContains(resp, f'From: {self.profile_2}')
+
+        self.assertTemplateUsed('profiles/notifications_unread.html')
 
     """Profile tests"""
 
@@ -345,7 +509,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'The weather forecast shows snow for')
         self.assertContains(resp, 'Past Projects')
         self.assertContains(resp, 'Edit')
-        self.assertContains(resp, 'Django')
+        self.assertContains(resp, 'Django developer')
         self.assertContains(resp, 'Angular')
         # The edit button should appear to allow the logged in user to edit
         # their profile
@@ -513,7 +677,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'also see README.md')
         # This is the position parts of the project
         self.assertContains(resp, 'this is the position')
-        self.assertContains(resp, 'Django')
+        self.assertContains(resp, 'Django developer')
 
         # Because we are not logged in, the following should not appear
         self.assertNotContains(resp, 'Edit Project')
@@ -547,7 +711,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'All Positions')
         # Project information
         self.assertContains(resp, 'Test Project')
-        self.assertContains(resp, 'Django')
+        self.assertContains(resp, 'Django developer')
 
         self.assertTemplateUsed('profiles/project_view_all.html')
 
@@ -562,7 +726,7 @@ class ProfileViewsTests(TestCase):
 
         # projects that matches the search term "Test Project"
         self.assertContains(resp, 'Test Project')
-        self.assertContains(resp, 'Django')
+        self.assertContains(resp, 'Django developer')
         # various page information
         self.assertContains(resp, 'Projects')
         self.assertContains(resp, 'All Needs')
@@ -574,11 +738,11 @@ class ProfileViewsTests(TestCase):
         """Ensures that a user can search projects via skill"""
         resp = self.client.get(
             reverse('profiles:search_by_skill',
-                    kwargs={'skill': 'Django'}))
+                    kwargs={'skill': 'Django developer'}))
 
-        # projects that matches the search term Django
+        # projects that matches the search term Django developer
         self.assertContains(resp, 'Test Project')
-        self.assertContains(resp, '1 results were found with: Django')
+        self.assertContains(resp, '1 results were found with: Django developer')
         # various page information
         self.assertContains(resp, 'Projects')
         self.assertContains(resp, 'All Needs')
@@ -610,8 +774,8 @@ class ProfileViewsTests(TestCase):
 
         resp = self.client.get(reverse('profiles:search_your_skills'))
 
-        # self.user2 has a profile with the Django skill
-        # self.project has one open position for Django, so
+        # self.user2 has a profile with the Django developer skill
+        # self.project has one open position for Django developer, so
         # we should find one result
         self.assertContains(
             resp,
