@@ -481,6 +481,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'My Skills')
         self.assertContains(resp, 'Save Changes')
         self.assertContains(resp, 'Profile')
+        self.assertContains(resp, 'Bio (markdown preview bellow)')
 
         self.assertTemplateUsed('profiles/profile_edit.html')
 
@@ -580,6 +581,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'See the README.md')
         self.assertContains(resp, 'also see README.md')
         self.assertContains(resp, 'See the README.md')
+        self.assertContains(resp, 'Description (markdown preview bellow)')
         # page information
         self.assertContains(resp, 'Project Timeline')
         self.assertContains(resp, 'Save Changes')
@@ -630,6 +632,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'Positions')
         self.assertContains(resp, 'Project Title')
         self.assertContains(resp, 'Application Requirements')
+        self.assertContains(resp, 'Description (markdown preview bellow)')
 
         # You can not delete a project that does not exist
         self.assertNotContains(resp, 'Delete Project')

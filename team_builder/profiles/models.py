@@ -1,18 +1,28 @@
 from django.conf import settings
 from django.db import models
 
+# django-markdownx
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
+
 
 class Profile(models.Model):
     """This is the profile model for a user"""
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
     avatar = models.ImageField(null=True, blank=True)
-    bio = models.CharField(max_length=500, blank=True)
+    bio = MarkdownxField(max_length=500, blank=True)
     skills = models.ManyToManyField('Skill', blank=True)
     username = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.username
+
+    @property
+    def bio_markdown(self):
+        """This allows us to turn self.bio into markdown to send
+        to a template for display."""
+        return markdownify(self.bio)
 
 
 class Skill(models.Model):
@@ -30,7 +40,7 @@ class Skill(models.Model):
 class Project(models.Model):
     """This is the model for a Project"""
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    description = models.CharField(max_length=1000)
+    description = MarkdownxField(max_length=1000)
     positions = models.ManyToManyField('Position', blank=True)
     requirements = models.CharField(max_length=100)
     time_line = models.CharField(max_length=30)
@@ -38,6 +48,12 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def description_markdown(self):
+        """This allows us to turn self.description into markdown to send
+        to a template for display."""
+        return markdownify(self.description)
 
 
 class Position(models.Model):

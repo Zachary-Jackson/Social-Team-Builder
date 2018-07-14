@@ -32,6 +32,7 @@
             {{ project_form.owner }}
           {{ project_form.title }}
         </div>
+        <p>Description (markdown preview bellow)</p>
         {{ project_form.description }}
       </div>
 
@@ -68,5 +69,7 @@
     </div>
   </div>
   </form>
+
+{{ project_form.media }}
 
 {% endblock content %}

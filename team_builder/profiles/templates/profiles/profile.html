@@ -33,7 +33,7 @@
     <div class="grid-70">
       <div class="circle--article--body">
         <h2>Bio</h2>
-        <p>{{ user_profile.bio }}</p>
+        <p>{{ user_profile.bio_markdown|safe }}</p>
       </div>
 
       <h2>Past Projects</h2>

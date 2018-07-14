@@ -37,7 +37,7 @@
 
       <div class="circle--article--body">
         <h4 class="circle--article--section">Description</h4>
-        {{ project.description|linebreaks }}
+        {{ project.description_markdown|safe }}
       </div>
 
       <div class="circle--project--positions">

@@ -26,7 +26,7 @@
           {{ form.username.errors }}
         {{ form.username }}
         <div class="circle--article--body">
-          <p>Bio</p>
+          <p>Bio (markdown preview bellow)</p>
           {{ form.bio }}
         </div>
 
@@ -96,5 +96,7 @@
     </div>
 
   </form>
+
+{{ form.media }}
 
 {% endblock nav_bar %}

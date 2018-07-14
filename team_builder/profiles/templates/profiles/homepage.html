@@ -89,6 +89,11 @@
       </thead>
 
         <tbody>
+
+            {% if not project %}
+                <h2>There are no current projects</h2>
+            {% endif %}
+
           {% for project in projects %}
 
           <tr class="clickable-row" data-href="{% url 'profiles:project' pk=project.pk %}">

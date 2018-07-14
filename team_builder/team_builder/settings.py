@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # The following are third party packages
     'debug_toolbar',
+    'markdownx',
     'notifications',
 
     # Normal django apps
@@ -129,6 +130,9 @@ USE_TZ = True
 
 STATIC_URL = '/assets/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
+
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 
 # A new User model overriding the default one

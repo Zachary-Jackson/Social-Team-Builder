@@ -27,6 +27,7 @@ urlpatterns = [
     url('^inbox/notifications/',
         include(notifications.urls, namespace='notifications')
         ),
+    url(r'^markdownx/', include('markdownx.urls')),
     path('', include('profiles.urls'))
 ]
 
