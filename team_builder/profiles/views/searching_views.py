@@ -94,7 +94,7 @@ def search_by_skill(request, skill):
 @login_required
 def search_your_skills(request):
     """Finds all of the projects that needs the user's skills"""
-    skills = request.user.profile.skills.all()
+    skills = request.user.allskills.skills.all()
 
     # Creates the sorted_skills for the template
     all_skills = models.Skill.objects.all()

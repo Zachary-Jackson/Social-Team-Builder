@@ -15,7 +15,7 @@ def project_delete(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
 
     # Checks if the logged in user owns the project. If not kick them out.
-    if project.owner.pk != request.user.profile.pk:
+    if project.owner.pk != request.user.pk:
         raise Http404("You do not own this project.")
 
     project.delete()
@@ -28,7 +28,7 @@ def project_delete_confirmation(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
 
     # Checks if the logged in user owns the project. If not kick them out.
-    if project.owner.pk != request.user.profile.pk:
+    if project.owner.pk != request.user.pk:
         raise Http404("You do not own this project.")
 
     if request.method == 'POST':
@@ -52,7 +52,7 @@ def project_edit(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
 
     # Checks if the logged in user owns the project. If not kick them out.
-    if project.owner.pk != request.user.profile.pk:
+    if project.owner.pk != request.user.pk:
         raise Http404("You do not own this project.")
 
     project_form = forms.ProjectForm(instance=project)
@@ -119,11 +119,11 @@ def project_view(request, pk):
 
     # Makes sure there is a logged in user
     try:
-        request.user.profile
+        request.user
     except AttributeError:
         pass
     else:
-        if request.user.profile == project.owner:
+        if request.user == project.owner:
             return render(
                 request,
                 'profiles/project_view_owned.html',
@@ -136,7 +136,7 @@ def project_view(request, pk):
 @login_required
 def project_view_all(request):
     """Shows the user all of their Projects regardless of filled status"""
-    projects = models.Project.objects.all().filter(owner=request.user.profile)\
+    projects = models.Project.objects.all().filter(owner=request.user)\
         .prefetch_related('positions__skill')
 
     # Get all of the desired skills for the projects

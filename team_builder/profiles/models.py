@@ -17,24 +17,6 @@ class AllSkills(models.Model):
         username = self.user.username
         return f"{username}'s skills"
 
-# class Profile(models.Model):
-#     """This is the profile model for a user"""
-#     user = models.OneToOneField(
-#         settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
-#     avatar = models.ImageField(null=True, blank=True)
-#     bio = MarkdownxField(max_length=500, blank=True)
-#     skills = models.ManyToManyField('Skill', blank=True)
-#     username = models.CharField(max_length=50, unique=True)
-#
-#     def __str__(self):
-#         return self.username
-#
-#     @property
-#     def bio_markdown(self):
-#         """This allows us to turn self.bio into markdown to send
-#         to a template for display."""
-#         return markdownify(self.bio)
-
 
 class Skill(models.Model):
     """A class that represents a single skill"""
@@ -50,13 +32,13 @@ class Skill(models.Model):
 
 class Project(models.Model):
     """This is the model for a Project"""
-    owner = models.OneToOneField(
-        settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     description = MarkdownxField(max_length=1000)
     positions = models.ManyToManyField('Position', blank=True)
     requirements = models.CharField(max_length=100)
     time_line = models.CharField(max_length=30)
-    title = models.CharField(max_length=40)
+    title = models.CharField(max_length=40, unique=True)
 
     def __str__(self):
         return self.title

@@ -23,7 +23,7 @@ class ProfileViewsTests(TestCase):
 
         # Create the first user for testing
         self.user = user.objects.create_user(
-            email='santa@santa.com',
+            email='user@user.com',
             username='Santa',
             password='testpass'
         )
@@ -37,7 +37,7 @@ class ProfileViewsTests(TestCase):
         # Creates a second user
         user = get_user_model()
         self.user_2 = user.objects.create_user(
-            email='hattie@hattie.com',
+            email='user2@user2.com',
             username='Hattie',
             password='testpass',
         )
@@ -46,29 +46,21 @@ class ProfileViewsTests(TestCase):
         self.user_2_skills = AllSkills.objects.create(user_id=self.user_2.pk)
         self.user_2_skills.skills.add(self.skill_1, self.skill_3)
 
-        # Create a new user without a Profile
-        self.user_no_profile = user.objects.create_user(
-            email='no@profile.com',
-            username='no_profile',
-            password='testpass'
+        # Creates a Project
+        self.project = Project.objects.create(
+            owner=self.user, title='Test Project',
+            time_line='Depends on the number of features',
+            requirements='See the README.md', description='also see README.md'
         )
 
-    #
-    #     # Creates a Project
-    #     self.project = Project.objects.create(
-    #         owner=self.profile, title='Test Project',
-    #         time_line='Depends on the number of features',
-    #         requirements='See the README.md', description='also see README.md'
-    #     )
-    #
-    #     # Creates a Position to attach to a Project
-    #     self.position = Position.objects.create(
-    #         skill=self.skill_1, information='this is the position',
-    #         related_project=self.project
-    #     )
-    #
-    #     # add a position to the main project
-    #     self.project.positions.add(self.position)
+        # Creates a Position to attach to a Project
+        self.position = Position.objects.create(
+            skill=self.skill_1, information='this is the position',
+            related_project=self.project
+        )
+
+        # add a position to the main project
+        self.project.positions.add(self.position)
     #
     #     # The following is to create messages to test notifications
     #
@@ -119,7 +111,7 @@ class ProfileViewsTests(TestCase):
 
     def test_login_router_with_profile(self):
         """Tests the router if the user has an AllSkills model attached"""
-        self.client.login(username='santa@santa.com', password='testpass')
+        self.client.login(username='user@user.com', password='testpass')
         resp = self.client.get(reverse('profiles:login_router'))
         self.assertRedirects(
             resp, reverse('profiles:profile', kwargs={'pk': self.user.pk})
@@ -127,6 +119,12 @@ class ProfileViewsTests(TestCase):
 
     def test_login_router_without_profile(self):
         """Tests the router if the user does not have a profile"""
+        # Create a new user without a Profile
+        self.user_no_profile = get_user_model().objects.create_user(
+            email='no@profile.com',
+            username='no_profile',
+            password='testpass'
+        )
         self.client.login(username='no@profile.com', password='testpass')
         resp = self.client.get(reverse('profiles:login_router'))
 
@@ -136,7 +134,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_applications(self):
     #     """Ensures the applications view works"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(reverse('profiles:applications'))
     #
@@ -153,7 +151,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_applications_with_data(self):
     #     """Ensures that an applicant can be found"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     # Create an applicant for self.project
     #     applicant = Applicants.objects.create(
@@ -185,7 +183,7 @@ class ProfileViewsTests(TestCase):
     #                 kwargs={'pk': self.project.pk}))
     #
     #     # Now that we have an applicant accept that application
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #     resp = self.client.get(
     #         reverse('profiles:applications_accept',
     #                 kwargs={
@@ -217,7 +215,7 @@ class ProfileViewsTests(TestCase):
     #                 kwargs={'pk': self.project.pk}))
     #
     #     # Now that we have an applicant accept that application
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #     resp = self.client.get(
     #         reverse('profiles:applications_reject',
     #                 kwargs={
@@ -260,7 +258,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_applications_view_accepted_with_data(self):
     #     """Ensures that an accepted applicant can be found"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     # Create an applicant for self.project
     #     applicant = Applicants.objects.create(
@@ -291,7 +289,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_applications_view_rejected_with_data(self):
     #     """Ensures that an accepted applicant can be found"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     # Create an applicant for self.project
     #     applicant = Applicants.objects.create(
@@ -324,7 +322,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_notifications(self):
     #     """Ensures the main notifications view is working"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(reverse('profiles:notifications'))
     #
@@ -344,7 +342,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_notification_delete(self):
     #     """Ensures that a user can delete a notification"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(
     #         reverse('profiles:notifications_delete',
@@ -358,7 +356,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_notifications_deletion_view(self):
     #     """Ensures the read notifications view is working"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(reverse('profiles:notifications_deletion_view'))
     #
@@ -378,7 +376,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_notification_mark_read(self):
     #     """Ensures that a user can mark a notification as read"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(
     #         reverse('profiles:notifications_mark_read',
@@ -395,7 +393,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_notification_mark_unread(self):
     #     """Ensures that a user can mark a notification as unread"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(
     #         reverse('profiles:notifications_mark_unread',
@@ -412,7 +410,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_notifications_read(self):
     #     """Ensures the read notifications view is working"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(reverse('profiles:notifications_read'))
     #
@@ -432,7 +430,7 @@ class ProfileViewsTests(TestCase):
     #
     # def test_notifications_unread(self):
     #     """Ensures the unread notifications view is working"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
+    #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(reverse('profiles:notifications_unread'))
     #
@@ -464,7 +462,7 @@ class ProfileViewsTests(TestCase):
 
     def test_profile_edit(self):
         """Ensures that profile_edit appears correctly"""
-        self.client.login(username='santa@santa.com', password='testpass')
+        self.client.login(username='user@user.com', password='testpass')
         resp = self.client.get(reverse('profiles:edit'))
 
         # our profile information
@@ -487,7 +485,7 @@ class ProfileViewsTests(TestCase):
 
     def test_profile_edit_post(self):
         """Ensures that profile_edit can update the Profile"""
-        self.client.login(username='santa@santa.com', password='testpass')
+        self.client.login(username='user@user.com', password='testpass')
         self.client.post(
             reverse('profiles:edit'),
             data={'bio': 'new bio', 'username': 'editor'})
@@ -503,7 +501,7 @@ class ProfileViewsTests(TestCase):
 
     def test_profile_view(self):
         """Ensures the profile_view is working"""
-        self.client.login(username='santa@santa.com', password='testpass')
+        self.client.login(username='user@user.com', password='testpass')
         resp = self.client.get(
             reverse('profiles:profile', kwargs={'pk': self.user.pk}))
 
@@ -520,275 +518,275 @@ class ProfileViewsTests(TestCase):
 
         self.assertTemplateUsed('profiles/profile.html')
 
-    # """Project tests"""
-    #
-    # def test_project_delete(self):
-    #     """Ensures a user can delete a project"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
-    #     resp = self.client.get(
-    #         reverse('profiles:project_delete', kwargs={'pk': self.project.pk}))
-    #
-    #     # Ensure that there is now zero Projects
-    #     self.assertEqual(len(Project.objects.all()), 0)
-    #
-    # def test_project_delete_unowned(self):
-    #     """Ensures only the project owner can delete a project"""
-    #     self.client.login(username='user2@user2.com', password='testpass')
-    #     resp = self.client.get(
-    #         reverse('profiles:project_delete', kwargs={'pk': self.project.pk}))
-    #
-    #     # Ensure that there is now zero Projects
-    #     self.assertEqual(resp.status_code, 404)
-    #
-    # def test_project_delete_confirmation_post(self):
-    #     """Ensures a user can go back to the edit page"""
-    #     # This tests to see if a user can go back
-    #     self.client.login(username='santa@santa.com', password='testpass')
-    #     resp = self.client.post(
-    #         reverse('profiles:project_delete_confirmation',
-    #                 kwargs={'pk': self.project.pk}),
-    #         data={'back': 'Go Back'}
-    #     )
-    #     self.assertRedirects(
-    #         resp, reverse('profiles:project_edit',
-    #                       kwargs={'pk': self.project.pk}))
-    #
-    #     self.assertTemplateUsed('profiles/project_delete_confirmation.html')
-    #
-    # def test_project_delete_confirmation_unowned(self):
-    #     """Ensures only the project owner can delete a project"""
-    #     self.client.login(username='user2@user2.com', password='testpass')
-    #     resp = self.client.get(
-    #         reverse('profiles:project_delete_confirmation',
-    #                 kwargs={'pk': self.project.pk}))
-    #
-    #     # Ensure that there is now zero Projects
-    #     self.assertEqual(resp.status_code, 404)
-    #
-    # def test_project_edit_not_logged_in(self):
-    #     """We should be routed to the login page"""
-    #     resp = self.client.get(
-    #         reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
-    #     self.assertEqual(resp.status_code, 302)
-    #
-    # def test_project_edit(self):
-    #     """Ensures project_edit appears correctly"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
-    #     resp = self.client.get(
-    #         reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
-    #
-    #     # project information
-    #     self.assertContains(resp, 'Test Project')
-    #     self.assertContains(resp, 'Depends on the number of features')
-    #     self.assertContains(resp, 'See the README.md')
-    #     self.assertContains(resp, 'also see README.md')
-    #     self.assertContains(resp, 'See the README.md')
-    #     self.assertContains(resp, 'Description (markdown preview bellow)')
-    #     # page information
-    #     self.assertContains(resp, 'Project Timeline')
-    #     self.assertContains(resp, 'Save Changes')
-    #     self.assertContains(resp, 'Delete Project')
-    #
-    #     self.assertTemplateNotUsed('profiles/project_edit.html')
-    #
-    # def test_project_edit_post(self):
-    #     """Ensures project_edit appears correctly"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
-    #     resp = self.client.post(
-    #         reverse('profiles:project_edit', kwargs={'pk': self.project.pk}),
-    #         data={
-    #             'title': 'test post', 'time_line': 'milliseconds',
-    #             'owner': self.user.pk,
-    #             'requirements': 'data to post', 'description': 'description',
-    #             # The following line is for the Position
-    #             'skill': self.skill_1.pk, 'information': 'This is a good skill'
-    #         }
-    #     )
-    #
-    #     # Get the updated Project
-    #     project = Project.objects.get(pk=self.project.pk)
-    #     self.assertEqual(project.title, 'test post')
-    #     self.assertEqual(project.time_line, 'milliseconds')
-    #     self.assertEqual(project.requirements, 'data to post')
-    #     self.assertEqual(project.description, 'description')
-    #
-    #     self.assertRedirects(
-    #         resp, reverse('profiles:project', kwargs={'pk': self.project.pk}))
-    #
-    # def test_project_edit_unowned(self):
-    #     """Tests to make sure a logged in user can not edit other's Projects"""
-    #     self.client.login(username='user2@user2.com', password='testpass')
-    #     resp = self.client.get(
-    #         reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
-    #
-    #     # Ensure we were kicked out
-    #     self.assertEqual(resp.status_code, 404)
-    #
-    # def test_project_new(self):
-    #     """Ensures project_new looks correct."""
-    #     self.client.login(username='santa@santa.com', password='testpass')
-    #     resp = self.client.get(reverse('profiles:project_new'))
-    #
-    #     # page information
-    #     self.assertContains(resp, 'Save Changes')
-    #     self.assertContains(resp, 'Positions')
-    #     self.assertContains(resp, 'Project Title')
-    #     self.assertContains(resp, 'Application Requirements')
-    #     self.assertContains(resp, 'Description (markdown preview bellow)')
-    #
-    #     # You can not delete a project that does not exist
-    #     self.assertNotContains(resp, 'Delete Project')
-    #
-    #     self.assertTemplateNotUsed('profiles/project_edit.html')
-    #
-    # def test_project_new_post(self):
-    #     """Ensures a user can post a new project"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
-    #     resp = self.client.post(
-    #         reverse('profiles:project_new'),
-    #         data={
-    #             'title': 'Second Project', 'time_line': 'very small',
-    #             'owner': self.user.pk,
-    #             'requirements': 'data to post', 'description': 'description',
-    #             'skill': self.skill_3.pk,
-    #             'information': 'Maybe you are on the wrong site.'
-    #         })
-    #
-    #     # In addition to the project/position created in SetUp
-    #     # we should have these two
-    #     self.assertEqual(len(Project.objects.all()), 2)
-    #     self.assertEqual(len(Position.objects.all()), 2)
-    #
-    #     project_2 = Project.objects.get(pk=2)
-    #     self.assertEqual(project_2.title, 'Second Project')
-    #     self.assertEqual(project_2.description, 'description')
-    #
-    #     position_2 = Position.objects.get(pk=2)
-    #     self.assertEqual(
-    #         position_2.information, 'Maybe you are on the wrong site.')
-    #
-    # def test_project_view_not_logged_in(self):
-    #     """Ensures that the project view page is working"""
-    #     resp = self.client.get(
-    #         reverse('profiles:project', kwargs={'pk': self.project.pk}))
-    #
-    #     self.assertEqual(resp.status_code, 200)
-    #
-    #     # This checks that all the project pieces are on the website
-    #     self.assertContains(resp, 'Team Builder')
-    #     self.assertContains(resp, 'Test Project')
-    #     self.assertContains(resp, 'Depends on the number of features')
-    #     self.assertContains(resp, 'See the README.md')
-    #     self.assertContains(resp, 'also see README.md')
-    #     # This is the position parts of the project
-    #     self.assertContains(resp, 'this is the position')
-    #     self.assertContains(resp, 'Django developer')
-    #
-    #     # Because we are not logged in, the following should not appear
-    #     self.assertNotContains(resp, 'Edit Project')
-    #     self.assertNotContains(resp, 'Delete Project')
-    #
-    #     self.assertTemplateNotUsed('profiles/project.html')
-    #
-    # def test_project_view(self):
-    #     """Logged in test"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
-    #     resp = self.client.get(
-    #         reverse('profiles:project', kwargs={'pk': self.project.pk}))
-    #
-    #     # Because we are logged in, the following should appear
-    #     self.assertContains(resp, 'Edit Project')
-    #
-    # def test_project_view_bad_pk(self):
-    #     """We should get a 404 error"""
-    #     resp = self.client.get(
-    #         reverse('profiles:project', kwargs={'pk': 10947}))
-    #     self.assertEqual(resp.status_code, 404)
-    #
-    # def test_project_view_all(self):
-    #     """Ensures the user can see all of their projects"""
-    #     self.client.login(username='santa@santa.com', password='testpass')
-    #     resp = self.client.get(reverse('profiles:project_view_all'))
-    #
-    #     # Page Information
-    #     self.assertContains(resp, 'My Projects')
-    #     self.assertContains(resp, 'Applications')
-    #     self.assertContains(resp, 'All Positions')
-    #     # Project information
-    #     self.assertContains(resp, 'Test Project')
-    #     self.assertContains(resp, 'Django developer')
-    #
-    #     self.assertTemplateUsed('profiles/project_view_all.html')
-    #
-    # """Searching tests"""
-    #
-    # def test_search(self):
-    #     """Ensures that a user can search for projects"""
-    #     resp = self.client.get(
-    #         reverse('profiles:search'),
-    #         # search with a lowercase search term
-    #         data={'search_term': 'Test Project'})
-    #
-    #     # projects that matches the search term "Test Project"
-    #     self.assertContains(resp, 'Test Project')
-    #     self.assertContains(resp, 'Django developer')
-    #     # various page information
-    #     self.assertContains(resp, 'Projects')
-    #     self.assertContains(resp, 'All Needs')
-    #     self.assertContains(resp, 'Projects')
-    #
-    #     self.assertTemplateUsed('profiles:homepage.html')
-    #
-    # def test_search_by_skill(self):
-    #     """Ensures that a user can search projects via skill"""
-    #     resp = self.client.get(
-    #         reverse('profiles:search_by_skill',
-    #                 kwargs={'skill': 'Django developer'}))
-    #
-    #     # projects that matches the search term Django developer
-    #     self.assertContains(resp, 'Test Project')
-    #     self.assertContains(resp, '1 results were found with: Django developer')
-    #     # various page information
-    #     self.assertContains(resp, 'Projects')
-    #     self.assertContains(resp, 'All Needs')
-    #     self.assertContains(resp, 'Projects')
-    #
-    #     self.assertTemplateUsed('profiles:homepage.html')
-    #
-    # def test_search_by_skill_invalid(self):
-    #     """Ensures that an invalid search informs the user"""
-    #     resp = self.client.get(
-    #         reverse('profiles:search_by_skill',
-    #                 kwargs={'skill': 'bad_search'}))
-    #
-    #     # verify that the project informs the user to no results
-    #     self.assertContains(
-    #         resp,
-    #         'No results were found with: bad search')
-    #
-    #     # various page information
-    #     self.assertContains(resp, 'Projects')
-    #     self.assertContains(resp, 'All Needs')
-    #     self.assertContains(resp, 'Projects')
-    #
-    #     self.assertTemplateUsed('profiles:homepage.html')
-    #
-    # def test_search_your_skills(self):
-    #     """Checks that all projects are found with your skills"""
-    #     self.client.login(username='user2@user2.com', password='testpass')
-    #
-    #     resp = self.client.get(reverse('profiles:search_your_skills'))
-    #
-    #     # self.user2 has a profile with the Django developer skill
-    #     # self.project has one open position for Django developer, so
-    #     # we should find one result
-    #     self.assertContains(
-    #         resp,
-    #         '1 results were found with: Your Skills')
-    #
-    #     # various page information
-    #     self.assertContains(resp, 'Test Project')
-    #     self.assertContains(resp, 'All Needs')
-    #     self.assertContains(resp, 'Projects')
-    #
-    #     self.assertTemplateUsed('profiles:homepage.html')
+    """Project tests"""
+
+    def test_project_delete(self):
+        """Ensures a user can delete a project"""
+        self.client.login(username='user@user.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_delete', kwargs={'pk': self.project.pk}))
+
+        # Ensure that there is now zero Projects
+        self.assertEqual(len(Project.objects.all()), 0)
+
+    def test_project_delete_unowned(self):
+        """Ensures only the project owner can delete a project"""
+        self.client.login(username='user2@user2.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_delete', kwargs={'pk': self.project.pk}))
+
+        # Ensure that there is now zero Projects
+        self.assertEqual(resp.status_code, 404)
+
+    def test_project_delete_confirmation_post(self):
+        """Ensures a user can go back to the edit page"""
+        # This tests to see if a user can go back
+        self.client.login(username='user@user.com', password='testpass')
+        resp = self.client.post(
+            reverse('profiles:project_delete_confirmation',
+                    kwargs={'pk': self.project.pk}),
+            data={'back': 'Go Back'}
+        )
+        self.assertRedirects(
+            resp, reverse('profiles:project_edit',
+                          kwargs={'pk': self.project.pk}))
+
+        self.assertTemplateUsed('profiles/project_delete_confirmation.html')
+
+    def test_project_delete_confirmation_unowned(self):
+        """Ensures only the project owner can delete a project"""
+        self.client.login(username='user2@user2.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_delete_confirmation',
+                    kwargs={'pk': self.project.pk}))
+
+        # Ensure that there is now zero Projects
+        self.assertEqual(resp.status_code, 404)
+
+    def test_project_edit_not_logged_in(self):
+        """We should be routed to the login page"""
+        resp = self.client.get(
+            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
+        self.assertEqual(resp.status_code, 302)
+
+    def test_project_edit(self):
+        """Ensures project_edit appears correctly"""
+        self.client.login(username='user@user.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
+
+        # project information
+        self.assertContains(resp, 'Test Project')
+        self.assertContains(resp, 'Depends on the number of features')
+        self.assertContains(resp, 'See the README.md')
+        self.assertContains(resp, 'also see README.md')
+        self.assertContains(resp, 'See the README.md')
+        self.assertContains(resp, 'Description (markdown preview bellow)')
+        # page information
+        self.assertContains(resp, 'Project Timeline')
+        self.assertContains(resp, 'Save Changes')
+        self.assertContains(resp, 'Delete Project')
+
+        self.assertTemplateNotUsed('profiles/project_edit.html')
+
+    def test_project_edit_post(self):
+        """Ensures project_edit appears correctly"""
+        self.client.login(username='user@user.com', password='testpass')
+        resp = self.client.post(
+            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}),
+            data={
+                'title': 'test post', 'time_line': 'milliseconds',
+                'owner': self.user.pk,
+                'requirements': 'data to post', 'description': 'description',
+                # The following line is for the Position
+                'skill': self.skill_1.pk, 'information': 'This is a good skill'
+            }
+        )
+
+        # Get the updated Project
+        project = Project.objects.get(pk=self.project.pk)
+        self.assertEqual(project.title, 'test post')
+        self.assertEqual(project.time_line, 'milliseconds')
+        self.assertEqual(project.requirements, 'data to post')
+        self.assertEqual(project.description, 'description')
+
+        self.assertRedirects(
+            resp, reverse('profiles:project', kwargs={'pk': self.project.pk}))
+
+    def test_project_edit_unowned(self):
+        """Tests to make sure a logged in user can not edit other's Projects"""
+        self.client.login(username='user2@user2.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project_edit', kwargs={'pk': self.project.pk}))
+
+        # Ensure we were kicked out
+        self.assertEqual(resp.status_code, 404)
+
+    def test_project_new(self):
+        """Ensures project_new looks correct."""
+        self.client.login(username='user@user.com', password='testpass')
+        resp = self.client.get(reverse('profiles:project_new'))
+
+        # page information
+        self.assertContains(resp, 'Save Changes')
+        self.assertContains(resp, 'Positions')
+        self.assertContains(resp, 'Project Title')
+        self.assertContains(resp, 'Application Requirements')
+        self.assertContains(resp, 'Description (markdown preview bellow)')
+
+        # You can not delete a project that does not exist
+        self.assertNotContains(resp, 'Delete Project')
+
+        self.assertTemplateNotUsed('profiles/project_edit.html')
+
+    def test_project_new_post(self):
+        """Ensures a user can post a new project"""
+        self.client.login(username='user@user.com', password='testpass')
+        self.client.post(
+            reverse('profiles:project_new'),
+            data={
+                'title': 'Second Project', 'time_line': 'very small',
+                'owner': self.user.pk,
+                'requirements': 'data to post', 'description': 'description',
+                'skill': self.skill_3.pk,
+                'information': 'Maybe you are on the wrong site.'
+            })
+
+        # In addition to the project/position created in SetUp
+        # we should have these two
+        self.assertEqual(len(Project.objects.all()), 2)
+        self.assertEqual(len(Position.objects.all()), 2)
+
+        project_2 = Project.objects.get(pk=2)
+        self.assertEqual(project_2.title, 'Second Project')
+        self.assertEqual(project_2.description, 'description')
+
+        position_2 = Position.objects.get(pk=2)
+        self.assertEqual(
+            position_2.information, 'Maybe you are on the wrong site.')
+
+    def test_project_view_not_logged_in(self):
+        """Ensures that the project view page is working"""
+        resp = self.client.get(
+            reverse('profiles:project', kwargs={'pk': self.project.pk}))
+
+        self.assertEqual(resp.status_code, 200)
+
+        # This checks that all the project pieces are on the website
+        self.assertContains(resp, 'Team Builder')
+        self.assertContains(resp, 'Test Project')
+        self.assertContains(resp, 'Depends on the number of features')
+        self.assertContains(resp, 'See the README.md')
+        self.assertContains(resp, 'also see README.md')
+        # This is the position parts of the project
+        self.assertContains(resp, 'this is the position')
+        self.assertContains(resp, 'Django developer')
+
+        # Because we are not logged in, the following should not appear
+        self.assertNotContains(resp, 'Edit Project')
+        self.assertNotContains(resp, 'Delete Project')
+
+        self.assertTemplateNotUsed('profiles/project.html')
+
+    def test_project_view(self):
+        """Logged in test"""
+        self.client.login(username='user@user.com', password='testpass')
+        resp = self.client.get(
+            reverse('profiles:project', kwargs={'pk': self.project.pk}))
+
+        # Because we are logged in, the following should appear
+        self.assertContains(resp, 'Edit Project')
+
+    def test_project_view_bad_pk(self):
+        """We should get a 404 error"""
+        resp = self.client.get(
+            reverse('profiles:project', kwargs={'pk': 10947}))
+        self.assertEqual(resp.status_code, 404)
+
+    def test_project_view_all(self):
+        """Ensures the user can see all of their projects"""
+        self.client.login(username='user@user.com', password='testpass')
+        resp = self.client.get(reverse('profiles:project_view_all'))
+
+        # Page Information
+        self.assertContains(resp, 'My Projects')
+        self.assertContains(resp, 'Applications')
+        self.assertContains(resp, 'All Positions')
+        # Project information
+        self.assertContains(resp, 'Test Project')
+        self.assertContains(resp, 'Django developer')
+
+        self.assertTemplateUsed('profiles/project_view_all.html')
+
+    """Searching tests"""
+
+    def test_search(self):
+        """Ensures that a user can search for projects"""
+        resp = self.client.get(
+            reverse('profiles:search'),
+            # search with a lowercase search term
+            data={'search_term': 'Test Project'})
+
+        # projects that matches the search term "Test Project"
+        self.assertContains(resp, 'Test Project')
+        self.assertContains(resp, 'Django developer')
+        # various page information
+        self.assertContains(resp, 'Projects')
+        self.assertContains(resp, 'All Needs')
+        self.assertContains(resp, 'Projects')
+
+        self.assertTemplateUsed('profiles:homepage.html')
+
+    def test_search_by_skill(self):
+        """Ensures that a user can search projects via skill"""
+        resp = self.client.get(
+            reverse('profiles:search_by_skill',
+                    kwargs={'skill': 'Django developer'}))
+
+        # projects that matches the search term Django developer
+        self.assertContains(resp, 'Test Project')
+        self.assertContains(resp, '1 results were found with: Django developer')
+        # various page information
+        self.assertContains(resp, 'Projects')
+        self.assertContains(resp, 'All Needs')
+        self.assertContains(resp, 'Projects')
+
+        self.assertTemplateUsed('profiles:homepage.html')
+
+    def test_search_by_skill_invalid(self):
+        """Ensures that an invalid search informs the user"""
+        resp = self.client.get(
+            reverse('profiles:search_by_skill',
+                    kwargs={'skill': 'bad_search'}))
+
+        # verify that the project informs the user to no results
+        self.assertContains(
+            resp,
+            'No results were found with: bad search')
+
+        # various page information
+        self.assertContains(resp, 'Projects')
+        self.assertContains(resp, 'All Needs')
+        self.assertContains(resp, 'Projects')
+
+        self.assertTemplateUsed('profiles:homepage.html')
+
+    def test_search_your_skills(self):
+        """Checks that all projects are found with your skills"""
+        self.client.login(username='user2@user2.com', password='testpass')
+
+        resp = self.client.get(reverse('profiles:search_your_skills'))
+
+        # self.user2 has a profile with the Django developer skill
+        # self.project has one open position for Django developer, so
+        # we should find one result
+        self.assertContains(
+            resp,
+            '1 results were found with: Your Skills')
+
+        # various page information
+        self.assertContains(resp, 'Test Project')
+        self.assertContains(resp, 'All Needs')
+        self.assertContains(resp, 'Projects')
+
+        self.assertTemplateUsed('profiles:homepage.html')

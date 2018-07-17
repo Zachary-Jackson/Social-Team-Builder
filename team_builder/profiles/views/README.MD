@@ -11,6 +11,3 @@ Miscellaneous Views
 
 Notifications Views will be its own app
 
-Project Views
-
-Searching Views
