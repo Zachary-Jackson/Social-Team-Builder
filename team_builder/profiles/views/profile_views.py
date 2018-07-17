@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
@@ -13,24 +14,26 @@ from .. import models
 @login_required
 def profile_edit(request):
     """Allows a profile to be edited"""
-    instance = request.user.profile
-    form = forms.ProfileForm(instance=instance)
+    instance = request.user
+    profile_form = forms.UserForm(instance=instance)
+    skills_form = forms.SkillForm(instance=instance.allskills)
 
     # The form is currently not capturing images properly.
     if request.method == 'POST':
-        form = forms.ProfileForm(
+        profile_form = forms.UserForm(
             request.POST, request.FILES, instance=instance
         )
 
-        if form.is_valid():
-            form.save()
-            return redirect('profiles:profile', pk=request.user.profile.pk)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('profiles:profile', pk=request.user.pk)
 
     return render(
         request,
         'profiles/templates/profiles/profile_edit.html',
         {
-            'form': form,
+            'profile_form': profile_form,
+            'skills_form': skills_form,
             'current_tab': 'Profile'  # navigation bar selector
         })
 
@@ -38,7 +41,7 @@ def profile_edit(request):
 def profile_view(request, pk):
     """Lets any user view a person's profile"""
     # Get the User model that matches the pk
-    user_profile = get_object_or_404(models.Profile, pk=pk)
+    user_profile = get_object_or_404(get_user_model(), pk=pk)
     projects = models.Project.objects.all().filter(owner=pk)\
         .prefetch_related('positions__skill')
 

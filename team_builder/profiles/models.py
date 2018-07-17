@@ -6,23 +6,34 @@ from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 
 
-class Profile(models.Model):
-    """This is the profile model for a user"""
+class AllSkills(models.Model):
+    """Holds on to all of the skills for a user"""
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
-    avatar = models.ImageField(null=True, blank=True)
-    bio = MarkdownxField(max_length=500, blank=True)
     skills = models.ManyToManyField('Skill', blank=True)
-    username = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
-        return self.username
+        """Shows the user's username + skills"""
+        username = self.user.username
+        return f"{username}'s skills"
 
-    @property
-    def bio_markdown(self):
-        """This allows us to turn self.bio into markdown to send
-        to a template for display."""
-        return markdownify(self.bio)
+# class Profile(models.Model):
+#     """This is the profile model for a user"""
+#     user = models.OneToOneField(
+#         settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
+#     avatar = models.ImageField(null=True, blank=True)
+#     bio = MarkdownxField(max_length=500, blank=True)
+#     skills = models.ManyToManyField('Skill', blank=True)
+#     username = models.CharField(max_length=50, unique=True)
+#
+#     def __str__(self):
+#         return self.username
+#
+#     @property
+#     def bio_markdown(self):
+#         """This allows us to turn self.bio into markdown to send
+#         to a template for display."""
+#         return markdownify(self.bio)
 
 
 class Skill(models.Model):
@@ -39,7 +50,8 @@ class Skill(models.Model):
 
 class Project(models.Model):
     """This is the model for a Project"""
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    owner = models.OneToOneField(
+        settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
     description = MarkdownxField(max_length=1000)
     positions = models.ManyToManyField('Position', blank=True)
     requirements = models.CharField(max_length=100)
@@ -58,11 +70,11 @@ class Project(models.Model):
 
 class Position(models.Model):
     """This holds onto position information for a Project"""
-    # allows various positions to easily be found by a Profile
+    # allows various positions to easily be found by User
     # position_creator will automatically be set from the
     # related_project
     position_creator = models.ForeignKey(
-        Profile,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         blank=True,
         null=True
@@ -72,7 +84,7 @@ class Position(models.Model):
         on_delete=models.CASCADE,
         blank=True)
 
-    # applicants hold every Profile that has applied to this position
+    # applicants hold every User that has applied to this position
     applicants = models.ManyToManyField(
         'Applicants',
         related_name='position_applicants',
@@ -88,7 +100,7 @@ class Position(models.Model):
     # current applicants are found in the Applicants model
     filled = models.BooleanField(default=False)
     filled_by = models.ForeignKey(
-        'Profile',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -124,7 +136,10 @@ class Position(models.Model):
 
 class Applicants(models.Model):
     """Contains an applicant and what project they belong to"""
-    applicant = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    applicant = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
     position = models.ForeignKey(
         Position,
         on_delete=models.CASCADE,

@@ -10,6 +10,7 @@ class AccountViewsTests(TestCase):
         resp = self.client.post(
             reverse('accounts:signup'),
             data={'email': 'test@test.com',
+                  'username': 'user',
                   'password1': 'testpass', 'password2': 'testpass'}
         )
 

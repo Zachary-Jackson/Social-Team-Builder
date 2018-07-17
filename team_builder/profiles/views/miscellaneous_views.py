@@ -23,14 +23,24 @@ def homepage(request):
 
 @login_required
 def login_router(request):
-    """Check to see if a Profile has been created.
-    If not create and redirect to edit page"""
+    """Check to see if the user's profile has been edited.
+    If not: route to the profile edit page and attach skills
+    Else: route to the main profile page"""
+
+    user = request.user
+
+    # Checks if an AllSkills model is attached to the user
+    # If not create and send to edit page
     try:
-        request.user.profile
+        user = user.allskills
     except AttributeError:
-        # create a Profile and redirect the user to the edit page
-        models.Profile(user=request.user, username=request.user.email).save()
+        models.AllSkills.objects.create(
+            user_id=user.pk
+        )
+
+        # Redirect to the main edit page
         return redirect('profiles:edit')
+
     else:
         # redirect to main profile page
-        return redirect('profiles:profile', pk=request.user.profile.pk)
+        return redirect('profiles:profile', pk=request.user.pk)

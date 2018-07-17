@@ -16,7 +16,7 @@
             </li>
             <li>
                 <a {% if current_tab == "Profile" %} class="selected" {% endif %}
-                        href={% url 'profiles:profile' pk=user.profile.pk %}>
+                        href={% url 'profiles:profile' pk=user.pk %}>
                     Profile
                 </a>
             </li>
