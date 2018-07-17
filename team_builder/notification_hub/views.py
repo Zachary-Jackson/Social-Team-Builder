@@ -13,7 +13,7 @@ def notifications(request):
 
     return render(
         request,
-        'profiles/notifications.html',
+        'notification_hub/notifications.html',
         {
             'current_tab': 'Notifications',
             'notification_query': notification_query
@@ -22,9 +22,9 @@ def notifications(request):
 
 
 @login_required
-def notifications_delete(request, pk):
+def delete(request, pk):
     """Marks a notification as read and reroute back to
-     profiles:notifications_unread"""
+     notification_hub:unread"""
     user = request.user
 
     # Get the notification or 404
@@ -37,17 +37,17 @@ def notifications_delete(request, pk):
     # mark the notification as read
     notification.delete()
 
-    return redirect('profiles:notifications_deletion_view')
+    return redirect('notification_hub:deletion_view')
 
 
 @login_required
-def notifications_deletion_view(request):
+def deletion_view(request):
     """Shows the user all read notifications that they can delete"""
     notification_query = request.user.notifications.read()
 
     return render(
         request,
-        'profiles/notifications_deletion.html',
+        'notification_hub/deletion.html',
         {
             'current_tab': 'Notifications',
             'notification_query': notification_query
@@ -56,9 +56,9 @@ def notifications_deletion_view(request):
 
 
 @login_required
-def notifications_mark_read(request, pk):
+def mark_read(request, pk):
     """Marks a notification as read and reroute back to
-     profiles:notifications_unread"""
+     notification_hub:unread"""
     user = request.user
 
     # Get the notification or 404
@@ -71,13 +71,13 @@ def notifications_mark_read(request, pk):
     # mark the notification as read
     notification.mark_as_read()
 
-    return redirect('profiles:notifications_unread')
+    return redirect('notification_hub:unread')
 
 
 @login_required
-def notifications_mark_unread(request, pk):
+def mark_unread(request, pk):
     """Marks a notification as unread and reroute back to
-     profiles:notifications_read"""
+     notification_hub:read"""
     user = request.user
 
     # Get the notification or 404
@@ -90,17 +90,17 @@ def notifications_mark_unread(request, pk):
     # mark the notification as read
     notification.mark_as_unread()
 
-    return redirect('profiles:notifications_read')
+    return redirect('notification_hub:read')
 
 
 @login_required
-def notifications_read(request):
+def read(request):
     """Shows the user all their opened notifications"""
     notification_query = request.user.notifications.read()
 
     return render(
         request,
-        'profiles/notifications_read.html',
+        'notification_hub/read.html',
         {
             'current_tab': 'Notifications',
             'notification_query': notification_query
@@ -109,13 +109,13 @@ def notifications_read(request):
 
 
 @login_required
-def notifications_unread(request):
+def unread(request):
     """Shows the user all their unopened notifications"""
     notification_query = request.user.notifications.unread()
 
     return render(
         request,
-        'profiles/notifications_unread.html',
+        'notification_hub/unread.html',
         {
             'current_tab': 'Notifications',
             'notification_query': notification_query

@@ -16,8 +16,8 @@ after sign up
 
 - [x] Let user's logout
 
-- [x] Allow users to edit profile
-* - [ ]Users can use Markdown in the "about me" part of the profile
+- [x] Allow users to edit their profile
+* - [x]Users can use Markdown in the "about me" part of the profile
 
 
 - [x] Users can upload an avatar
@@ -29,7 +29,7 @@ after sign up
 
 
 - [x] Create a project
-* - [ ]Markdown can be used in the project description
+* - [x]Markdown can be used in the project description
 
 
 - [ ] Users can create multiple positions for a project

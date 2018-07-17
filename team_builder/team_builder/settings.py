@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # Normal django apps
     'team_builder',
     'accounts',
+    'notification_hub',
     'profiles'
 ]
 

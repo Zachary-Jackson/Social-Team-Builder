@@ -324,7 +324,7 @@ class ProfileViewsTests(TestCase):
     #     """Ensures the main notifications view is working"""
     #     self.client.login(username='user@user.com', password='testpass')
     #
-    #     resp = self.client.get(reverse('profiles:notifications'))
+    #     resp = self.client.get(reverse('notification_hub:notifications'))
     #
     #     # various page information
     #     self.assertContains(resp, 'Notifications')
@@ -345,20 +345,20 @@ class ProfileViewsTests(TestCase):
     #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(
-    #         reverse('profiles:notifications_delete',
+    #         reverse('notification_hub:delete',
     #                 kwargs={'pk': 1}))
     #
     #     self.assertEqual(len(self.user.notifications.all()), 1)
     #     self.assertRedirects(
     #         resp,
-    #         reverse('profiles:notifications_deletion_view')
+    #         reverse('notification_hub:deletion_view')
     #     )
     #
     # def test_notifications_deletion_view(self):
     #     """Ensures the read notifications view is working"""
     #     self.client.login(username='user@user.com', password='testpass')
     #
-    #     resp = self.client.get(reverse('profiles:notifications_deletion_view'))
+    #     resp = self.client.get(reverse('notification_hub:deletion_view'))
     #
     #     # various page information
     #     self.assertContains(resp, 'Notifications')
@@ -379,7 +379,7 @@ class ProfileViewsTests(TestCase):
     #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(
-    #         reverse('profiles:notifications_mark_read',
+    #         reverse('notification_hub:mark_read',
     #                 kwargs={'pk': 1}))
     #
     #     # We should not have deleted a notification
@@ -388,7 +388,7 @@ class ProfileViewsTests(TestCase):
     #
     #     self.assertRedirects(
     #         resp,
-    #         reverse('profiles:notifications_unread')
+    #         reverse('notification_hub:unread')
     #     )
     #
     # def test_notification_mark_unread(self):
@@ -396,7 +396,7 @@ class ProfileViewsTests(TestCase):
     #     self.client.login(username='user@user.com', password='testpass')
     #
     #     resp = self.client.get(
-    #         reverse('profiles:notifications_mark_unread',
+    #         reverse('notification_hub:mark_unread',
     #                 kwargs={'pk': 2}))
     #
     #     # We should not have deleted a notification
@@ -405,14 +405,14 @@ class ProfileViewsTests(TestCase):
     #
     #     self.assertRedirects(
     #         resp,
-    #         reverse('profiles:notifications_read')
+    #         reverse('notification_hub:read')
     #     )
     #
     # def test_notifications_read(self):
     #     """Ensures the read notifications view is working"""
     #     self.client.login(username='user@user.com', password='testpass')
     #
-    #     resp = self.client.get(reverse('profiles:notifications_read'))
+    #     resp = self.client.get(reverse('notification_hub:read'))
     #
     #     # various page information
     #     self.assertContains(resp, 'Notifications')
@@ -432,7 +432,7 @@ class ProfileViewsTests(TestCase):
     #     """Ensures the unread notifications view is working"""
     #     self.client.login(username='user@user.com', password='testpass')
     #
-    #     resp = self.client.get(reverse('profiles:notifications_unread'))
+    #     resp = self.client.get(reverse('notification_hub:unread'))
     #
     #     # various page information
     #     self.assertContains(resp, 'Notifications')

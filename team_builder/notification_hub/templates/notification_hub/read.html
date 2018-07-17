@@ -1,4 +1,4 @@
-{% extends "profiles/selectable_list.html" %}
+{% extends "selectable_list.html" %}
 
 
 nav_bar.html takes one parameter
@@ -9,7 +9,7 @@ nav_bar.html takes one parameter
 Notifications.html takes a couple of parameters
 
 1) notification_query
-    The unread notifications that a user has
+    The read notifications that a user has
 
 
 
@@ -21,22 +21,22 @@ Notifications.html takes a couple of parameters
 
 {% block first_sidebar %}
     <li>
-      <a href="{% url 'profiles:notifications' %}">
+      <a href="{% url 'notification_hub:notifications' %}">
           All Notifications
       </a>
     </li>
     <li>
-      <a class="selected" href="{% url 'profiles:notifications_unread' %}">
+      <a href="{% url 'notification_hub:unread' %}">
           Unread
       </a>
     </li>
     <li>
-      <a href="{% url 'profiles:notifications_read' %}">
+      <a class="selected" href="{% url 'notification_hub:read' %}">
           Read
       </a>
     </li>
     <li>
-      <a href="{% url 'profiles:notifications_deletion_view' %}">
+      <a href="{% url 'notification_hub:deletion_view' %}">
           Deletion View
       </a>
     </li>
@@ -44,14 +44,14 @@ Notifications.html takes a couple of parameters
 
 
 {% block body_header %}
-    <th>Unread Notifications</th>
+    <th>Read Notifications</th>
     <th class="circle--cell--right">Time of notification</th>
 {% endblock body_header %}
 
 
 {% block body %}
     {% if not notification_query %}
-        <h2>You are up to date on notifications!</h2>
+        <h2>You have no read notifications</h2>
     {% endif %}
 
     {% for notification in notification_query %}
@@ -63,19 +63,18 @@ Notifications.html takes a couple of parameters
                     </a>
                 </h3>
                 <p>
+
                     <a href={% url 'profiles:profile' pk=notification.actor.pk%}>
                         From: {{ notification.actor}}
                     </a>
-                </p>
-
 
             </td>
             <td class="circle--cell--right">
               <span class="secondary-label">
                   {{ notification.timestamp }}
                   <a class="button button-primary extra_vertical_margin"
-                  href = {% url 'profiles:notifications_mark_read' pk=notification.pk %}>
-                    Mark read
+                  href = {% url 'notification_hub:mark_unread' pk=notification.pk %}>
+                    Mark unread
                   </a>
               </span>
             </td>

@@ -28,6 +28,7 @@ urlpatterns = [
         include(notifications.urls, namespace='notifications')
         ),
     url(r'^markdownx/', include('markdownx.urls')),
+    url(r'^notifications/', include('notification_hub.urls')),
     path('', include('profiles.urls'))
 ]
 

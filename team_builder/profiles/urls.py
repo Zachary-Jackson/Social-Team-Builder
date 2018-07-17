@@ -63,37 +63,4 @@ urlpatterns = [
          name='search_your_skills'
     ),
     path('project/view_all', views.project_view_all, name='project_view_all'),
-
-    # Notifications related paths
-    path('notifications', views.notifications, name='notifications'),
-    path(
-        'notifications/deletion/<int:pk>',
-        views.notifications_delete,
-        name='notifications_delete'
-    ),
-    path(
-        'notifications/deletion_view',
-        views.notifications_deletion_view,
-        name='notifications_deletion_view'
-    ),
-    path(
-        'notifications/mark_read/<int:pk>/',
-        views.notifications_mark_read,
-        name='notifications_mark_read'
-    ),
-    path(
-        'notifications/mark_unread/<int:pk>/',
-        views.notifications_mark_unread,
-        name='notifications_mark_unread'
-    ),
-    path(
-        'notifications/unread',
-        views.notifications_unread,
-        name='notifications_unread'
-    ),
-    path(
-        'notifications/read',
-        views.notifications_read,
-        name='notifications_read'
-    ),
 ]

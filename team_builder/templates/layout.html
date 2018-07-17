@@ -68,7 +68,7 @@
               {% else %}
                   {% if request.user.notifications.unread %}
                       <li>
-                          <a style="color:white"  href="{% url 'profiles:notifications_unread' %}">
+                          <a style="color:white"  href="{% url 'notification_hub:unread' %}">
                               <u >Unread Notifications!</u>
                           </a>
                       </li>
