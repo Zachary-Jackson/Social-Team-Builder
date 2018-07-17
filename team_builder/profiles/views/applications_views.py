@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404
@@ -36,7 +37,7 @@ def get_projects_with_filled_or_unfilled_positions(is_filled: bool, request):
 
     Returns found projects"""
     projects = models.Project.objects.all().filter(
-        Q(owner=request.user.profile) & Q(positions__filled=is_filled))
+        Q(owner=request.user) & Q(positions__filled=is_filled))
     return projects
 
 
@@ -51,7 +52,7 @@ def get_needed_skills_and_found_positions(
     needed_skills = set()
 
     positions = models.Position.objects.all() \
-        .filter(position_creator=request.user.profile)
+        .filter(position_creator=request.user)
 
     for position in positions:
 
@@ -71,9 +72,9 @@ def if_owned_get_position_profile(request, position_pk, profile_pk):
     Return: position, and profile
     else:
     Http 404"""
-    user = request.user.profile
+    user = request.user
     position = get_object_or_404(models.Position, pk=position_pk)
-    profile = get_object_or_404(models.Profile, pk=profile_pk)
+    profile = get_object_or_404(get_user_model(), pk=profile_pk)
 
     # if the current user does not own the project kick them out
     if user != position.position_creator:
@@ -129,7 +130,7 @@ def applications_accept(request, position_pk, profile_pk):
     skill = position.skill
     project = position.related_project
     message = f'You have been accepted as a {skill} for the project: {project}'
-    notify.send(profile, recipient=profile.user, verb=message)
+    notify.send(profile, recipient=found_applicant.applicant, verb=message)
 
     return redirect('profiles:applications')
 
@@ -156,7 +157,7 @@ def applications_reject(request, position_pk, profile_pk):
     skill = position.skill
     project = position.related_project
     message = f'You have been rejected as a {skill} for the project: {project}'
-    notify.send(profile, recipient=profile.user, verb=message)
+    notify.send(profile, recipient=found_applicant.applicant, verb=message)
 
     return redirect('profiles:applications')
 
@@ -166,7 +167,7 @@ def applications_request(request, pk):
     """Allows a user to submit an application request"""
     # Ensures that the Position model exists or 404
     position = get_object_or_404(models.Position, pk=pk)
-    user = request.user.profile
+    user = request.user
 
     # If the user has already applied, prevent another application
     for applicant in position.applicants.all():
@@ -188,7 +189,7 @@ def applications_request(request, pk):
     # Create a notification to send to the project owner
     project = position.related_project
     message = f'There is a pending application for the project: {project}'
-    notify.send(user, recipient=position.position_creator.user, verb=message)
+    notify.send(user, recipient=position.position_creator, verb=message)
 
     # Return the user back to the Project's page
     return redirect('profiles:project', pk=pk)
@@ -227,7 +228,7 @@ def applications_view_rejected(request):
 
     # Get all of a user's positions
     positions = models.Position.objects.all() \
-        .filter(position_creator=request.user.profile)
+        .filter(position_creator=request.user)
 
     for position in positions:
 
