@@ -5,6 +5,20 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .. import forms
 from .. import models
 
+def get_project_and_authenticate(request, pk):
+    """Gets the logged in user and makes sure that the user owns
+    the project
+
+    If so: return project
+    Else: raise 404"""
+    project = get_object_or_404(models.Project, pk=pk)
+
+    # Checks if the logged in user owns the project. If not kick them out.
+    if project.owner.pk != request.user.pk:
+        raise Http404("You do not own this project.")
+
+    return project
+
 
 """Project related views"""
 
@@ -12,11 +26,7 @@ from .. import models
 @login_required()
 def project_delete(request, pk):
     """Allows a project owner to delete a project"""
-    project = get_object_or_404(models.Project, pk=pk)
-
-    # Checks if the logged in user owns the project. If not kick them out.
-    if project.owner.pk != request.user.pk:
-        raise Http404("You do not own this project.")
+    project = get_project_and_authenticate(request, pk)
 
     project.delete()
     return redirect('profiles:homepage')
@@ -25,11 +35,7 @@ def project_delete(request, pk):
 @login_required()
 def project_delete_confirmation(request, pk):
     """Checks if a user really want to delete a project"""
-    project = get_object_or_404(models.Project, pk=pk)
-
-    # Checks if the logged in user owns the project. If not kick them out.
-    if project.owner.pk != request.user.pk:
-        raise Http404("You do not own this project.")
+    project = get_project_and_authenticate(request, pk)
 
     if request.method == 'POST':
         # If the user deleted the project return to homepage
@@ -49,11 +55,8 @@ def project_delete_confirmation(request, pk):
 @login_required()
 def project_edit(request, pk):
     """Allows only the project's owner to edit a project"""
-    project = get_object_or_404(models.Project, pk=pk)
 
-    # Checks if the logged in user owns the project. If not kick them out.
-    if project.owner.pk != request.user.pk:
-        raise Http404("You do not own this project.")
+    project = get_project_and_authenticate(request, pk)
 
     project_form = forms.ProjectForm(instance=project)
     # Currently only one position can be added per project. temporary

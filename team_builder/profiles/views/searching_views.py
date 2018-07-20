@@ -46,7 +46,7 @@ def search(request):
         request,
         'profiles/homepage.html',
         {
-            'projects': projects,
+            'object_list': projects,
             'skills': skills,
             'search_results': search_results}
     )
@@ -85,7 +85,7 @@ def search_by_skill(request, skill):
     sorted_skills = sorted(skills, key=attrgetter('skill'))
 
     return render(request, 'profiles/homepage.html',
-                  {'projects': projects,
+                  {'object_list': projects,
                    'search_results': search_results,
                    'skill_selector': found_skill,
                    'skills': sorted_skills})
@@ -122,7 +122,7 @@ def search_your_skills(request):
     skill_selector = 'Your Projects'
 
     return render(request, 'profiles/homepage.html',
-                  {'projects': projects,
+                  {'object_list': projects,
                    'search_results': search_results,
                    'skill_selector': skill_selector,
                    'skills': sorted_skills})

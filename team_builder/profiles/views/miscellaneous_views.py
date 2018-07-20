@@ -1,7 +1,9 @@
 from operator import attrgetter
 
+from django.views.generic import ListView
+
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 
 from .. import models
 
@@ -9,16 +11,23 @@ from .. import models
 """Miscellaneous views"""
 
 
-def homepage(request):
+class HomepageListView(ListView):
     """This is the homepage for the profiles app"""
-    projects = models.Project.objects.all().prefetch_related(
-        'positions__skill')
-    skills = sorted(models.Skill.objects.all(), key=attrgetter('skill'))
+    model = models.Project
+    template_name = 'profiles/homepage.html'
 
-    return render(
-        request,
-        'profiles/homepage.html',
-        {'skills': skills, 'projects': projects})
+    def get_context_data(self, *, object_list=None, **kwargs):
+        # gets skills for the template
+        context = super(HomepageListView, self).get_context_data(**kwargs)
+        context['skills'] = (
+            sorted(models.Skill.objects.all(), key=attrgetter('skill'))
+        )
+        return context
+
+    def get_queryset(self):
+        return (
+            models.Project.objects.all().prefetch_related('positions__skill')
+        )
 
 
 @login_required

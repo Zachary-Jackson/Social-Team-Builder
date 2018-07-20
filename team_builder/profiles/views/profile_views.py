@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.templatetags.staticfiles import static
-
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .. import forms
@@ -23,9 +22,13 @@ def profile_edit(request):
         profile_form = forms.UserForm(
             request.POST, request.FILES, instance=instance
         )
+        skills_form = forms.SkillForm(
+            request.POST, request.FILES, instance=instance.allskills
+        )
 
-        if profile_form.is_valid():
+        if profile_form.is_valid() and skills_form.is_valid():
             profile_form.save()
+            skills_form.save()
             return redirect('profiles:profile', pk=request.user.pk)
 
     return render(

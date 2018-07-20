@@ -8,9 +8,9 @@ from . import models
 CHOICES = [
     ('Blue', 'Blue'),
     ('Green', 'Green'),
+    ('Orange', 'Orange'),
     ('Pink', 'Pink'),
     ('Purple', 'Purple'),
-    ('Orange', 'Orange'),
 
 ]
 

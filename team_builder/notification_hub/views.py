@@ -2,6 +2,25 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
+
+def get_notification_and_authenticate(request, pk):
+    """Gets the logged in user and makes sure that the user owns
+    the notification
+
+    If so, return notification
+    Else: raise 404"""
+    user = request.user
+
+    # Get the notification or 404
+    notification = get_object_or_404(user.notifications, pk=pk)
+
+    # If the user does not own the notification 404
+    if notification.recipient == user:
+        Http404('You do not own this notification')
+
+    return notification
+
+
 """Notification Views"""
 
 
@@ -25,14 +44,7 @@ def notifications(request):
 def delete(request, pk):
     """Marks a notification as read and reroute back to
      notification_hub:unread"""
-    user = request.user
-
-    # Get the notification or 404
-    notification = get_object_or_404(user.notifications, pk=pk)
-
-    # If the user does not own the notification 404
-    if notification.recipient == user:
-        Http404('You do not own this notification')
+    notification = get_notification_and_authenticate(request, pk)
 
     # mark the notification as read
     notification.delete()
@@ -59,14 +71,7 @@ def deletion_view(request):
 def mark_read(request, pk):
     """Marks a notification as read and reroute back to
      notification_hub:unread"""
-    user = request.user
-
-    # Get the notification or 404
-    notification = get_object_or_404(user.notifications, pk=pk)
-
-    # If the user does not own the notification 404
-    if notification.recipient == user:
-        Http404('You do not own this notification')
+    notification = get_notification_and_authenticate(request, pk)
 
     # mark the notification as read
     notification.mark_as_read()
@@ -78,14 +83,7 @@ def mark_read(request, pk):
 def mark_unread(request, pk):
     """Marks a notification as unread and reroute back to
      notification_hub:read"""
-    user = request.user
-
-    # Get the notification or 404
-    notification = get_object_or_404(user.notifications, pk=pk)
-
-    # If the user does not own the notification 404
-    if notification.recipient == user:
-        Http404('You do not own this notification')
+    notification = get_notification_and_authenticate(request, pk)
 
     # mark the notification as read
     notification.mark_as_unread()

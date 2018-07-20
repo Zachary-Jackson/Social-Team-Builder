@@ -571,6 +571,7 @@ class ProfileViewsTests(TestCase):
         # projects that matches the search term "Test Project"
         self.assertContains(resp, 'Test Project')
         self.assertContains(resp, 'Django developer')
+        self.assertContains(resp, str(self.project))
         # various page information
         self.assertContains(resp, 'Projects')
         self.assertContains(resp, 'All Needs')
@@ -586,7 +587,10 @@ class ProfileViewsTests(TestCase):
 
         # projects that matches the search term Django developer
         self.assertContains(resp, 'Test Project')
-        self.assertContains(resp, '1 results were found with: Django developer')
+        self.assertContains(
+            resp, '1 results were found with: Django developer'
+        )
+        self.assertContains(resp, str(self.project))
         # various page information
         self.assertContains(resp, 'Projects')
         self.assertContains(resp, 'All Needs')
@@ -623,7 +627,9 @@ class ProfileViewsTests(TestCase):
         # we should find one result
         self.assertContains(
             resp,
-            '1 results were found with: Your Skills')
+            '1 results were found with: Your Skills'
+        )
+        self.assertContains(resp, str(self.project))
 
         # various page information
         self.assertContains(resp, 'Test Project')

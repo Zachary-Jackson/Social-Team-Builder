@@ -6,7 +6,7 @@ app_name = 'profiles'
 
 urlpatterns = [
     # Miscellaneous related paths
-    path('', views.homepage, name='homepage'),
+    path('', views.HomepageListView.as_view(), name='homepage'),
     path('login_router', views.login_router, name='login_router'),
 
     # Applications related paths

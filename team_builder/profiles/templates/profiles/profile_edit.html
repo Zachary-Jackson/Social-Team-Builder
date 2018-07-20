@@ -76,7 +76,11 @@
           <h4>My Skills</h4>
           <ul class="circle--clone--list">
             <li>
-              {{ skills_form.skills }}
+{#              {{ skills_form.skills }}#}
+              {{ skills_form.management_form }}
+                {% for form in skills_form %}
+                {{ form }}
+                {% endfor %}
               <a class="circle--clone--add">Add Skill</a>
               <a class="circle--clone--remove">Remove</a>
             </li>

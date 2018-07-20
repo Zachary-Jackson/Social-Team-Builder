@@ -26,18 +26,11 @@
 {#  Check to see if the user is logged in. If so grab their preferred stylesheet  #}
 {% if user.is_authenticated %}
 
-    {% if user.color == 'Blue' %}
-        <link rel="stylesheet" href="{% static 'css/blue.css' %}">
-    {% endif %}
-    {% if user.color == 'Orange' %}
-        <link rel="stylesheet" href="{% static 'css/orange.css' %}">
-    {% endif %}
-    {% if user.color == 'Pink' %}
-        <link rel="stylesheet" href="{% static 'css/pink.css' %}">
-    {% endif %}
-    {% if user.color == 'Purple' %}
-        <link rel="stylesheet" href="{% static 'css/purple.css' %}">
-    {% endif %}
+{#    Creates a stylesheet from user.color and renders it#}
+    {% with 'css/'|add:user.color|add:'.css' as stylesheet %}
+        <link rel="stylesheet" href="{% static stylesheet %}">
+    {% endwith %}
+
 
 {% endif %}
 
