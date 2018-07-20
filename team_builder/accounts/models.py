@@ -52,6 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # These are not set by accounts
     avatar = models.ImageField(null=True, blank=True)
     bio = MarkdownxField(max_length=500, blank=True)
+    color = models.CharField(max_length=50, blank=True)
 
     objects = UserManager()
 

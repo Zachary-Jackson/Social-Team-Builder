@@ -1,0 +1,158 @@
+/*This file allows for the project's color scheme to be changed to orchid.*/
+
+/* This allows the body page to change slightly*/
+body {
+  background-image: linear-gradient(#e2e2e2, rgba(226, 0, 255, 0.08));
+}
+
+/*Change the transparency of the circle header to be less transparent*/
+.circle--header a {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/*Allow for the grey navigation bar color to be changed*/
+.circle--actions--bar {
+  background: rgba(216, 216, 216, 0.57);
+}
+
+/*The following were previously #689b98 and used mostly for links*/
+
+a {
+  color: #781a92;
+}
+
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  color: #781a92;
+  box-shadow: 0 0 0 2px #781a92 inset;
+}
+
+.button svg,
+button svg,
+input[type="submit"] svg,
+input[type="reset"] svg,
+input[type="button"] svg {
+  fill: #781a92;
+}
+
+.button.button-primary, input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary,
+button.button-primary {
+  color: #fff;
+  background-color: #781a92;
+}
+
+/* line 111, ../sass/circle/core/buttons.sass */
+.button.button-text:hover, input[type="submit"].button-text:hover,
+input[type="reset"].button-text:hover,
+input[type="button"].button-text:hover, .button.button-text:focus, input[type="submit"].button-text:focus,
+input[type="reset"].button-text:focus,
+input[type="button"].button-text:focus,
+button.button-text:hover,
+button.button-text:focus {
+  color: #781a92;
+}
+
+.clickable-row h3 {
+  color: #781a92;
+}
+
+.circle--select .chevron {
+  fill: #781a92;
+}
+
+.circle--select.focus {
+  border-color: #781a92;
+}
+
+input[type="email"]:focus, input[type="number"]:focus, input[type="search"]:focus, input[type="text"]:focus, select:focus, input[type="tel"]:focus, input[type="url"]:focus, input[type="password"]:focus {
+  border-color: #781a92;
+}
+
+select:focus {
+  border-color: #781a92;
+}
+
+textarea:focus {
+  border-color: #781a92;
+}
+
+
+/*The following were previously #a5c4c2 used for delete button */
+
+.button.button-text, input[type="submit"].button-text,
+input[type="reset"].button-text,
+input[type="button"].button-text, input[type="submit"].button-text:hover, input[type="submit"].button-text:focus,
+input[type="reset"].button-text:hover,
+input[type="reset"].button-text:focus,
+input[type="button"].button-text:hover,
+input[type="button"].button-text:focus,
+button.button-text {
+  color: orchid;
+}
+
+.circle--clone--remove {
+  color: orchid;
+}
+
+.circle--filter--list a:hover {
+  color: orchid;
+}
+
+.clickable-row td {
+  color: orchid;
+}
+
+.circle--secondary--module > h1 a, .circle--secondary--module > h2 a, .circle--secondary--module > h3 a, .circle--secondary--module > h4 a, .circle--secondary--module > h5 a, .circle--secondary--module > h6 a {
+  color: orchid;
+}
+
+
+/*The following were previously #537d7b and is the main body color*/
+
+a:hover {
+  color: darkmagenta;
+}
+
+.button.button-primary:hover, input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover, input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus, .button.button-primary:focus, input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus,
+button.button-primary:hover,
+button.button-primary:focus {
+  background-color: darkmagenta;
+}
+
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover {
+  box-shadow: 0 0 0 2px darkmagenta inset;
+  color: white;
+}
+
+.button:hover svg,
+button:hover svg,
+input[type="submit"]:hover svg,
+input[type="reset"]:hover svg,
+input[type="button"]:hover svg {
+  fill: darkmagenta;
+}
+
+.circle--clone--remove:hover {
+  color: darkmagenta;
+}
+
+.circle--header {
+  background: darkmagenta;
+  padding: 20px 0;
+  margin-bottom: 30px;
+}

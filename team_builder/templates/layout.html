@@ -23,6 +23,24 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="{% static 'css/global.css' %}">
 
+{#  Check to see if the user is logged in. If so grab their preferred stylesheet  #}
+{% if user.is_authenticated %}
+
+    {% if user.color == 'Blue' %}
+        <link rel="stylesheet" href="{% static 'css/blue.css' %}">
+    {% endif %}
+    {% if user.color == 'Orange' %}
+        <link rel="stylesheet" href="{% static 'css/orange.css' %}">
+    {% endif %}
+    {% if user.color == 'Pink' %}
+        <link rel="stylesheet" href="{% static 'css/pink.css' %}">
+    {% endif %}
+    {% if user.color == 'Purple' %}
+        <link rel="stylesheet" href="{% static 'css/purple.css' %}">
+    {% endif %}
+
+{% endif %}
+
   <!-- JS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>

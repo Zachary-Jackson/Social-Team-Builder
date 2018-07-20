@@ -3,6 +3,17 @@ from django.contrib.auth import get_user_model
 
 from . import models
 
+# CHOICES is the tuple that defines what colors a user can pick for their
+# background color in the ProfileForm
+CHOICES = [
+    ('Blue', 'Blue'),
+    ('Green', 'Green'),
+    ('Pink', 'Pink'),
+    ('Purple', 'Purple'),
+    ('Orange', 'Orange'),
+
+]
+
 
 class SkillForm(forms.ModelForm):
     """Form for the AllSkills model"""
@@ -67,8 +78,11 @@ class UserForm(forms.ModelForm):
         fields = [
             'avatar',
             'bio',
+            'color',
             'username'
         ]
+
+        widgets = {'color': forms.Select(choices=CHOICES)}
 
     def clean_honey_pot(self):
         """This creates a honeypot to get rid of some bots"""

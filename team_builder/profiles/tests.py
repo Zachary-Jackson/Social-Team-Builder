@@ -2,8 +2,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-# django-notifications-hq
-from notifications.signals import notify
 
 from .models import AllSkills, Applicants, Skill, Project, Position
 
@@ -61,35 +59,7 @@ class ProfileViewsTests(TestCase):
 
         # add a position to the main project
         self.project.positions.add(self.position)
-    #
-    #     # The following is to create messages to test notifications
-    #
-    #     # Create a message to send to self.user
-    #     skill = self.skill_1
-    #     project = self.project
-    #     self.message_1 = (
-    #         f'You have been accepted as a {skill} for the project: {project}'
-    #     )
-    #
-    #     # Accepted message unread
-    #     notify.send(
-    #         self.profile_2,
-    #         recipient=self.user,
-    #         verb=self.message_1
-    #     )
-    #
-    #     # Declined message read
-    #     self.message_2 = (
-    #         f'You have been rejected as a {skill} for the project: {project}'
-    #     )
-    #
-    #     notify.send(
-    #         self.profile_2,
-    #         recipient=self.user,
-    #         verb=self.message_2
-    #     )
-    #     self.user.notifications.get(pk=2).mark_as_read()
-    #
+
     """Miscellaneous test"""
 
     def test_homepage(self):
@@ -318,136 +288,6 @@ class ProfileViewsTests(TestCase):
 
         self.assertTemplateUsed('profiles/applicants_rejected.html')
 
-    # """Notification tests"""
-    #
-    # def test_notifications(self):
-    #     """Ensures the main notifications view is working"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #
-    #     resp = self.client.get(reverse('notification_hub:notifications'))
-    #
-    #     # various page information
-    #     self.assertContains(resp, 'Notifications')
-    #     self.assertContains(resp, 'Unread')
-    #     self.assertContains(resp, 'Read')
-    #     self.assertContains(resp, 'Deletion View')
-    #     self.assertContains(resp, 'Time of notification')
-    #     # notification information
-    #     self.assertContains(resp, self.message_1)
-    #     self.assertContains(resp, f'Unread from: {self.profile_2}')
-    #     self.assertContains(resp, self.message_2)
-    #     self.assertContains(resp, f'Read from: {self.profile_2}')
-    #
-    #     self.assertTemplateUsed('profiles/notifications.html')
-    #
-    # def test_notification_delete(self):
-    #     """Ensures that a user can delete a notification"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #
-    #     resp = self.client.get(
-    #         reverse('notification_hub:delete',
-    #                 kwargs={'pk': 1}))
-    #
-    #     self.assertEqual(len(self.user.notifications.all()), 1)
-    #     self.assertRedirects(
-    #         resp,
-    #         reverse('notification_hub:deletion_view')
-    #     )
-    #
-    # def test_notifications_deletion_view(self):
-    #     """Ensures the read notifications view is working"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #
-    #     resp = self.client.get(reverse('notification_hub:deletion_view'))
-    #
-    #     # various page information
-    #     self.assertContains(resp, 'Notifications')
-    #     self.assertContains(resp, 'Unread')
-    #     self.assertContains(resp, 'Read')
-    #     self.assertContains(resp, 'Deletion View')
-    #     self.assertContains(resp, 'Read notifications for deletion')
-    #     self.assertContains(resp, 'Time of notification')
-    #     # notification information
-    #     self.assertContains(resp, self.message_2)
-    #     self.assertContains(resp, 'Delete')
-    #     self.assertContains(resp, f'From: {self.profile_2}')
-    #
-    #     self.assertTemplateUsed('profiles/notifications_deletion.html')
-    #
-    # def test_notification_mark_read(self):
-    #     """Ensures that a user can mark a notification as read"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #
-    #     resp = self.client.get(
-    #         reverse('notification_hub:mark_read',
-    #                 kwargs={'pk': 1}))
-    #
-    #     # We should not have deleted a notification
-    #     self.assertEqual(len(self.user.notifications.all()), 2)
-    #     self.assertEqual(self.user.notifications.get(pk=1).unread, False)
-    #
-    #     self.assertRedirects(
-    #         resp,
-    #         reverse('notification_hub:unread')
-    #     )
-    #
-    # def test_notification_mark_unread(self):
-    #     """Ensures that a user can mark a notification as unread"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #
-    #     resp = self.client.get(
-    #         reverse('notification_hub:mark_unread',
-    #                 kwargs={'pk': 2}))
-    #
-    #     # We should not have deleted a notification
-    #     self.assertEqual(len(self.user.notifications.all()), 2)
-    #     self.assertEqual(self.user.notifications.get(pk=2).unread, True)
-    #
-    #     self.assertRedirects(
-    #         resp,
-    #         reverse('notification_hub:read')
-    #     )
-    #
-    # def test_notifications_read(self):
-    #     """Ensures the read notifications view is working"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #
-    #     resp = self.client.get(reverse('notification_hub:read'))
-    #
-    #     # various page information
-    #     self.assertContains(resp, 'Notifications')
-    #     self.assertContains(resp, 'Unread')
-    #     self.assertContains(resp, 'Read')
-    #     self.assertContains(resp, 'Deletion View')
-    #     self.assertContains(resp, 'Read Notifications')
-    #     self.assertContains(resp, 'Time of notification')
-    #     # notification information
-    #     self.assertContains(resp, self.message_2)
-    #     self.assertContains(resp, 'Mark unread')
-    #     self.assertContains(resp, f'From: {self.profile_2}')
-    #
-    #     self.assertTemplateUsed('profiles/notifications_read.html')
-    #
-    # def test_notifications_unread(self):
-    #     """Ensures the unread notifications view is working"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #
-    #     resp = self.client.get(reverse('notification_hub:unread'))
-    #
-    #     # various page information
-    #     self.assertContains(resp, 'Notifications')
-    #     self.assertContains(resp, 'Unread')
-    #     self.assertContains(resp, 'Read')
-    #     self.assertContains(resp, 'Deletion View')
-    #     self.assertContains(resp, 'Unread Notifications')
-    #     self.assertContains(resp, 'Time of notification')
-    #     # notification information
-    #     self.assertContains(resp, self.message_1)
-    #     self.assertContains(resp, 'Mark read')
-    #     self.assertContains(resp, f'From: {self.profile_2}')
-    #
-    #     self.assertTemplateUsed('profiles/notifications_unread.html')
-    #
     """Profile view tests"""
 
     def test_profile_edit_not_logged_in(self):
@@ -488,7 +328,7 @@ class ProfileViewsTests(TestCase):
         self.client.login(username='user@user.com', password='testpass')
         self.client.post(
             reverse('profiles:edit'),
-            data={'bio': 'new bio', 'username': 'editor'})
+            data={'bio': 'new bio', 'color': 'Blue', 'username': 'editor'})
 
         # get the updated profile for testing
         user_model = get_user_model()
@@ -496,6 +336,7 @@ class ProfileViewsTests(TestCase):
 
         self.assertEqual(profile.bio, 'new bio')
         self.assertEqual(profile.username, 'editor')
+        self.assertEqual(profile.color, 'Blue')
 
         self.assertTemplateUsed('profiles/profile_edit.html')
 
