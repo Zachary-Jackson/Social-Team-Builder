@@ -1,13 +1,10 @@
 from operator import attrgetter
 
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
+from django.views.generic import ListView
 
 from .. import models
-
-
-"""searching related views"""
 
 
 def create_search_result_string(projects, search_term):
@@ -20,109 +17,125 @@ def create_search_result_string(projects, search_term):
     return search_results
 
 
-def search(request):
+class SearchViewMixin(object):
+    """Creates a template for the Search views
+    This sets the model and template_name as well as the skills context"""
+    model = models.Project
+    template_name = 'profiles/homepage.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchViewMixin, self).get_context_data(**kwargs)
+        context['skills'] = (
+            sorted(models.Skill.objects.all(), key=attrgetter('skill'))
+        )
+        return context
+
+
+"""searching related views"""
+
+
+class SearchListView(SearchViewMixin, ListView):
     """Searches all projects and returns the results"""
-    search_term = request.GET.get('search_term')
 
-    # If no search term is provided reroute to homepage
-    if not search_term:
-        return redirect('profiles:homepage')
+    def get_context_data(self, *, object_list=None, **kwargs):
+        """"Gets all skills from the database and the search_results string"""
+        context = super(SearchListView, self).get_context_data(**kwargs)
 
-    projects = models.Project.objects.all().prefetch_related('positions')\
-        .filter(
-            Q(title__icontains=search_term) |
-            Q(time_line__icontains=search_term) |
-            Q(requirements__icontains=search_term) |
-            Q(description__icontains=search_term) |
-            Q(positions__information__icontains=search_term)
-    ).distinct()
+        search_term = self.request.GET.get('search_term')
+        if not search_term:
+            return redirect('profiles:homepage')
+        context['search_results'] = (
+            create_search_result_string(self.get_queryset(), search_term)
+        )
+        return context
 
-    # Various template things
-    # Gets the search_results string
-    search_results = create_search_result_string(projects, search_term)
-    skills = sorted(models.Skill.objects.all(), key=attrgetter('skill'))
+    def get_queryset(self):
+        """Filters all fields for all projects by the search term"""
+        search_term = self.request.GET.get('search_term')
+        if not search_term:
+            return redirect('profiles:homepage')
 
-    return render(
-        request,
-        'profiles/homepage.html',
-        {
-            'object_list': projects,
-            'skills': skills,
-            'search_results': search_results}
-    )
+        return models.Project.objects.all().prefetch_related('positions')\
+            .filter(
+                Q(title__icontains=search_term) |
+                Q(time_line__icontains=search_term) |
+                Q(requirements__icontains=search_term) |
+                Q(description__icontains=search_term) |
+                Q(positions__information__icontains=search_term)
+        ).distinct()
 
 
-def search_by_skill(request, skill):
+class SearchBySkillListView(SearchViewMixin, ListView):
     """Searches projects by skills needed"""
-    # The skill might be in a url acceptable format without spaces
-    # if so we need to remove the spaces
-    # See Skill's readable_to_url method
-    skill = skill.replace('_', ' ')
 
-    skills = models.Skill.objects.all()
+    def get_context_data(self, *, object_list=None, **kwargs):
+        """"Gets all skills from the database and the search_results string"""
+        context = super(SearchBySkillListView, self).get_context_data(**kwargs)
 
-    # If the searched skill is not in skills, return no results
-    try:
-        found_skill = skills.get(skill=skill)
-    except models.Skill.DoesNotExist:
+        # The skill might be in a url acceptable format without spaces
+        # if so we need to remove the spaces
+        # See Skill's readable_to_url method
+        skill = self.kwargs['skill'].replace('_', ' ')
+        context['search_results'] = (
+            create_search_result_string(self.get_queryset(), skill)
+        )
 
-        # Various template things
-        # Creates the search_results string
-        search_results = create_search_result_string(False, skill)
-        sorted_skills = sorted(skills, key=attrgetter('skill'))
-        return render(request, 'profiles/homepage.html',
-                      {'search_results': search_results,
-                       'skills': sorted_skills})
+        # if the searched skill is not a Skill, don't create a
+        # 'skill_selector' context
+        try:
+            found_skill = models.Skill.objects.get(skill=skill)
+            context['skill_selector'] = found_skill
+        except models.Skill.DoesNotExist:
+            pass
 
-    # Get all projects that need a position with the searched skill
-    projects = models.Project.objects.all().filter(
-        Q(positions__skill__skill__contains=skill))\
-        .prefetch_related('positions__skill').distinct()
+        return context
 
-    # Various template things
-    # Creates the search_results string
-    search_results = create_search_result_string(projects, skill)
-    sorted_skills = sorted(skills, key=attrgetter('skill'))
+    def get_queryset(self):
+        """Filters all fields for all projects by the search term"""
+        # See above get_context_data
+        skill = self.kwargs['skill'].replace('_', ' ')
 
-    return render(request, 'profiles/homepage.html',
-                  {'object_list': projects,
-                   'search_results': search_results,
-                   'skill_selector': found_skill,
-                   'skills': sorted_skills})
+        return models.Project.objects.all().filter(
+            Q(positions__skill__skill__contains=skill))\
+            .prefetch_related('positions__skill').distinct()
 
 
-@login_required
-def search_your_skills(request):
+class SearchYourSkillsView(SearchViewMixin, ListView):
     """Finds all of the projects that needs the user's skills"""
-    skills = request.user.allskills.skills.all()
+    login_required = True
 
-    # Creates the sorted_skills for the template
-    all_skills = models.Skill.objects.all()
-    sorted_skills = sorted(all_skills, key=attrgetter('skill'))
+    def get_context_data(self, *, object_list=None, **kwargs):
+        """"Gets all skills from the database and the search_results string"""
+        context = super(SearchYourSkillsView, self).get_context_data(**kwargs)
 
-    # Get all of the projects
-    all_projects = models.Project.objects.all()
+        context['skill_selector'] = 'Your Projects'
+        context['search_results'] = (
+            create_search_result_string(self.get_queryset(), 'Your Skills')
+        )
 
-    # Create a list to add all the found projects to
-    found_projects = set()
+        return context
 
-    for skill in skills:
-        query = all_projects.filter(Q(positions__skill__skill__contains=skill))
-        # If the query is empty, do not add to found_projects
-        if len(query):
-            found_projects.add(query)
+    def get_queryset(self):
+        """Filters all fields for all projects by the search term"""
+        # The user's skills
+        skills = self.request.user.allskills.skills.all()
 
-    projects = []
-    for queryset in found_projects:
-        for query in queryset:
-            projects.append(query)
+        # Get all of the projects
+        all_projects = models.Project.objects.all()
 
-    # Get all of the information for the template
-    search_results = create_search_result_string(found_projects, 'Your Skills')
-    skill_selector = 'Your Projects'
+        # Create a list to add all the found projects to
+        found_projects = set()
 
-    return render(request, 'profiles/homepage.html',
-                  {'object_list': projects,
-                   'search_results': search_results,
-                   'skill_selector': skill_selector,
-                   'skills': sorted_skills})
+        for skill in skills:
+            query = all_projects.filter(
+                Q(positions__skill__skill__contains=skill))
+            # If the query is empty, do not add to found_projects
+            if len(query):
+                found_projects.add(query)
+
+        projects = []
+        for queryset in found_projects:
+            for query in queryset:
+                projects.append(query)
+
+        return projects

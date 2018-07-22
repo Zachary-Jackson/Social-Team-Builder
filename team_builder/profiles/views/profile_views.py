@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .. import forms
@@ -45,20 +44,14 @@ def profile_view(request, pk):
     """Lets any user view a person's profile"""
     # Get the User model that matches the pk
     user_profile = get_object_or_404(get_user_model(), pk=pk)
+    # filter projects by the logged in user
     projects = models.Project.objects.all().filter(owner=pk)\
         .prefetch_related('positions__skill')
-
-    # Checks to see if the User has an avatar if not use default media
-    try:
-        image_url = static(user_profile.avatar.url)
-    except ValueError:
-        image_url = static('profiles_media/default_profile_image.png')
 
     return render(
         request,
         'profiles/profile.html',
         {
             'current_tab': 'Profile',  # navigation bar selector
-            'image_url': image_url,
             'projects': projects,
             'user_profile': user_profile})

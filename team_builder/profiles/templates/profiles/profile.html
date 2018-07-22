@@ -18,7 +18,8 @@
       {% endif %}
 
 
-      {# If the logged in user is not the same as the user_profile don't show an edit button#}
+{#      If the logged in user is not the same as the user_profile#}
+{#        don't show an edit button#}
       {% if user_profile.username == request.user.username %}
         <div class="circle--fluid--cell circle--fluid--secondary">
           <a class="button icon-on-left" href="{% url 'profiles:edit' %}">
@@ -32,7 +33,7 @@
 
     <div class="grid-70">
       <div class="circle--article--body">
-        <h2>Bio</h2>
+        <h2>Bio:</h2>
         <p>{{ user_profile.bio_markdown|safe }}</p>
       </div>
 
@@ -47,7 +48,8 @@
         <tbody>
 
         {% for project in projects %}
-          <tr class="clickable-row" data-href="{% url 'profiles:project' pk=project.pk %}">
+          <tr class="clickable-row"
+              data-href="{% url 'profiles:project' pk=project.pk %}">
             <td>
               <h3>{{ project }}</h3>
             </td>
@@ -68,9 +70,17 @@
 
     <div class="grid-25 grid-push-5">
 
-      {% if image_url %}
+{#    Checks to see if the user has an avatar.#}
+{#    If not use default profile media#}
+      {% if user_profile.avatar %}
         <div class="circle--secondary--module">
-            <img class="circle--primary--avatar" src= {{ image_url }}>
+            <img class="circle--primary--avatar"
+                 src="{% static user_profile.avatar.url %}">
+        </div>
+      {% else %}
+        <div class="circle--secondary--module">
+            <img class="circle--primary--avatar"
+                 src="{% static 'profiles_media/default_profile_image.png' %}">
         </div>
       {% endif %}
 

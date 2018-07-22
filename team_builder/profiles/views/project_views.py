@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .. import forms
 from .. import models
 
+
 def get_project_and_authenticate(request, pk):
     """Gets the logged in user and makes sure that the user owns
     the project

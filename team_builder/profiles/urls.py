@@ -34,7 +34,11 @@ urlpatterns = [
 
     # Profile related paths
     path('profile/edit/', views.profile_edit, name='edit'),
-    path('profile/view/<int:pk>/', views.profile_view, name='profile'),
+    path(
+        'profile/view/<int:pk>/',
+        views.profile_view,
+        name='profile'
+    ),
 
     # Project related paths
     path(
@@ -50,17 +54,17 @@ urlpatterns = [
     path('project/edit/<int:pk>', views.project_edit, name='project_edit'),
     path('project/new', views.project_new, name='project_new'),
     path('project/view/<int:pk>/', views.project_view, name='project'),
+    path('project/view_all', views.project_view_all, name='project_view_all'),
 
     # Search related paths
-    path('search', views.search, name='search'),
+    path('search', views.SearchListView.as_view(), name='search'),
     path(
         'search/skill/<str:skill>',
-        views.search_by_skill,
+        views.SearchBySkillListView.as_view(),
         name='search_by_skill'
     ),
     path('search/your_skills',
-         views.search_your_skills,
+         views.SearchYourSkillsView.as_view(),
          name='search_your_skills'
     ),
-    path('project/view_all', views.project_view_all, name='project_view_all'),
 ]
