@@ -24,7 +24,7 @@ after sign up
 * - [ ]The avatar image can be edited with tools like resize, crop, rotate and flip
 
 
-- [ ] Users can pick multiple skills for their profile from a list
+- [x] Users can pick multiple skills for their profile from a list
 * - [ ]They can also create custom skills
 
 

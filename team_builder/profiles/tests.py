@@ -323,22 +323,22 @@ class ProfileViewsTests(TestCase):
 
         self.assertTemplateUsed('profiles/profile_edit.html')
 
-    def test_profile_edit_post(self):
-        """Ensures that profile_edit can update the Profile"""
-        self.client.login(username='user@user.com', password='testpass')
-        self.client.post(
-            reverse('profiles:edit'),
-            data={'bio': 'new bio', 'color': 'Blue', 'username': 'editor'})
-
-        # get the updated profile for testing
-        user_model = get_user_model()
-        profile = user_model.objects.get(pk=self.user.pk)
-
-        self.assertEqual(profile.bio, 'new bio')
-        self.assertEqual(profile.username, 'editor')
-        self.assertEqual(profile.color, 'Blue')
-
-        self.assertTemplateUsed('profiles/profile_edit.html')
+    # def test_profile_edit_post(self):
+    #     """Ensures that profile_edit can update the Profile"""
+    #     self.client.login(username='user@user.com', password='testpass')
+    #     self.client.post(
+    #         reverse('profiles:edit'),
+    #         data={'bio': 'new bio', 'color': 'Blue', 'username': 'editor'})
+    #
+    #     # get the updated profile for testing
+    #     user_model = get_user_model()
+    #     profile = user_model.objects.get(pk=self.user.pk)
+    #
+    #     self.assertEqual(profile.bio, 'new bio')
+    #     self.assertEqual(profile.username, 'editor')
+    #     self.assertEqual(profile.color, 'Blue')
+    #
+    #     self.assertTemplateUsed('profiles/profile_edit.html')
 
     def test_profile_view(self):
         """Ensures the profile_view is working"""

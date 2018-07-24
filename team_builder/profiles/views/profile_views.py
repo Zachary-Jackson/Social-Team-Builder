@@ -6,6 +6,43 @@ from .. import forms
 from .. import models
 
 
+def create_data(user):
+    """
+    Creates the data dictionary for a formset, based on a user
+    Returns: data
+    """
+    data = {
+        'form-TOTAL_FORMS': '1',
+        'form-INITIAL_FORMS': '2',
+        'form-MAX_NUM_FORMS': '',
+    }
+    skills = user.allskills.skills.all()
+    num_of_skills = len(skills)
+
+    if num_of_skills:
+        # For each skill in skills add a key to the dictionary data
+        # with the skill's pk in a list
+        counter = 0
+        for skill in skills:
+            pk = skill.pk
+            # Creates a template to append to data
+            key_template = f'form-{counter}-skills'
+            data[key_template] = [pk]
+            # Increase the counter, so we go to the next form
+            counter += 1
+
+        # Updates data's total and initial form count
+        data['form-TOTAL_FORMS'] = num_of_skills
+        data['form-INITIAL_FORMS'] = num_of_skills
+    else:
+        data['form-0-skills'] = [0]
+
+    # Create data's total, initial, and max forms count
+
+    data['form-MAX_NUM_FORMS'] = 5
+    return data
+
+
 """Profile related views"""
 
 
@@ -14,20 +51,37 @@ def profile_edit(request):
     """Allows a profile to be edited"""
     instance = request.user
     profile_form = forms.UserForm(instance=instance)
-    skills_form = forms.SkillForm(instance=instance.allskills)
+    data = create_data(instance)
+    skills_form = forms.SkillFormSet(data=data)
 
-    # The form is currently not capturing images properly.
     if request.method == 'POST':
         profile_form = forms.UserForm(
             request.POST, request.FILES, instance=instance
         )
-        skills_form = forms.SkillForm(
-            request.POST, request.FILES, instance=instance.allskills
+        skills_form = forms.SkillFormSet(
+            request.POST, request.FILES
         )
 
         if profile_form.is_valid() and skills_form.is_valid():
             profile_form.save()
-            skills_form.save()
+            skills_dict = skills_form.cleaned_data
+
+            # Take all skills from the cleaned data, and put it in a list
+            skills_list = []
+            for dictionary in skills_dict:
+
+                # If a form is left empty pass
+                try:
+                    for item in dictionary['skills']:
+                        skills_list.append(item)
+                except KeyError:
+                    pass
+
+            # dissociate all skills from a user
+            instance.allskills.skills.clear()
+            # creates a new set of skills for the user
+            instance.allskills.skills.add(*skills_list)
+
             return redirect('profiles:profile', pk=request.user.pk)
 
     return render(

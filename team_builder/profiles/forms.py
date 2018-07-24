@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.forms import formset_factory
 
 from . import models
 
@@ -11,7 +12,6 @@ CHOICES = [
     ('Orange', 'Orange'),
     ('Pink', 'Pink'),
     ('Purple', 'Purple'),
-
 ]
 
 
@@ -23,6 +23,19 @@ class SkillForm(forms.ModelForm):
         fields = [
             'skills'
         ]
+        labels = {
+            'name': 'Skill'
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Book Name here'
+                }
+            )
+        }
+
+
+SkillFormSet = formset_factory(SkillForm)
 
 
 class ProjectForm(forms.ModelForm):

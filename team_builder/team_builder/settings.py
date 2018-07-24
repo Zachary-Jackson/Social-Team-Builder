@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'team_builder',
     'accounts',
     'notification_hub',
-    'profiles'
+    'profiles',
 ]
 
 MIDDLEWARE = [

@@ -16,3 +16,7 @@ the owner can accept or deny the application.
 compliant with the property bio_markdown that displays the bio in markdown.
 
 3) django-markdownx==2.0.23 (for various fields in models.py)
+
+4) Inside of assets there needs to be a directory called *profiles_media*
+that contains an image called *default_profile_image.png*. This image
+will be used if the user does not have a profile image.
