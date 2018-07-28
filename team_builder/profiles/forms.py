@@ -1,17 +1,17 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.forms import formset_factory
+from django.forms import BaseFormSet, formset_factory
 
 from . import models
 
 # CHOICES is the tuple that defines what colors a user can pick for their
 # background color in the ProfileForm
 CHOICES = [
-    ('Blue', 'Blue'),
-    ('Green', 'Green'),
-    ('Orange', 'Orange'),
-    ('Pink', 'Pink'),
-    ('Purple', 'Purple'),
+    ('blue', 'Blue'),
+    ('green', 'Green'),
+    ('orange', 'Orange'),
+    ('pink', 'Pink'),
+    ('purple', 'Purple'),
 ]
 
 
@@ -35,7 +35,7 @@ class SkillForm(forms.ModelForm):
         }
 
 
-SkillFormSet = formset_factory(SkillForm)
+SkillFormSet = formset_factory(SkillForm, extra=0)
 
 
 class ProjectForm(forms.ModelForm):
@@ -80,6 +80,25 @@ class PositionForm(forms.ModelForm):
         ]
 
         widgets = {'information': forms.Textarea(attrs={'rows': 10})}
+
+
+class EditPositionForm(PositionForm):
+    """Subclass of PositionForm that bypasses a bug when the user submits
+    the PositionFormSet when deleting a Position and does nothing else
+
+    Could potentially allow a user to edit a newly created project
+    to have no positions though."""
+
+    def is_valid(self):
+        """Allows the form to count as valid if no information is present"""
+        valid = super(PositionForm, self).is_valid()
+
+        if self['skill'].data == '' and self['information'].data == '':
+            valid = True
+        return valid
+
+
+PositionFormSet = formset_factory(EditPositionForm, extra=0)
 
 
 class UserForm(forms.ModelForm):

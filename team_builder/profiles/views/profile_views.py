@@ -6,41 +6,21 @@ from .. import forms
 from .. import models
 
 
-def create_data(user):
+def create_initial_data(user):
     """
-    Creates the data dictionary for a formset, based on a user
-    Returns: data
+    Creates the initial data dictionary for a formset, based on a user
+    Returns: initial data
     """
-    data = {
-        'form-TOTAL_FORMS': '1',
-        'form-INITIAL_FORMS': '2',
-        'form-MAX_NUM_FORMS': '',
-    }
+
+    initial = []
     skills = user.allskills.skills.all()
-    num_of_skills = len(skills)
 
-    if num_of_skills:
-        # For each skill in skills add a key to the dictionary data
-        # with the skill's pk in a list
-        counter = 0
-        for skill in skills:
-            pk = skill.pk
-            # Creates a template to append to data
-            key_template = f'form-{counter}-skills'
-            data[key_template] = [pk]
-            # Increase the counter, so we go to the next form
-            counter += 1
+    for skill in skills:
+        initial.append({
+            'skills': [skill.pk]  # select many field requires a list
+        })
 
-        # Updates data's total and initial form count
-        data['form-TOTAL_FORMS'] = num_of_skills
-        data['form-INITIAL_FORMS'] = num_of_skills
-    else:
-        data['form-0-skills'] = [0]
-
-    # Create data's total, initial, and max forms count
-
-    data['form-MAX_NUM_FORMS'] = 5
-    return data
+    return initial
 
 
 """Profile related views"""
@@ -51,8 +31,8 @@ def profile_edit(request):
     """Allows a profile to be edited"""
     instance = request.user
     profile_form = forms.UserForm(instance=instance)
-    data = create_data(instance)
-    skills_form = forms.SkillFormSet(data=data)
+    initial = create_initial_data(instance)
+    skills_form = forms.SkillFormSet(initial=initial)
 
     if request.method == 'POST':
         profile_form = forms.UserForm(

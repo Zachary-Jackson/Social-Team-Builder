@@ -32,7 +32,7 @@ after sign up
 * - [x]Markdown can be used in the project description
 
 
-- [ ] Users can create multiple positions for a project
+- [x] Users can create multiple positions for a project
 * - [ ]Can provide a time commitment for the position and use Markdown
 
 

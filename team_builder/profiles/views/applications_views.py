@@ -34,7 +34,6 @@ def get_applicant(position, profile_pk: int):
 def get_projects_with_filled_or_unfilled_positions(is_filled: bool, request):
     """Searches all of the User's projects and checks if they have
     filled or unfilled positions in them
-
     Returns found projects"""
     projects = models.Project.objects.all().filter(
         Q(owner=request.user) & Q(positions__filled=is_filled))
@@ -45,7 +44,6 @@ def get_needed_skills_and_found_positions(
         request, is_accepted: bool, is_filled: bool):
     """Gets all of the User's Positions
     Finds all of the applicants using is_filled
-
     returns the found_skills and needed_positions"""
     # Get all of the desired skills for the projects
     found_positions = set()
@@ -248,4 +246,4 @@ def applications_view_rejected(request):
             'current_tab': 'Applications',  # navigation bar selector
             'needed_skills': list(needed_skills),
             'projects': projects
-        })
+    })

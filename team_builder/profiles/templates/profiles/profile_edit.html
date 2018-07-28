@@ -121,7 +121,7 @@ The source code has been edited in order to work with this project -->
         <div class="input-group">
             {{form.skills}}
             <div class="input-group-append">
-                <button class="btn btn-success add-form-row">+</button>
+                <button class="btn btn-success add-form-row">Add Skill</button>
             </div>
         </div>
     </div>
@@ -191,24 +191,11 @@ $( document ).ready(function() {
 
     let length = found_forms.length
 
-    // If length is one we need to click and unclick the form, becuase no
-    // data is in it. We don't want two empty forms
-    if (length === '1') {
+    // If length is not one we need to click the form so the jquery
+    // updates all the forms to display correctly
+    if (length !== 1) {
         // This gets the first form element and clicks it
         found_forms[0].click()
-    }
-    else {
-        // This gets the first form element and clicks it
-        found_forms[0].click()
-
-        // Get the last form
-        let found_deletes = document.getElementsByClassName('btn btn-danger remove-form-row')
-
-        let delete_length = found_deletes.length
-        let last_delete = found_deletes[delete_length]
-
-        // Click the last form, so the user has all the proper buttons
-        last_delete.click()
     }
 
 
