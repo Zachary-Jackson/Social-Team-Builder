@@ -45,38 +45,39 @@
 
         <ul class="circle--group--list">
 
-          {% for position in project.positions.all %}
-            <li>
+        {% block applicant_buttons %}
+
+            {% for position in unfilled_positions %}
               <h3>{{ position.skill }}</h3>
               <p>{{ position.information|linebreaks }}</p>
 
-
-{#              Allows a Position's applicant buttons to change #}
-{#                based on who is logged in  #}
-            {% block applicant_buttons %}
-              {% if position.filled == False %}
                 <a class="button button-primary"
-                   href="{% url 'profiles:applications_request' pk=position.pk %}"
-                >
+                   href="{% url 'profiles:applications_request' pk=position.pk %}">
                     Apply
                 </a>
-              {% endif %}
-              {% if position.filled == True %}
-                <a class="button button-primary button-inactive">
-                    Position Filled
-                </a>
-              {% endif %}
-            {% endblock applicant_buttons %}
+            {% endfor %}
+            </ul>
 
+          <h2>Filled Positions</h2>
+          <ul class="circle--group--list">
+            {% for position in filled_positions %}
+              <h3>{{ position.skill }}</h3>
+              <p>{{ position.information|linebreaks }}</p>
 
-            </li>
-          {% endfor %}
+                    <a class="button button-primary button-inactive">
+                        Position Filled
+                    </a>
+
+            {% endfor %}
+          </ul>
+
+      {% endblock applicant_buttons %}
+
 
 {#        Allows for the addition of delete_confirmation form buttons#}
         {% block delete_confirmation %}
         {% endblock delete_confirmation %}
 
-        </ul>
       </div>
     </div>
 
@@ -84,10 +85,8 @@
       <div class="circle--secondary--module">
         <h3>Project Needs</h3>
         <ul class="circle--link--list">
-          {% for position in project.positions.all %}
-            {% if not position.filled %}
-                <li><a>{{ position }}</a></li>
-            {% endif %}
+          {% for position in unfilled_positions %}
+            <li><a>{{ position }}</a></li>
           {% endfor %}
         </ul>
       </div>

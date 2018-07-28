@@ -55,7 +55,8 @@ class SearchListView(SearchViewMixin, ListView):
         if not search_term:
             return redirect('profiles:homepage')
 
-        return models.Project.objects.all().prefetch_related('positions')\
+        return models.Project.objects.filter(positions__filled=False)\
+            .prefetch_related('positions')\
             .filter(
                 Q(title__icontains=search_term) |
                 Q(time_line__icontains=search_term) |
@@ -95,9 +96,12 @@ class SearchBySkillListView(SearchViewMixin, ListView):
         # See above get_context_data
         skill = self.kwargs['skill'].replace('_', ' ')
 
-        return models.Project.objects.all().filter(
-            Q(positions__skill__skill__contains=skill))\
-            .prefetch_related('positions__skill').distinct()
+        return models.Project.objects.filter(
+            Q(
+                positions__skill__skill__contains=skill,
+                positions__filled=False,
+            )
+        ).prefetch_related('positions__skill').distinct()
 
 
 class SearchYourSkillsView(SearchViewMixin, ListView):
@@ -121,7 +125,8 @@ class SearchYourSkillsView(SearchViewMixin, ListView):
         skills = self.request.user.allskills.skills.all()
 
         # Get all of the projects
-        all_projects = models.Project.objects.all()
+        all_projects = models.Project.objects\
+            .filter(positions__filled=False).distinct()
 
         # Create a list to add all the found projects to
         found_projects = set()

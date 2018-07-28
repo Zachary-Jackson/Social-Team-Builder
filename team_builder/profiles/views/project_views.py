@@ -25,6 +25,21 @@ def create_initial_data(positions):
     return initial
 
 
+def get_filled_and_unfilled_positions(project):
+    """"Takes a project
+    returns all of the filled and unfilled positions"""
+
+    # Get all of the positions for the project
+    all_positions = project.positions.all()
+
+    # Separate the filled and unfilled projects, so that users can't
+    # edit the filled ones
+    filled_positions = all_positions.filter(filled=True)
+    unfilled_positions = all_positions.filter(filled=False)
+
+    return filled_positions, unfilled_positions
+
+
 def get_project_and_authenticate(request, pk):
     """Gets the logged in user and makes sure that the user owns
     the project
@@ -80,13 +95,9 @@ def project_edit(request, pk):
 
     project_form = forms.ProjectForm(instance=project)
 
-    # Get all of the positions for the project
-    all_positions = project.positions.all()
-    
-    # Separate the filled and unfilled projects, so that users can't
-    # edit the filled ones
-    filled_positions = all_positions.filter(filled=True)
-    unfilled_positions = all_positions.filter(filled=False)
+    filled_positions, unfilled_positions = (
+        get_filled_and_unfilled_positions(project)
+    )
 
     initial = create_initial_data(unfilled_positions)
 
@@ -205,8 +216,16 @@ def project_new(request):
 def project_view(request, pk):
     """Checks to see if the logged in user owns this project.
     If so show special owner template. If not show normal project template"""
+
+    # If the owner is viewing the project the template changes
+    template_name = 'profiles/project.html'
+
     # Get the Project that matches the pk
     project = get_object_or_404(models.Project, pk=pk)
+
+    filled_positions, unfilled_positions = (
+        get_filled_and_unfilled_positions(project)
+    )
 
     # Makes sure there is a logged in user
     try:
@@ -215,13 +234,14 @@ def project_view(request, pk):
         pass
     else:
         if request.user == project.owner:
-            return render(
-                request,
-                'profiles/project_view_owned.html',
-                {'project': project}
-            )
-    # If no logged in user or the wrong user the following happens
-    return render(request, 'profiles/project.html', {'project': project})
+            # Change to the owned template view
+            template_name = 'profiles/project_view_owned.html'
+
+    return render(request, template_name, {
+        'filled_positions': filled_positions,
+        'project': project,
+        'unfilled_positions': unfilled_positions
+    })
 
 
 @login_required

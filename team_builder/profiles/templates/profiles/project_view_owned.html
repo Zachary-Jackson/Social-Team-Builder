@@ -2,19 +2,31 @@
 
 {% block applicant_buttons %}
 
-  {% if position.filled == False %}
-    <a class="button button-primary">Accepting applicants</a>
-    <a class="button button-primary"
-       href="{% url 'profiles:applications_request' pk=position.pk %}">
-        Dev Application
-    </a>
-  {% endif %}
+    {% for position in unfilled_positions %}
+      <h3>{{ position.skill }}</h3>
+      <p>{{ position.information|linebreaks }}</p>
 
-  {% if position.filled == True %}
+        <a class="button button-primary">Accepting applicants</a>
+        <a class="button button-primary"
+           href="{% url 'profiles:applications_request' pk=position.pk %}">
+            Dev Application
+        </a>
+
+    {% endfor %}
+    </ul>
+
+  <h2>Filled Positions</h2>
+  <ul class="circle--group--list">
+    {% for position in filled_positions %}
+      <h3>{{ position.skill }}</h3>
+      <p>{{ position.information|linebreaks }}</p>
+
     <a class="button button-primary button-inactive"
        href="{% url 'profiles:profile' pk=position.filled_by.pk %}">
         Position Filled by {{ position.filled_by }}
     </a>
-  {% endif %}
+
+    {% endfor %}
+  </ul>
 
 {% endblock applicant_buttons %}

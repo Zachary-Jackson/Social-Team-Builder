@@ -102,7 +102,9 @@
             </td>
             <td class="circle--cell--right">
               {% for position in project.positions.all %}
-               <span class="secondary-label">{{ position.skill }}</span>
+                  {% if not position.filled %}
+                    <span class="secondary-label">[{{ position.skill }}]</span>
+                  {% endif %}
               {% endfor %}
             </td>
           </tr>

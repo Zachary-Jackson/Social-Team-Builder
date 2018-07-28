@@ -25,8 +25,11 @@ class HomepageListView(ListView):
         return context
 
     def get_queryset(self):
+        """Returns all Projects that have an unfilled position"""
         return (
-            models.Project.objects.all().prefetch_related('positions__skill')
+            models.Project.objects.filter(
+                positions__filled=False
+            ).distinct().prefetch_related('positions__skill')
         )
 
 

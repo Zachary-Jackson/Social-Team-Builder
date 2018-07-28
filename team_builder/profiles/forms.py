@@ -1,3 +1,5 @@
+import random
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.forms import BaseFormSet, formset_factory
@@ -7,9 +9,12 @@ from . import models
 # CHOICES is the tuple that defines what colors a user can pick for their
 # background color in the ProfileForm
 CHOICES = [
+    ('random', 'Random'),
     ('blue', 'Blue'),
+    ('', 'Blue-Green'),
     ('green', 'Green'),
     ('orange', 'Orange'),
+    ('red', 'Red'),
     ('pink', 'Pink'),
     ('purple', 'Purple'),
 ]
@@ -115,6 +120,13 @@ class UserForm(forms.ModelForm):
         ]
 
         widgets = {'color': forms.Select(choices=CHOICES)}
+
+    def clean_color(self):
+        """If the color is random, choice a random color"""
+        color = self.cleaned_data['color']
+        if color == 'random':
+            color = random.choice(CHOICES[1:])[0]
+        return color
 
     def clean_honey_pot(self):
         """This creates a honeypot to get rid of some bots"""

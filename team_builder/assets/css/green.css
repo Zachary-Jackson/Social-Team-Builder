@@ -1,0 +1,158 @@
+/*This file allows for the project's color scheme to be changed to sandybrown.*/
+
+/* This allows the body page to change slightly*/
+body {
+  background-image: linear-gradient(#e2e2e2, rgba(0, 255, 12, 0.02));
+}
+
+/*Change the transparency of the circle header to be less transparent*/
+.circle--header a {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/*Allow for the grey navigation bar color to be changed*/
+.circle--actions--bar {
+  background: rgba(216, 216, 216, 0.57);
+}
+
+/*The following were previously #689b98 and used mostly for links*/
+
+a {
+  color: seagreen;
+}
+
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  color: seagreen;
+  box-shadow: 0 0 0 2px seagreen inset;
+}
+
+.button svg,
+button svg,
+input[type="submit"] svg,
+input[type="reset"] svg,
+input[type="button"] svg {
+  fill: seagreen;
+}
+
+.button.button-primary, input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary,
+button.button-primary {
+  color: #fff;
+  background-color: seagreen;
+}
+
+/* line 111, ../sass/circle/core/buttons.sass */
+.button.button-text:hover, input[type="submit"].button-text:hover,
+input[type="reset"].button-text:hover,
+input[type="button"].button-text:hover, .button.button-text:focus, input[type="submit"].button-text:focus,
+input[type="reset"].button-text:focus,
+input[type="button"].button-text:focus,
+button.button-text:hover,
+button.button-text:focus {
+  color: seagreen;
+}
+
+.clickable-row h3 {
+  color: seagreen;
+}
+
+.circle--select .chevron {
+  fill: seagreen;
+}
+
+.circle--select.focus {
+  border-color: seagreen;
+}
+
+input[type="email"]:focus, input[type="number"]:focus, input[type="search"]:focus, input[type="text"]:focus, select:focus, input[type="tel"]:focus, input[type="url"]:focus, input[type="password"]:focus {
+  border-color: seagreen;
+}
+
+select:focus {
+  border-color: seagreen;
+}
+
+textarea:focus {
+  border-color: seagreen;
+}
+
+
+/*The following were previously #a5c4c2 used for delete button */
+
+.button.button-text, input[type="submit"].button-text,
+input[type="reset"].button-text,
+input[type="button"].button-text, input[type="submit"].button-text:hover, input[type="submit"].button-text:focus,
+input[type="reset"].button-text:hover,
+input[type="reset"].button-text:focus,
+input[type="button"].button-text:hover,
+input[type="button"].button-text:focus,
+button.button-text {
+  color: sandybrown;
+}
+
+.circle--clone--remove {
+  color: sandybrown;
+}
+
+.circle--filter--list a:hover {
+  color: sandybrown;
+}
+
+.clickable-row td {
+  color: sandybrown;
+}
+
+.circle--secondary--module > h1 a, .circle--secondary--module > h2 a, .circle--secondary--module > h3 a, .circle--secondary--module > h4 a, .circle--secondary--module > h5 a, .circle--secondary--module > h6 a {
+  color: sandybrown;
+}
+
+
+/*The following were previously #537d7b and is the main body color*/
+
+a:hover {
+  color: darkgreen;
+}
+
+.button.button-primary:hover, input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover, input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus, .button.button-primary:focus, input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus,
+button.button-primary:hover,
+button.button-primary:focus {
+  background-color: darkgreen;
+}
+
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover {
+  box-shadow: 0 0 0 2px darkgreen inset;
+  color: white;
+}
+
+.button:hover svg,
+button:hover svg,
+input[type="submit"]:hover svg,
+input[type="reset"]:hover svg,
+input[type="button"]:hover svg {
+  fill: darkgreen;
+}
+
+.circle--clone--remove:hover {
+  color: darkgreen;
+}
+
+.circle--header {
+  background: darkgreen;
+  padding: 20px 0;
+  margin-bottom: 30px;
+}
