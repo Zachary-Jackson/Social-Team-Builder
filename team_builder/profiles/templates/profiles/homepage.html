@@ -62,7 +62,8 @@
           <li>
             <!--If the skill_selector is the current skill, bold it-->
             {% if skill_selector == skill %}
-              <a class = "selected" href="{% url 'profiles:search_by_skill' skill=skill.readable_to_url %}">
+              <a class = "selected"
+                 href="{% url 'profiles:search_by_skill' skill=skill.readable_to_url %}">
             {% else %}
               <a href="{% url 'profiles:search_by_skill' skill=skill.readable_to_url %}">
             {% endif %}

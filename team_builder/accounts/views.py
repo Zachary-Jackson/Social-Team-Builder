@@ -23,6 +23,7 @@ class LoginView(generic.FormView):
 
 
 class LogoutView(generic.RedirectView):
+    """Allows a user to logout"""
     url = reverse_lazy("profiles:homepage")
 
     def get(self, request, *args, **kwargs):

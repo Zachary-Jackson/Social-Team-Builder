@@ -10,12 +10,14 @@ from .. import models
 def create_initial_data(positions):
     """
     Creates the initial dictionary for a formset, based on send in positions
+
     Returns: data
     """
     initial = []
     for position in positions:
         initial.append({
             'skill': position.skill,
+            'time_commitment': position.time_commitment,
             'information': position.information
         })
 
@@ -26,8 +28,11 @@ def create_initial_data(positions):
 
 
 def get_filled_and_unfilled_positions(project):
-    """"Takes a project
-    returns all of the filled and unfilled positions"""
+    """"
+    Takes a project
+
+    returns: all of the filled and unfilled positions
+    """
 
     # Get all of the positions for the project
     all_positions = project.positions.all()
@@ -41,11 +46,16 @@ def get_filled_and_unfilled_positions(project):
 
 
 def get_project_and_authenticate(request, pk):
-    """Gets the logged in user and makes sure that the user owns
+    """
+    Gets the logged in user and makes sure that the user owns
     the project
 
     If so: return project
-    Else: raise 404"""
+    Else: raise 404
+
+    Keyword arguments:
+    pk -- Project object's primary key
+    """
     project = get_object_or_404(models.Project, pk=pk)
 
     # Checks if the logged in user owns the project. If not kick them out.
@@ -60,7 +70,12 @@ def get_project_and_authenticate(request, pk):
 
 @login_required()
 def project_delete(request, pk):
-    """Allows a project owner to delete a project"""
+    """
+    Allows a project owner to delete a project
+
+    Keyword arguments:
+    pk -- Project object's primary key
+   """
     project = get_project_and_authenticate(request, pk)
 
     project.delete()
@@ -214,8 +229,13 @@ def project_new(request):
 
 
 def project_view(request, pk):
-    """Checks to see if the logged in user owns this project.
-    If so show special owner template. If not show normal project template"""
+    """
+    Checks to see if the logged in user owns this project.
+    If so show special owner template. If not show normal project template
+
+    Keyword arguments:
+    pk -- Project object's primary key
+    """
 
     # If the owner is viewing the project the template changes
     template_name = 'profiles/project.html'

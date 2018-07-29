@@ -2,7 +2,7 @@ import random
 
 from django import forms
 from django.contrib.auth import get_user_model
-from django.forms import BaseFormSet, formset_factory
+from django.forms import formset_factory
 
 from . import models
 
@@ -81,6 +81,7 @@ class PositionForm(forms.ModelForm):
         model = models.Position
         fields = [
             'skill',
+            'time_commitment',
             'information',
         ]
 

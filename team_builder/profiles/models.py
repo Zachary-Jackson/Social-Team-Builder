@@ -52,15 +52,6 @@ class Project(models.Model):
 
 class Position(models.Model):
     """This holds onto position information for a Project"""
-    # allows various positions to easily be found by User
-    # position_creator will automatically be set from the
-    # related_project
-    position_creator = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
     related_project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
@@ -89,6 +80,7 @@ class Position(models.Model):
         related_name='employee_name'
     )
     information = models.CharField(max_length=500)
+    time_commitment = MarkdownxField(max_length=400)
 
     def __str__(self):
         """Returns the skill and information with ... if info is to long"""
@@ -114,6 +106,12 @@ class Position(models.Model):
         self.position_creator = self.related_project.owner
 
         super(Position, self).save(*args, **kwargs)
+
+    @property
+    def time_commitment_markdown(self):
+        """This allows us to turn self.time_commitment into markdown to send
+        to a template for display."""
+        return markdownify(self.time_commitment)
 
 
 class Applicants(models.Model):

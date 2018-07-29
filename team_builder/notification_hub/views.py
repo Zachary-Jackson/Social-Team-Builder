@@ -4,11 +4,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 
 def get_notification_and_authenticate(request, pk):
-    """Gets the logged in user and makes sure that the user owns
+    """
+    Gets the logged in user and makes sure that the user owns
     the notification
 
-    If so, return notification
-    Else: raise 404"""
+    Keyword Arguments:
+    pk -- The primary key of a user
+
+    If the user owns the notification, return notification
+    Else: raise 404
+    """
     user = request.user
 
     # Get the notification or 404
@@ -42,8 +47,10 @@ def notifications(request):
 
 @login_required
 def delete(request, pk):
-    """Marks a notification as read and reroute back to
-     notification_hub:unread"""
+    """
+    Marks a notification as read and reroute back to
+    notification_hub:unread
+    """
     notification = get_notification_and_authenticate(request, pk)
 
     # mark the notification as read
@@ -69,8 +76,10 @@ def deletion_view(request):
 
 @login_required
 def mark_read(request, pk):
-    """Marks a notification as read and reroute back to
-     notification_hub:unread"""
+    """
+    Marks a notification as read and reroute back to
+    notification_hub:unread
+    """
     notification = get_notification_and_authenticate(request, pk)
 
     # mark the notification as read
@@ -81,8 +90,10 @@ def mark_read(request, pk):
 
 @login_required
 def mark_unread(request, pk):
-    """Marks a notification as unread and reroute back to
-     notification_hub:read"""
+    """
+    Marks a notification as unread and reroute back to the route
+    'notification_hub:read'
+    """
     notification = get_notification_and_authenticate(request, pk)
 
     # mark the notification as read

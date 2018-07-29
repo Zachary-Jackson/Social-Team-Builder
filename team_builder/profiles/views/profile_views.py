@@ -20,6 +20,10 @@ def create_initial_data(user):
             'skills': [skill.pk]  # select many field requires a list
         })
 
+    # If skills is empty create a blank form
+    if not initial:
+        initial.append({'skills': 0})
+
     return initial
 
 
@@ -88,4 +92,6 @@ def profile_view(request, pk):
         {
             'current_tab': 'Profile',  # navigation bar selector
             'projects': projects,
-            'user_profile': user_profile})
+            'user_profile': user_profile
+        }
+    )

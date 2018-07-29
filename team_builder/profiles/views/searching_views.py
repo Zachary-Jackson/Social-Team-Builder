@@ -18,8 +18,10 @@ def create_search_result_string(projects, search_term):
 
 
 class SearchViewMixin(object):
-    """Creates a template for the Search views
-    This sets the model and template_name as well as the skills context"""
+    """
+    Creates a template for the Search views's class based views.
+    This sets the model and template_name as well as the skills context
+    """
     model = models.Project
     template_name = 'profiles/homepage.html'
 

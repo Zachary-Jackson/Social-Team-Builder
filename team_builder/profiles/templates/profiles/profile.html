@@ -42,7 +42,7 @@
         <thead>
           <tr>
             <th>Project Title</th>
-            <th class="circle--cell--right">Project Needs</th>
+            <th class="circle--cell--right">Project Positions</th>
           </tr>
         </thead>
         <tbody>
@@ -53,13 +53,27 @@
             <td>
               <h3>{{ project }}</h3>
             </td>
-            {% for position in project.positions.all %}
-                <td class="circle--cell--right">
-                  <span class="secondary-label">
-                      {{ position.skill }}
-                  </span>
-                </td>
-            {% endfor %}
+
+            {% with project.positions.all as positions %}
+
+                {% if positions|length > 3 %}
+                    <td class="circle--cell--right">
+                    <span class="secondary-label">
+                        <b><i>Many Positions</i></b>
+                    </span>
+                    </td>
+                {% else %}
+                    {% for position in positions %}
+                        <td class="circle--cell--right">
+                          <span class="secondary-label">
+                              {{ position.skill }}
+                          </span>
+                        </td>
+                    {% endfor %}
+                {% endif %}
+
+            {% endwith %}
+
           </tr>
         {% endfor %}
 

@@ -35,9 +35,12 @@ class HomepageListView(ListView):
 
 @login_required
 def login_router(request):
-    """Check to see if the user's profile has been edited.
+    """
+    Check to see if the user's profile has been edited.
+
     If not: route to the profile edit page and attach skills
-    Else: route to the main profile page"""
+    Else: route to the main profile page
+    """
 
     user = request.user
 

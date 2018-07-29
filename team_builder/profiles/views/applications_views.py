@@ -14,8 +14,14 @@ from .. import models
 
 
 def get_applicant(position, profile_pk: int):
-    """Checks to see if an applicant is in a position if not 404
-    Returns the found_applicant or 404"""
+    """
+    Checks to see if an applicant is in a position if not 404
+    Returns the found_applicant or 404
+
+    Keyword arguments:
+    position -- A Position model object
+    profile_pk -- A primary key associated with a profile
+    """
     # Get and update the Applicants model
     found_applicant = ''
 
@@ -32,9 +38,15 @@ def get_applicant(position, profile_pk: int):
 
 
 def get_projects_with_filled_or_unfilled_positions(is_filled: bool, request):
-    """Searches all of the User's projects and checks if they have
+    """
+    Searches all of the User's projects and checks if they have
     filled or unfilled positions in them
-    Returns found projects"""
+    Returns found projects
+
+    Keyword arguments:
+    is_filled -- Bool stating if a position is filled or not
+    request -- standard view request object
+    """
     projects = models.Project.objects.all().filter(
         Q(owner=request.user) & Q(positions__filled=is_filled))
     return projects
@@ -42,15 +54,21 @@ def get_projects_with_filled_or_unfilled_positions(is_filled: bool, request):
 
 def get_needed_skills_and_found_positions(
         request, is_accepted: bool, is_filled: bool):
-    """Gets all of the User's Positions
+    """
+    Gets all of the User's Positions
     Finds all of the applicants using is_filled
-    returns the found_skills and needed_positions"""
+    returns the found_skills and needed_positions
+
+    Keyword arguments:
+    is_accepted -- Bool stating if an applicant is accepted
+    is_filled -- Bool stating if a position is filled or open
+    """
     # Get all of the desired skills for the projects
     found_positions = set()
     needed_skills = set()
 
     positions = models.Position.objects.all() \
-        .filter(position_creator=request.user)
+        .filter(related_project__owner=request.user)
 
     for position in positions:
 
@@ -66,16 +84,22 @@ def get_needed_skills_and_found_positions(
 
 
 def if_owned_get_position_profile(request, position_pk, profile_pk):
-    """If the logged in user owns the position
+    """
+    If the logged in user owns the position
     Return: position, and profile
     else:
-    Http 404"""
+    Http 404
+
+    Keyword arguments:
+    position_pk -- Position object's pk
+    profile_pk -- Profile object's pk
+    """
     user = request.user
     position = get_object_or_404(models.Position, pk=position_pk)
     profile = get_object_or_404(get_user_model(), pk=profile_pk)
 
     # if the current user does not own the project kick them out
-    if user != position.position_creator:
+    if user != position.related_project.owner:
         raise Http404("You do not own this project")
 
     return position, profile
@@ -105,8 +129,14 @@ def applications(request):
 
 @login_required
 def applications_accept(request, position_pk, profile_pk):
-    """Allows the owner of a project to accept an applicant
-    Redirects to main applications page"""
+    """
+    Allows the owner of a project to accept an applicant
+    Redirects to main applications page
+
+    Keyword arguments:
+    position_pk -- Position object's pk
+    profile_pk -- Profile object's pk
+    """
 
     # Get position, profile or 404
     position, profile = if_owned_get_position_profile(
@@ -135,8 +165,14 @@ def applications_accept(request, position_pk, profile_pk):
 
 @login_required
 def applications_reject(request, position_pk, profile_pk):
-    """Allows the owner of a project to reject an applicant
-    Redirects to main applications page"""
+    """
+    Allows the owner of a project to reject an applicant
+    Redirects to main applications page
+
+    Keyword arguments:
+    position_pk -- Position object's pk
+    profile_pk -- Profile object's pk
+    """
 
     # Get position, profile or 404
     position, profile = if_owned_get_position_profile(
@@ -187,7 +223,7 @@ def applications_request(request, pk):
     # Create a notification to send to the project owner
     project = position.related_project
     message = f'There is a pending application for the project: {project}'
-    notify.send(user, recipient=position.position_creator, verb=message)
+    notify.send(user, recipient=position.related_project.owner, verb=message)
 
     # Return the user back to the Project's page
     return redirect('profiles:project', pk=pk)
@@ -226,7 +262,7 @@ def applications_view_rejected(request):
 
     # Get all of a user's positions
     positions = models.Position.objects.all() \
-        .filter(position_creator=request.user)
+        .filter(related_project__owner=request.user)
 
     for position in positions:
 

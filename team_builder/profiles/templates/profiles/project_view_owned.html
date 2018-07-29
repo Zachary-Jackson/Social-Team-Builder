@@ -4,7 +4,10 @@
 
     {% for position in unfilled_positions %}
       <h3>{{ position.skill }}</h3>
+        <h4><u>Information</u></h4>
       <p>{{ position.information|linebreaks }}</p>
+        <h4><u>Time Commitment</u></h4>
+        <p>{{ position.time_commitment_markdown|safe }}</p>
 
         <a class="button button-primary">Accepting applicants</a>
         <a class="button button-primary"
@@ -19,7 +22,10 @@
   <ul class="circle--group--list">
     {% for position in filled_positions %}
       <h3>{{ position.skill }}</h3>
+        <h4><u>Information</u></h4>
       <p>{{ position.information|linebreaks }}</p>
+        <h4><u>Time Commitment</u></h4>
+        <p>{{ position.time_commitment_markdown|safe }}</p>
 
     <a class="button button-primary button-inactive"
        href="{% url 'profiles:profile' pk=position.filled_by.pk %}">
