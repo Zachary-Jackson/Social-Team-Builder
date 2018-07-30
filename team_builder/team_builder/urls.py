@@ -24,6 +24,7 @@ import notifications.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls'),),
+    path('accounts/', include('django.contrib.auth.urls'),),
     url('^inbox/notifications/',
         include(notifications.urls, namespace='notifications')
         ),

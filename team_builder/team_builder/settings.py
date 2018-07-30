@@ -143,3 +143,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'assets', 'media')
 
 INTERNAL_IPS = ('127.0.0.1')
+
+LOGIN_REDIRECT_URL = 'profiles:login_router'
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')

@@ -5,3 +5,4 @@ __pycache__
 team_builder/assets/media
 .idea
 venv
+sent_emails

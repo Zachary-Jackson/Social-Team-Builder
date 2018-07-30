@@ -72,7 +72,7 @@ def get_needed_skills_and_found_positions(
 
     for position in positions:
 
-        if position.any_applicants and position.filled == is_filled:
+        if position.applicants.all() and position.filled == is_filled:
             for applicant in position.applicants.all():
 
                 if applicant.accepted == is_accepted and \
@@ -217,7 +217,6 @@ def applications_request(request, pk):
 
     # Attach the applicant to a Position
     position.applicants.add(applicant)
-    position.any_applicants = True
     position.save()
 
     # Create a notification to send to the project owner
@@ -267,7 +266,7 @@ def applications_view_rejected(request):
     for position in positions:
 
         # If there are applicants in a position add the position to applicants
-        if position.any_applicants:
+        if position.applicants.all():
             for applicant in position.applicants.all():
                 if applicant.rejected:
                     found_positions.add(applicant)

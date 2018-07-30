@@ -7,7 +7,9 @@ has an email address field which is classified as the username for tasks such
 as logging in. The username field is required and is shown instead of an email
 address protecting the user's email account.
 
-Accounts allows users to sign up, login, and logout of the web page.
+Accounts allows users to logout and signup on the web page. For tasks such as
+logging in, and password reset along with email confirmation, that is all
+handled by `*'django.contrib.auth.urls'*`
 
 ### Fields
 

@@ -64,10 +64,6 @@ class Position(models.Model):
         blank=True,
     )
 
-    # if there are any applicants, any_applicants will automatically
-    # default to true
-    any_applicants = models.BooleanField(default=False)
-
     skill = models.ForeignKey('Skill', on_delete=models.CASCADE)
     # filled and filled_by are for final application acceptance
     # current applicants are found in the Applicants model
@@ -90,7 +86,7 @@ class Position(models.Model):
         return "{}: {}".format(str(self.skill), self.information)
 
     def save(self, *args, **kwargs):
-        """automatically fills a position and the position_creator"""
+        """automatically sets the filled_by position"""
 
         # this try except block sets the self.filled position
         try:
@@ -99,11 +95,6 @@ class Position(models.Model):
             self.filled = False
         else:
             self.filled = True
-
-        # sets the position_creator value automatically to reduce
-        # potential errors
-
-        self.position_creator = self.related_project.owner
 
         super(Position, self).save(*args, **kwargs)
 
