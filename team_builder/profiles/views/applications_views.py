@@ -83,7 +83,7 @@ def get_needed_skills_and_found_positions(
     return found_positions, needed_skills
 
 
-def if_owned_get_position_profile(request, position_pk, profile_pk):
+def if_owned_get_position_profile(request, position_pk: int, profile_pk: int):
     """
     If the logged in user owns the position
     Return: position, and profile
@@ -128,7 +128,7 @@ def applications(request):
 
 
 @login_required
-def applications_accept(request, position_pk, profile_pk):
+def applications_accept(request, position_pk: int, profile_pk: int):
     """
     Allows the owner of a project to accept an applicant
     Redirects to main applications page
@@ -164,7 +164,7 @@ def applications_accept(request, position_pk, profile_pk):
 
 
 @login_required
-def applications_reject(request, position_pk, profile_pk):
+def applications_reject(request, position_pk: int, profile_pk: int):
     """
     Allows the owner of a project to reject an applicant
     Redirects to main applications page
@@ -197,7 +197,7 @@ def applications_reject(request, position_pk, profile_pk):
 
 
 @login_required
-def applications_request(request, pk):
+def applications_request(request, pk: int):
     """Allows a user to submit an application request"""
     # Ensures that the Position model exists or 404
     position = get_object_or_404(models.Position, pk=pk)

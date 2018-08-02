@@ -7,11 +7,11 @@ from .. import forms
 from .. import models
 
 
-def create_initial_data(positions):
+def create_initial_data(positions: models.Position) -> list:
     """
     Creates the initial dictionary for a formset, based on send in positions
 
-    Returns: data
+    Returns: a list of skills
     """
     initial = []
     for position in positions:
@@ -21,13 +21,14 @@ def create_initial_data(positions):
             'information': position.information
         })
 
-    # If there is not data in initial prefill with blank data
+    # If there is not data in initial pre-fill with blank data
     if not initial:
         initial.append({'skill': 0, 'information': ''})
+
     return initial
 
 
-def get_filled_and_unfilled_positions(project):
+def get_filled_and_unfilled_positions(project: models.Position):
     """"
     Takes a project
 
@@ -45,7 +46,7 @@ def get_filled_and_unfilled_positions(project):
     return filled_positions, unfilled_positions
 
 
-def get_project_and_authenticate(request, pk):
+def get_project_and_authenticate(request, pk: int) -> models.Project:
     """
     Gets the logged in user and makes sure that the user owns
     the project
@@ -69,7 +70,7 @@ def get_project_and_authenticate(request, pk):
 
 
 @login_required()
-def project_delete(request, pk):
+def project_delete(request, pk: int):
     """
     Allows a project owner to delete a project
 
@@ -83,7 +84,7 @@ def project_delete(request, pk):
 
 
 @login_required()
-def project_delete_confirmation(request, pk):
+def project_delete_confirmation(request, pk: int):
     """Checks if a user really want to delete a project"""
     project = get_project_and_authenticate(request, pk)
 
@@ -103,7 +104,7 @@ def project_delete_confirmation(request, pk):
 
 
 @login_required()
-def project_edit(request, pk):
+def project_edit(request, pk: int):
     """Allows only the project's owner to edit a project"""
 
     project = get_project_and_authenticate(request, pk)
@@ -228,7 +229,7 @@ def project_new(request):
         {'project_form': project_form, 'position_form': position_form})
 
 
-def project_view(request, pk):
+def project_view(request, pk: int):
     """
     Checks to see if the logged in user owns this project.
     If so show special owner template. If not show normal project template

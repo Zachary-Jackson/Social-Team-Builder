@@ -6,10 +6,10 @@ from .. import forms
 from .. import models
 
 
-def create_initial_data(user):
+def create_initial_data(user) -> list:
     """
     Creates the initial data dictionary for a formset, based on a user
-    Returns: initial data
+    Returns: a list of skill pks
     """
 
     initial = []
@@ -78,7 +78,7 @@ def profile_edit(request):
         })
 
 
-def profile_view(request, pk):
+def profile_view(request, pk: int):
     """Lets any user view a person's profile"""
     # Get the User model that matches the pk
     user_profile = get_object_or_404(get_user_model(), pk=pk)

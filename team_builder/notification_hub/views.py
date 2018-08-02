@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 
-def get_notification_and_authenticate(request, pk):
+def get_notification_and_authenticate(request, pk: int):
     """
     Gets the logged in user and makes sure that the user owns
     the notification
@@ -46,7 +46,7 @@ def notifications(request):
 
 
 @login_required
-def delete(request, pk):
+def delete(request, pk: int):
     """
     Marks a notification as read and reroute back to
     notification_hub:unread
@@ -75,7 +75,7 @@ def deletion_view(request):
 
 
 @login_required
-def mark_read(request, pk):
+def mark_read(request, pk: int):
     """
     Marks a notification as read and reroute back to
     notification_hub:unread
@@ -89,7 +89,7 @@ def mark_read(request, pk):
 
 
 @login_required
-def mark_unread(request, pk):
+def mark_unread(request, pk: int):
     """
     Marks a notification as unread and reroute back to the route
     'notification_hub:read'

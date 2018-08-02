@@ -6,3 +6,4 @@ team_builder/assets/media
 .idea
 venv
 sent_emails
+team_builder/team_builder/secret_key.py

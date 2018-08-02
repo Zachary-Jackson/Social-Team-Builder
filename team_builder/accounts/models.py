@@ -1,3 +1,6 @@
+import datetime
+
+from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -36,6 +39,7 @@ class UserManager(BaseUserManager):
         )
         user.is_staff = True
         user.is_superuser = True
+        user.is_active = True
         user.save()
         return user
 
@@ -45,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # The following are set/created by the accounts application
     date_joined = models.DateTimeField(default=timezone.now)
     email = models.EmailField(unique=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     username = models.CharField(max_length=50, unique=True)
 
@@ -69,3 +73,38 @@ class User(AbstractBaseUser, PermissionsMixin):
         """This allows us to turn self.bio into markdown to send
         to a template for display."""
         return markdownify(self.bio)
+
+
+class AuthenticationToken(models.Model):
+    """
+    Holds onto a token for user verification
+
+    Can be used to verify token.
+    """
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        unique=True,
+        on_delete=models.CASCADE)
+
+    token = models.CharField(max_length=1000)
+
+    expiration_date = models.DateTimeField()
+
+    def __str__(self):
+        """Creates a string value for AuthenticationToken"""
+        return "{}: token".format(self.user)
+
+    def is_valid(self, token):
+        """Checks if a token is valid and has not expired"""
+        # Does the token match the set token
+        if not self.token == token:
+            return False
+
+        # Has the token expired?
+        current_time = datetime.datetime.now(datetime.timezone.utc)
+        if current_time > self.expiration_date:
+            return False
+
+        # Otherwise
+        return True

@@ -15,7 +15,7 @@ class NotificationHubViewsTests(TestCase):
         user = get_user_model()
 
         # Create the first user for testing
-        self.user = user.objects.create_user(
+        self.user = user.objects.create_superuser(
             email='user@user.com',
             username='Santa',
             password='testpass'
@@ -23,7 +23,7 @@ class NotificationHubViewsTests(TestCase):
 
         # Creates a second user
         user = get_user_model()
-        self.user_2 = user.objects.create_user(
+        self.user_2 = user.objects.create_superuser(
             email='user2@user2.com',
             username='Hattie',
             password='testpass',

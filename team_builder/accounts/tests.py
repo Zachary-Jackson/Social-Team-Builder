@@ -18,4 +18,4 @@ class AccountViewsTests(TestCase):
         user = get_user_model()
         self.assertEqual(len(user.objects.all()), 1)
 
-        self.assertRedirects(resp, reverse('login'))
+        self.assertRedirects(resp, reverse('accounts:email_confirmation'))

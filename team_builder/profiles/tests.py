@@ -20,7 +20,7 @@ class ProfileViewsTests(TestCase):
         user = get_user_model()
 
         # Create the first user for testing
-        self.user = user.objects.create_user(
+        self.user = user.objects.create_superuser(
             email='user@user.com',
             username='Santa',
             password='testpass'
@@ -34,7 +34,7 @@ class ProfileViewsTests(TestCase):
 
         # Creates a second user
         user = get_user_model()
-        self.user_2 = user.objects.create_user(
+        self.user_2 = user.objects.create_superuser(
             email='user2@user2.com',
             username='Hattie',
             password='testpass',
@@ -90,7 +90,7 @@ class ProfileViewsTests(TestCase):
     def test_login_router_without_profile(self):
         """Tests the router if the user does not have a profile"""
         # Create a new user without a Profile
-        self.user_no_profile = get_user_model().objects.create_user(
+        self.user_no_profile = get_user_model().objects.create_superuser(
             email='no@profile.com',
             username='no_profile',
             password='testpass'

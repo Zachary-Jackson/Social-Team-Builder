@@ -7,7 +7,7 @@ from django.views.generic import ListView
 from .. import models
 
 
-def create_search_result_string(projects, search_term):
+def create_search_result_string(projects, search_term: str) -> str:
     """Creates a formatted string stating what results were found"""
     if not projects:
         search_results = 'No results were found with: {}'.format(search_term)
