@@ -76,7 +76,7 @@ class NotificationHubViewsTests(TestCase):
         self.assertContains(resp, self.message_2)
         self.assertContains(resp, f'Read from: {self.user_2}')
 
-        self.assertTemplateUsed('profiles/notifications.html')
+        self.assertTemplateUsed('notifications.html')
 
     def test_notification_delete(self):
         """Ensures that a user can delete a notification"""
@@ -110,7 +110,7 @@ class NotificationHubViewsTests(TestCase):
         self.assertContains(resp, 'Delete')
         self.assertContains(resp, f'From: {self.user_2}')
 
-        self.assertTemplateUsed('profiles/notifications_deletion.html')
+        self.assertTemplateUsed('notifications_deletion.html')
 
     def test_notification_mark_read(self):
         """Ensures that a user can mark a notification as read"""
@@ -164,7 +164,7 @@ class NotificationHubViewsTests(TestCase):
         self.assertContains(resp, 'Mark unread')
         self.assertContains(resp, f'From: {self.user_2}')
 
-        self.assertTemplateUsed('profiles/notifications_read.html')
+        self.assertTemplateUsed('notifications_read.html')
 
     def test_notifications_unread(self):
         """Ensures the unread notifications view is working"""
@@ -184,5 +184,5 @@ class NotificationHubViewsTests(TestCase):
         self.assertContains(resp, 'Mark read')
         self.assertContains(resp, f'From: {self.user_2}')
 
-        self.assertTemplateUsed('profiles/notifications_unread.html')
+        self.assertTemplateUsed('notifications_unread.html')
 

@@ -31,13 +31,6 @@ class SkillForm(forms.ModelForm):
         labels = {
             'name': 'Skill'
         }
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter Book Name here'
-                }
-            )
-        }
 
 
 SkillFormSet = formset_factory(SkillForm, extra=0)

@@ -28,7 +28,7 @@ def create_initial_data(positions: models.Position) -> list:
     return initial
 
 
-def get_filled_and_unfilled_positions(project: models.Position):
+def get_filled_and_unfilled_positions(project: models.Project):
     """"
     Takes a project
 
@@ -106,18 +106,11 @@ def project_delete_confirmation(request, pk: int):
 @login_required()
 def project_edit(request, pk: int):
     """Allows only the project's owner to edit a project"""
-
     project = get_project_and_authenticate(request, pk)
-
-    project_form = forms.ProjectForm(instance=project)
 
     filled_positions, unfilled_positions = (
         get_filled_and_unfilled_positions(project)
     )
-
-    initial = create_initial_data(unfilled_positions)
-
-    position_form = forms.PositionFormSet(initial=initial)
 
     if request.method == 'POST':
         project_form = forms.ProjectForm(request.POST, instance=project)
@@ -125,8 +118,6 @@ def project_edit(request, pk: int):
         position_form = forms.PositionFormSet(
             request.POST, request.FILES
         )
-
-        print(position_form.is_valid())
 
         if project_form.is_valid() and position_form.is_valid():
             project_form.save()
@@ -167,6 +158,11 @@ def project_edit(request, pk: int):
 
             return redirect('profiles:project', pk=pk)
 
+    # Create the forms required for the project
+    project_form = forms.ProjectForm(instance=project)
+    initial = create_initial_data(unfilled_positions)
+    position_form = forms.PositionFormSet(initial=initial)
+
     return render(
         request,
         'profiles/project_edit.html',
@@ -181,6 +177,7 @@ def project_edit(request, pk: int):
 @login_required()
 def project_new(request):
     """Allows for the creation of a new project"""
+    # Forms for the project
     project_form = forms.ProjectForm()
     data = {
         'form-TOTAL_FORMS': '1',
@@ -207,8 +204,9 @@ def project_new(request):
 
                 # If a form is left empty pass
                 try:
-                    skill = dictionary['skill']
                     information = dictionary['information']
+                    skill = dictionary['skill']
+                    time_commitment = dictionary['time_commitment']
                 except KeyError:
                     pass
                 else:
@@ -216,7 +214,8 @@ def project_new(request):
                     position = models.Position.objects.create(
                         information=information,
                         related_project=project,
-                        skill=skill
+                        skill=skill,
+                        time_commitment=time_commitment
                     )
                     # add the position to the project
                     project.positions.add(position)

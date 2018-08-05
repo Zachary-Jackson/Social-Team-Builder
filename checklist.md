@@ -8,7 +8,7 @@ prefaced with a bullet point is an extra feature that can be added
 - [x] Add a custom User model that includes an avatar, bio, and username
 
 - [x] Allow users to register for an account
-* - [ ] Sign up email validation and complete the user's profile shortly
+* - [x] Sign up email validation and complete the user's profile shortly
 after sign up
 
 

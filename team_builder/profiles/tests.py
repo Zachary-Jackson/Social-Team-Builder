@@ -77,7 +77,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, self.skill_1)
         self.assertContains(resp, self.skill_2)
 
-        self.assertTemplateUsed('profiles/homepage.html')
+        self.assertTemplateUsed('homepage.html')
 
     def test_login_router_with_profile(self):
         """Tests the router if the user has an AllSkills model attached"""
@@ -142,7 +142,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'Accept')
         self.assertContains(resp, 'Reject')
 
-        self.assertTemplateUsed('profiles/applications.html')
+        self.assertTemplateUsed('applications.html')
 
     def test_applications_accept(self):
         """Ensures a user can accept an application"""
@@ -255,7 +255,7 @@ class ProfileViewsTests(TestCase):
         # Ensure we get the second user's name
         self.assertContains(resp, 'Hattie')
 
-        self.assertTemplateUsed('profiles/applicants_accepted.html')
+        self.assertTemplateUsed('applicants_accepted.html')
 
     def test_applications_view_rejected_with_data(self):
         """Ensures that an accepted applicant can be found"""
@@ -286,7 +286,7 @@ class ProfileViewsTests(TestCase):
         # Ensure we get the second user's name
         self.assertContains(resp, 'Hattie')
 
-        self.assertTemplateUsed('profiles/applicants_rejected.html')
+        self.assertTemplateUsed('applicants_rejected.html')
 
     """Profile view tests"""
 
@@ -321,24 +321,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, str(self.skill_2))
         self.assertContains(resp, str(self.skill_3))
 
-        self.assertTemplateUsed('profiles/profile_edit.html')
-
-    # def test_profile_edit_post(self):
-    #     """Ensures that profile_edit can update the Profile"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #     self.client.post(
-    #         reverse('profiles:edit'),
-    #         data={'bio': 'new bio', 'color': 'Blue', 'username': 'editor'})
-    #
-    #     # get the updated profile for testing
-    #     user_model = get_user_model()
-    #     profile = user_model.objects.get(pk=self.user.pk)
-    #
-    #     self.assertEqual(profile.bio, 'new bio')
-    #     self.assertEqual(profile.username, 'editor')
-    #     self.assertEqual(profile.color, 'Blue')
-    #
-    #     self.assertTemplateUsed('profiles/profile_edit.html')
+        self.assertTemplateUsed('profile_edit.html')
 
     def test_profile_view(self):
         """Ensures the profile_view is working"""
@@ -357,7 +340,7 @@ class ProfileViewsTests(TestCase):
         # their profile
         self.assertContains(resp, 'Edit')
 
-        self.assertTemplateUsed('profiles/profile.html')
+        self.assertTemplateUsed('profile.html')
 
     """Project tests"""
 
@@ -392,7 +375,7 @@ class ProfileViewsTests(TestCase):
             resp, reverse('profiles:project_edit',
                           kwargs={'pk': self.project.pk}))
 
-        self.assertTemplateUsed('profiles/project_delete_confirmation.html')
+        self.assertTemplateUsed('project_delete_confirmation.html')
 
     def test_project_delete_confirmation_unowned(self):
         """Ensures only the project owner can delete a project"""
@@ -430,30 +413,6 @@ class ProfileViewsTests(TestCase):
 
         self.assertTemplateNotUsed('profiles/project_edit.html')
 
-    # def test_project_edit_post(self):
-    #     """Ensures project_edit appears correctly"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #     resp = self.client.post(
-    #         reverse('profiles:project_edit', kwargs={'pk': self.project.pk}),
-    #         data={
-    #             'title': 'test post', 'time_line': 'milliseconds',
-    #             'owner': self.user.pk,
-    #             'requirements': 'data to post', 'description': 'description',
-    #             # The following line is for the Position
-    #             'skill': self.skill_1.pk, 'information': 'This is a good skill'
-    #         }
-    #     )
-    #
-    #     # Get the updated Project
-    #     project = Project.objects.get(pk=self.project.pk)
-    #     self.assertEqual(project.title, 'test post')
-    #     self.assertEqual(project.time_line, 'milliseconds')
-    #     self.assertEqual(project.requirements, 'data to post')
-    #     self.assertEqual(project.description, 'description')
-    #
-    #     self.assertRedirects(
-    #         resp, reverse('profiles:project', kwargs={'pk': self.project.pk}))
-
     def test_project_edit_unowned(self):
         """Tests to make sure a logged in user can not edit other's Projects"""
         self.client.login(username='user2@user2.com', password='testpass')
@@ -479,32 +438,6 @@ class ProfileViewsTests(TestCase):
         self.assertNotContains(resp, 'Delete Project')
 
         self.assertTemplateNotUsed('profiles/project_edit.html')
-
-    # def test_project_new_post(self):
-    #     """Ensures a user can post a new project"""
-    #     self.client.login(username='user@user.com', password='testpass')
-    #     self.client.post(
-    #         reverse('profiles:project_new'),
-    #         data={
-    #             'title': 'Second Project', 'time_line': 'very small',
-    #             'owner': self.user.pk,
-    #             'requirements': 'data to post', 'description': 'description',
-    #             'skill': self.skill_3.pk,
-    #             'information': 'Maybe you are on the wrong site.'
-    #         })
-    #
-    #     # In addition to the project/position created in SetUp
-    #     # we should have these two
-    #     self.assertEqual(len(Project.objects.all()), 2)
-    #     self.assertEqual(len(Position.objects.all()), 2)
-    #
-    #     project_2 = Project.objects.get(pk=2)
-    #     self.assertEqual(project_2.title, 'Second Project')
-    #     self.assertEqual(project_2.description, 'description')
-    #
-    #     position_2 = Position.objects.get(pk=2)
-    #     self.assertEqual(
-    #         position_2.information, 'Maybe you are on the wrong site.')
 
     def test_project_view_not_logged_in(self):
         """Ensures that the project view page is working"""
@@ -557,7 +490,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'Test Project')
         self.assertContains(resp, 'Django developer')
 
-        self.assertTemplateUsed('profiles/project_view_all.html')
+        self.assertTemplateUsed('project_view_all.html')
 
     """Searching tests"""
 
@@ -577,7 +510,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'All Needs')
         self.assertContains(resp, 'Projects')
 
-        self.assertTemplateUsed('profiles:homepage.html')
+        self.assertTemplateUsed('homepage.html')
 
     def test_search_by_skill(self):
         """Ensures that a user can search projects via skill"""
@@ -596,7 +529,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'All Needs')
         self.assertContains(resp, 'Projects')
 
-        self.assertTemplateUsed('profiles:homepage.html')
+        self.assertTemplateUsed('homepage.html')
 
     def test_search_by_skill_invalid(self):
         """Ensures that an invalid search informs the user"""
@@ -614,7 +547,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'All Needs')
         self.assertContains(resp, 'Projects')
 
-        self.assertTemplateUsed('profiles:homepage.html')
+        self.assertTemplateUsed('homepage.html')
 
     def test_search_your_skills(self):
         """Checks that all projects are found with your skills"""
@@ -636,4 +569,4 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'All Needs')
         self.assertContains(resp, 'Projects')
 
-        self.assertTemplateUsed('profiles:homepage.html')
+        self.assertTemplateUsed('homepage.html')

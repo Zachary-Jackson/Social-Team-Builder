@@ -34,11 +34,9 @@ def create_initial_data(user) -> list:
 def profile_edit(request):
     """Allows a profile to be edited"""
     instance = request.user
-    profile_form = forms.UserForm(instance=instance)
-    initial = create_initial_data(instance)
-    skills_form = forms.SkillFormSet(initial=initial)
 
     if request.method == 'POST':
+        breakpoint()
         profile_form = forms.UserForm(
             request.POST, request.FILES, instance=instance
         )
@@ -68,9 +66,14 @@ def profile_edit(request):
 
             return redirect('profiles:profile', pk=request.user.pk)
 
+    # Create all the necessary forms
+    profile_form = forms.UserForm(instance=instance)
+    initial = create_initial_data(instance)
+    skills_form = forms.SkillFormSet(initial=initial)
+
     return render(
         request,
-        'profiles/templates/profiles/profile_edit.html',
+        'profiles/profile_edit.html',
         {
             'profile_form': profile_form,
             'skills_form': skills_form,

@@ -9,7 +9,8 @@ from markdownx.utils import markdownify
 class AllSkills(models.Model):
     """Holds on to all of the skills for a user"""
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
+        settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE
+    )
     skills = models.ManyToManyField('Skill', blank=True)
 
     def __str__(self):
@@ -33,7 +34,8 @@ class Skill(models.Model):
 class Project(models.Model):
     """This is the model for a Project"""
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
     description = MarkdownxField(max_length=1000)
     positions = models.ManyToManyField('Position', blank=True)
     requirements = models.CharField(max_length=100)
@@ -65,6 +67,7 @@ class Position(models.Model):
     )
 
     skill = models.ForeignKey('Skill', on_delete=models.CASCADE)
+
     # filled and filled_by are for final application acceptance
     # current applicants are found in the Applicants model
     filled = models.BooleanField(default=False)
@@ -75,6 +78,7 @@ class Position(models.Model):
         null=True,
         related_name='employee_name'
     )
+
     information = models.CharField(max_length=500)
     time_commitment = MarkdownxField(max_length=400)
 

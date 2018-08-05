@@ -105,8 +105,13 @@ def sign_up(request):
     )
 
 
-def token_confirmation_view(request, token: str):
-    """Ensures a token is valid, if so activate user"""
+def token_confirmation(request, token: str):
+    """
+    Ensures a token is valid
+
+    if so:  activate user and login
+    Else: 404
+    """
     # Tries to find the user or 404
     try:
         found_user = models.AuthenticationToken.objects.get(token=token)

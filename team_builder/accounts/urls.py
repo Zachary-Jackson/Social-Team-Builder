@@ -14,7 +14,7 @@ urlpatterns = [
     path('signup/', views.sign_up, name='signup'),
     path(
         'token_confirmation/<str:token>/',
-        views.token_confirmation_view,
+        views.token_confirmation,
         name='token_confirmation'
     ),
 ]
