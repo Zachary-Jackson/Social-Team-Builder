@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
+  {% load static %}
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="{% static 'js/dynamicformsets.js' %}"></script>
 
   <form method="post" enctype="multipart/form-data" action="">
   {% csrf_token %}
@@ -23,7 +26,6 @@
   </div>
 
 
-
   <div class="bounds circle--page circle--article">
     <div class="grid-70">
       <div class="circle--article--body">
@@ -41,9 +43,6 @@
         <h2>Positions</h2>
 
         <ul class="circle--group--list circle--clone--list">
-
-
-
 
 
     <form class="form-horizontal" method="POST" action="">
@@ -86,86 +85,7 @@
 {% endif %}
 
 
-{% block custom_js %}
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script type="text/javascript">
-function updateElementIndex(el, prefix, ndx) {
-    let id_regex = new RegExp('(' + prefix + '-\\d+)');
-    let replacement = prefix + '-' + ndx;
-    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
-    if (el.id) el.id = el.id.replace(id_regex, replacement);
-    if (el.name) el.name = el.name.replace(id_regex, replacement);
-}
-function cloneMore(selector, prefix) {
-    let newElement = $(selector).clone(true);
-    let total = $('#id_' + prefix + '-TOTAL_FORMS').val();
-    newElement.find(':input').each(function() {
-        let name = $(this).attr('name')
-        if(name) {
-            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
-            let id = 'id_' + name;
-            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-        }
-    });
-    total++;
-    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
-    $(selector).after(newElement);
-    let conditionRow = $('.form-row:not(:last)');
-    conditionRow.find('.btn.add-form-row')
-    .removeClass('btn-success').addClass('btn-danger')
-    .removeClass('add-form-row').addClass('remove-form-row')
-    .html('-');
-    return false;
-}
-function deleteForm(prefix, btn) {
-    let total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-    if (total > 1){
-        btn.closest('.form-row').remove();
-        let forms = $('.form-row');
-        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
-        for (let i=0, formCount=forms.length; i<formCount; i++) {
-            $(forms.get(i)).find(':input').each(function() {
-                updateElementIndex(this, prefix, i);
-            });
-        }
-    }
-    return false;
-}
-$(document).on('click', '.add-form-row', function(e){
-    e.preventDefault();
-    cloneMore('.form-row:last', 'form');
-    return false;
-});
-$(document).on('click', '.remove-form-row', function(e){
-    e.preventDefault();
-    deleteForm('form', $(this));
-    return false;
-});
-
-$( document ).ready(function() {
-    // find all form add buttons on page load
-    let found_forms = document.getElementsByClassName('btn btn-success add-form-row')
-
-    let length = found_forms.length
-
-    // If length is not one we need to click the form so the jquery
-    // updates all the forms to display correctly
-    if (length !== 1) {
-        // This gets the first form element and clicks it
-        found_forms[0].click()
-    }
-
-
-
-});
-
-</script>
-    {% endblock custom_js %}
-
-
-
         </ul>
-
 
       </div>
     </div>

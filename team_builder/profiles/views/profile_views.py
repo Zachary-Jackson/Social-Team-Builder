@@ -10,6 +10,9 @@ def create_initial_data(user) -> list:
     """
     Creates the initial data dictionary for a formset, based on a user
     Returns: a list of skill pks
+
+    Keyword arguments:
+    user -- User model object
     """
 
     initial = []
@@ -81,8 +84,18 @@ def profile_edit(request):
         })
 
 
+def profile_edit_image(request):
+    """Allows a profile image to be edited"""
+    return render(request, 'profiles/profile_image_edit.html')
+
+
 def profile_view(request, pk: int):
-    """Lets any user view a person's profile"""
+    """
+    Lets any user view a person's profile
+
+    Keyword arguments:
+    pk -- primary key for a User model object
+    """
     # Get the User model that matches the pk
     user_profile = get_object_or_404(get_user_model(), pk=pk)
     # filter projects by the logged in user

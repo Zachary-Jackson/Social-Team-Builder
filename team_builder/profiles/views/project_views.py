@@ -85,7 +85,12 @@ def project_delete(request, pk: int):
 
 @login_required()
 def project_delete_confirmation(request, pk: int):
-    """Checks if a user really want to delete a project"""
+    """
+    Checks if a user really want to delete a project
+
+    Keyword arguments:
+    pk -- primary key for a Project object
+    """
     project = get_project_and_authenticate(request, pk)
 
     if request.method == 'POST':
@@ -105,7 +110,12 @@ def project_delete_confirmation(request, pk: int):
 
 @login_required()
 def project_edit(request, pk: int):
-    """Allows only the project's owner to edit a project"""
+    """
+    Allows only the project's owner to edit a project
+
+    Keyword arguments:
+    pk -- primary key for a Project object
+    """
     project = get_project_and_authenticate(request, pk)
 
     filled_positions, unfilled_positions = (

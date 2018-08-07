@@ -198,7 +198,12 @@ def applications_reject(request, position_pk: int, profile_pk: int):
 
 @login_required
 def applications_request(request, pk: int):
-    """Allows a user to submit an application request"""
+    """
+    Allows a user to submit an application request
+
+    Keyword arguments:
+    pk -- primary key for a Position object
+    """
     # Ensures that the Position model exists or 404
     position = get_object_or_404(models.Position, pk=pk)
     user = request.user
