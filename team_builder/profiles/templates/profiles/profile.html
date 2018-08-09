@@ -98,6 +98,14 @@
         </div>
       {% endif %}
 
+    {% if user_profile.username == request.user.username %}
+      <p>
+        <a href="{% url 'profiles:profile_edit_image' %}">
+          Image editor
+        </a>
+      </p>
+    {% endif %}
+
       <div class="circle--secondary--module">
         <h4>My Skills</h4>
         <ul class="unloaded">

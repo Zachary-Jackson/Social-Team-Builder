@@ -39,7 +39,6 @@ def profile_edit(request):
     instance = request.user
 
     if request.method == 'POST':
-        breakpoint()
         profile_form = forms.UserForm(
             request.POST, request.FILES, instance=instance
         )
@@ -84,9 +83,17 @@ def profile_edit(request):
         })
 
 
+@login_required
 def profile_edit_image(request):
     """Allows a profile image to be edited"""
-    return render(request, 'profiles/profile_image_edit.html')
+    return render(
+        request,
+        'profiles/profile_image_edit.html',
+        {
+            'current_tab': 'Profile',  # navigation bar selector
+            'profile': request.user
+        }
+    )
 
 
 def profile_view(request, pk: int):

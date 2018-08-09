@@ -5,26 +5,43 @@
 {% block nav_bar %}
 
   {% load static %}
-  <script src="{% static 'js/fabric.min.js' %}"></script>
+  <div class="center">
+    <h1>Image editor!</h1>
+  </div>
 
-    <canvas id="c"></canvas>
+  <div class="min-height bounds">
 
-  <script>
+    <div class="grid-50">
+      <canvas id="c" class="canvas-image" width="240" height="340">
+        No canvas support
+      </canvas>
 
-  var canvas = new fabric.Canvas('c');
+{#      These are two hidden images for the image editor#}
+      {% if profile.avatar %}
+        <img src="{% static profile.avatar.url %}"
+             id="my-image" style="display: none;">
+      {% endif %}
+      <img src="{% static 'profiles_media/default_profile_image.png' %}"
+           id="site-image" style="display: none;">
 
-  // create a rectangle with angle=45
-  var rect = new fabric.Rect({
-    left: 100,
-    top: 100,
-    fill: 'red',
-    width: 20,
-    height: 20,
-    angle: 45
-  });
+    </div>
 
-  canvas.add(rect);
+    <div class="float-right">
+      <div style="margin-left: 10px; display: inline-block;">
+        <button class="btn btn-info" id="clear-canvas">Clear</button><br>
+        {% if profile.avatar %}
+          <button class="btn btn-info" id="clear-canvas-with-pic">
+            Non working profile pic
+          </button><br>
+        {% endif %}
+          <button class="btn btn-info" id="clear-canvas-with-site-pic">
+            Clear: Use site profile image
+          </button><br>
+      </div>
+    </div>
 
-  </script>
+  </div>
 
+  <script src="{% static 'js/profiles/fabric.min.js' %}"></script>
+  <script src="{% static 'js/profiles/profile_image.js' %}"></script>
 {% endblock nav_bar %}

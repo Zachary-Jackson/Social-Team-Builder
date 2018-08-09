@@ -2120,3 +2120,13 @@ button.button-secondary {
 .extra_vertical_margin {
   margin-top: 10px;
 }
+
+
+.min-height {
+  min-height: 600px;
+}
+
+
+.center {
+  text-align: center;
+}

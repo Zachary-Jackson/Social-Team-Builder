@@ -335,6 +335,7 @@ class ProfileViewsTests(TestCase):
         self.assertContains(resp, 'Edit')
         self.assertContains(resp, 'Django developer')
         self.assertContains(resp, 'Angular')
+        self.assertContains(resp, 'Image editor')
         self.assertContains(resp, str(self.skill_1))
         # The edit button should appear to allow the logged in user to edit
         # their profile
