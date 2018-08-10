@@ -1,5 +1,8 @@
+import base64
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .. import forms
@@ -86,12 +89,41 @@ def profile_edit(request):
 @login_required
 def profile_edit_image(request):
     """Allows a profile image to be edited"""
+    user = request.user
+
+    if request.method == 'POST':
+
+        # The form is submitted in a dataurl image, so we must convert it to
+        # an image.
+
+        # A lot of the following was based off of this stackoverflow post
+        # https://stackoverflow.com/questions/39576174/
+        # save-base64-image-in-django-file-field
+
+        post_info = request.POST
+        # Convert the QueryDict to a normal dictionary
+        post_dict = dict(post_info.lists())
+        data_url = post_dict['data-url'][0]
+
+        format_var, imgstr_var = data_url.split(';base64,')
+        ext = format_var.split('/')[-1]
+
+        data = ContentFile(
+            base64.b64decode(imgstr_var),
+            name='temp.' + ext
+        )
+
+        # Now we can save the image to the user's avatar
+        user.avatar = data
+        user.save()
+        return redirect('profiles:profile', pk=user.pk)
+
     return render(
         request,
         'profiles/profile_image_edit.html',
         {
             'current_tab': 'Profile',  # navigation bar selector
-            'profile': request.user
+            'profile': user
         }
     )
 

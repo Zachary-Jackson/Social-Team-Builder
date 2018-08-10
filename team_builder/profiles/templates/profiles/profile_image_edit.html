@@ -9,6 +9,13 @@
     <h1>Image editor!</h1>
   </div>
 
+  <form action="{% url 'profiles:profile_edit_image' %}"
+        id="theForm" method="post">
+  {% csrf_token %}
+    <input name="data-url" type="hidden" id="data-url" />
+      <button type="button" id="save-image">Save Image</button>
+  </form>
+
   <div class="min-height bounds">
 
     <div class="grid-50">
@@ -30,13 +37,14 @@
       <div style="margin-left: 10px; display: inline-block;">
         <button class="btn btn-info" id="clear-canvas">Clear</button><br>
         {% if profile.avatar %}
-          <button class="btn btn-info" id="clear-canvas-with-pic">
-            Non working profile pic
-          </button><br>
+{#          <button class="btn btn-info" id="clear-canvas-with-pic">#}
+{#            Non working profile pic#}
+{#          </button><br>#}
         {% endif %}
           <button class="btn btn-info" id="clear-canvas-with-site-pic">
             Clear: Use site profile image
           </button><br>
+
       </div>
     </div>
 
