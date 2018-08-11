@@ -153,3 +153,6 @@ LOGIN_REDIRECT_URL = 'profiles:login_router'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+# Allows base64 encoded images to be much larger
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576000

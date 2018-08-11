@@ -9,21 +9,38 @@
     <h1>Image editor!</h1>
   </div>
 
+          <button class="btn btn-info floated" id="clear-canvas">
+            New blank canvas
+          </button>
+        {% if profile.avatar %}
+          <button class="btn btn-info floated" id="clear-canvas-with-pic" >
+            Clear: Avatar image
+          </button>
+        {% endif %}
+          <button class="btn btn-info floated" id="clear-canvas-with-site-pic">
+            Clear: Use site profile image
+          </button><br>
+
   <form action="{% url 'profiles:profile_edit_image' %}"
         id="theForm" method="post">
   {% csrf_token %}
     <input name="data-url" type="hidden" id="data-url" />
-      <button type="button" id="save-image">Save Image</button>
+      <button
+          class="floated button button-secondary"
+          type="button"
+          id="save-image">
+        Save Image
+      </button>
   </form>
 
   <div class="min-height bounds">
 
     <div class="grid-50">
-      <canvas id="c" class="canvas-image" width="240" height="340">
+      <canvas id="c" class="canvas-image">
         No canvas support
       </canvas>
 
-{#      These are two hidden images for the image editor#}
+{#      Create one or two images for the JavaScript application#}
       {% if profile.avatar %}
         <img src="{% static profile.avatar.url %}"
              id="my-image" style="display: none;">
@@ -35,15 +52,16 @@
 
     <div class="float-right">
       <div style="margin-left: 10px; display: inline-block;">
-        <button class="btn btn-info" id="clear-canvas">Clear</button><br>
-        {% if profile.avatar %}
-{#          <button class="btn btn-info" id="clear-canvas-with-pic">#}
-{#            Non working profile pic#}
-{#          </button><br>#}
-        {% endif %}
-          <button class="btn btn-info" id="clear-canvas-with-site-pic">
-            Clear: Use site profile image
-          </button><br>
+
+        <p>Drawing Options</p>
+
+        <label>Pencil Color</label>
+        <input id="drawing-color" value="black" type="color">
+
+        <label>Line Width</label>
+        <input id="drawing-line-width" value="10"
+               type="range" min="0" max="50"
+        >
 
       </div>
     </div>
