@@ -50,12 +50,15 @@
 
     </div>
 
-    <div class="float-right">
+    <div class="drawing-options">
+
       <div style="margin-left: 10px; display: inline-block;">
+
+        <p>Rotate/Move Mode<input type="checkbox" id="drawing-toggle"></p>
 
         <p>Drawing Options</p>
 
-        <label>Pencil Color</label>
+        <label>Pencil/Shape Color</label>
         <input id="drawing-color" value="black" type="color">
 
         <label>Line Width</label>
@@ -63,10 +66,27 @@
                type="range" min="0" max="50"
         >
 
+
+
       </div>
     </div>
 
   </div>
+
+  <h3>Add shapes</h3>
+
+  <button class="btn btn-info" id="add-square">
+    Add square
+  </button>
+  <button class="btn btn-info" id="add-circle">
+    Add Circle
+  </button>
+  <button class="btn btn-info" id="add-triangle">
+    Add Triangle
+  </button>
+  <button class="btn btn-info" id="remove-selected">
+    Delete selected object
+  </button>
 
   <script src="{% static 'js/profiles/fabric.min.js' %}"></script>
   <script src="{% static 'js/profiles/profile_image.js' %}"></script>

@@ -8,12 +8,15 @@
   // Create a getElementById shortcut
   const $ = function(id){return document.getElementById(id)};
 
-  let drawingColorEl = $('drawing-color'),
-      drawingLineWidthEl = $('drawing-line-width')
+  let drawingColor = $('drawing-color'),
+      drawingLineWidth = $('drawing-line-width')
 
   // Create the canvas element
   let canvas = this.__canvas = new fabric.Canvas('c', {
-    isDrawingMode: true, width: 240, height: 340
+    isDrawingMode: true, width: 240, height: 340,
+    // This prevents the avatar image from going to the front of the canvas
+    // during rotation mode
+    preserveObjectStacking: true
   });
 
 
@@ -37,7 +40,7 @@
   canvas.add(siteImgInstance)
 
   // Canvas drawing image options
-  canvas.freeDrawingBrush.color = drawingColorEl.value;
+  canvas.freeDrawingBrush.color = drawingColor.value;
 
   fabric.Object.prototype.transparentCorners = false;
 
@@ -99,17 +102,132 @@
       let dataUrl= $('data-url')
       let imageInfo = canvas.toDataURL()
       dataUrl.value =imageInfo
-      // console.log('this works');
-      // formImage.src=siteImgElement.src
-      // console.log(formImage.src)
       form.submit()
   }
 
-  drawingColorEl.onchange = function() {
+
+  // Creates the saveImageButton which lets a user submit the html form
+  let drawingToggle= $('drawing-toggle');
+  drawingToggle.onclick = toggleDrawing;
+  console.log(drawingToggle)
+
+  function toggleDrawing() {
+      /**
+       * Toggles whether or not the canvas is in drawing mode.
+       */
+      let currentMode = canvas.isDrawingMode
+
+      if (currentMode) {
+          canvas.isDrawingMode = false
+      } else {
+          canvas.isDrawingMode = true
+      }
+  }
+
+  // Adds the ability to add a square to the canvas
+  let addSquareButton = $('add-square');
+  addSquareButton.onclick = addSquare;
+
+  function addSquare () {
+    /**
+     * Adds a square to the canvas of a certain color
+     *
+     * Side Effects:
+     * Turns off drawing mode via function
+     */
+    turnOffDrawingMode()
+      let rect = new fabric.Rect({
+        left: 100,
+        top: 100,
+        fill: drawingColor.value,
+        width: 25,
+        height: 25,
+      });
+      canvas.add(rect)
+  }
+
+  // Adds the ability to add a circle to the canvas
+  let addCircleButton = $('add-circle');
+  addCircleButton.onclick = addCircle;
+
+  function addCircle () {
+    /**
+     * Adds a circle to the canvas of a certain color
+     *
+     * Side Effects:
+     * Turns off drawing mode via function
+     */
+    turnOffDrawingMode()
+      let circle = new fabric.Circle({
+        radius: 20, fill: drawingColor.value, left: 100, top: 100
+      });
+      canvas.add(circle)
+  }
+
+  // Adds the ability to add a triangle to the canvas
+  let addTriangleButton = $('add-triangle');
+  addTriangleButton.onclick = addTriangle;
+
+  function addTriangle() {
+    /**
+     * Adds a triangle to the canvas of a certain color
+     *
+     * Side Effects:
+     * Turns off drawing mode via function
+     */
+    turnOffDrawingMode()
+      let triangle = new fabric.Triangle({
+        width: 35, height: 35, fill: drawingColor.value,
+        left: 100, top: 100
+      });
+      canvas.add(triangle)
+  }
+
+
+  let removeSelectedButton = $('remove-selected');
+  removeSelectedButton.onclick = removeSelected
+
+  function removeSelected () {
+    /**
+     * Removes the currently selected item if applicable
+     *
+     * Otherwise ignore
+     */
+    let selected = canvas.getActiveObject();
+
+    // Check if the object exists
+    if (selected) {
+      canvas.remove(selected)
+    }
+  }
+
+  function turnOffDrawingMode () {
+    /**
+     * Turns off the canvas drawing mode
+     *
+     * It also checks the rotate/move mode box
+     */
+    drawingToggle.checked = true
+    canvas.isDrawingMode = false
+  }
+
+  function turnOnDrawingMode () {
+    /**
+     * Turns on the canvas drawing mode
+     *
+     * It also unchecks the rotate/move mode box
+     */
+    drawingToggle.checked = false
+    canvas.isDrawingMode = true
+  }
+
+  drawingColor.onchange = function() {
     canvas.freeDrawingBrush.color = this.value;
   };
 
-  drawingLineWidthEl.onchange = function() {
+  drawingLineWidth.onchange = function() {
+    turnOnDrawingMode()
+    canvas.isDrawingMode = true;
     canvas.freeDrawingBrush.width = parseInt(this.value, 10) || 1;
     this.previousSibling.innerHTML = this.value;
   };
