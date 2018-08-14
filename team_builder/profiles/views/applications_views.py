@@ -208,6 +208,10 @@ def applications_request(request, pk: int):
     position = get_object_or_404(models.Position, pk=pk)
     user = request.user
 
+    # If the user owns the project 404
+    if user == position.related_project.owner:
+        raise Http404("You own this project!")
+
     # If the user has already applied, prevent another application
     for applicant in position.applicants.all():
         if applicant.applicant == user:

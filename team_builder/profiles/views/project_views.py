@@ -203,7 +203,12 @@ def project_new(request):
         project_form = forms.ProjectForm(request.POST)
         position_form = forms.PositionFormSet(request.POST, request.FILES)
         if project_form.is_valid() and position_form.is_valid():
-            project_form.save()
+
+            # Adds the logged in user to the project
+            project_instance = project_form.save(commit=False)
+            project_instance.owner = request.user
+            project_instance.save()
+
             project = project_form.instance
 
             positions_data = position_form.cleaned_data

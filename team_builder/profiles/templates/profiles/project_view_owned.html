@@ -10,10 +10,6 @@
         <p>{{ position.time_commitment_markdown|safe }}</p>
 
         <a class="button button-primary">Accepting applicants</a>
-        <a class="button button-primary"
-           href="{% url 'profiles:applications_request' pk=position.pk %}">
-            Dev Application
-        </a>
 
     {% endfor %}
     </ul>

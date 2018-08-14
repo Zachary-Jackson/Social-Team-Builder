@@ -2155,3 +2155,11 @@ button.button-secondary {
 .canvas-image {
   border: 2px solid black;
 }
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+.top-padding {
+  padding-top: 10px;
+}

@@ -37,12 +37,18 @@
       top: 0,
   });
 
-  canvas.add(siteImgInstance)
-
   // Canvas drawing image options
   canvas.freeDrawingBrush.color = drawingColor.value;
 
   fabric.Object.prototype.transparentCorners = false;
+
+  // Adds either the site image, or the profile image to the canvas
+  // depending on if the user has a profile image
+  if (imgElement) {
+    canvas.add(imgInstance)
+  } else {
+    canvas.add(siteImgInstance)
+  }
 
   /** Various button/form settings and their respective functions */
 
@@ -70,6 +76,15 @@
         * Redraws the user's profile picture
          */
       canvas.clear();
+
+      // Get the hidden profile pic again to override imgInstance
+      // If we use the old imgInstance it keeps position data
+      let imgElement = $('my-image')
+      let imgInstance = new fabric.Image(imgElement, {});
+      imgInstance.set({
+          top: 0,
+      });
+
       canvas.add(imgInstance);
       canvas.renderAll;
     };
@@ -109,7 +124,6 @@
   // Creates the saveImageButton which lets a user submit the html form
   let drawingToggle= $('drawing-toggle');
   drawingToggle.onclick = toggleDrawing;
-  console.log(drawingToggle)
 
   function toggleDrawing() {
       /**

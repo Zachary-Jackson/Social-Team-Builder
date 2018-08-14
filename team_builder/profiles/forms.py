@@ -51,7 +51,6 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = models.Project
         fields = [
-            'owner',
             'title',
             'time_line',
             'requirements',
