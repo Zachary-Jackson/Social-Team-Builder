@@ -4,6 +4,7 @@ This folder helps keep the project organized by view.
 """
 
 
+from .admin import *
 from .applications_views import *
 from .miscellaneous_views import *
 from .profile_views import *

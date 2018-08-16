@@ -32,6 +32,14 @@
                     Notifications
                 </a>
             </li>
+            {% if request.user.is_staff or request.user.is_superuser %}
+              <li>
+                <a {% if current_tab == "Administrative" %} class="selected" {% endif %}
+                        href={% url 'profiles:administrative' %}>
+                    Administrative
+                </a>
+            </li>
+            {% endif %}
 
           </ul>
         </nav>

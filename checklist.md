@@ -25,7 +25,7 @@ after sign up
 
 
 - [x] Users can pick multiple skills for their profile from a list
-* - [ ]They can also create custom skills
+* - [x]They can also create custom skills
 
 
 - [x] Create a project

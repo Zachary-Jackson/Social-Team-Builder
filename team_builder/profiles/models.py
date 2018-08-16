@@ -36,18 +36,23 @@ class SkillConfirmation(models.Model):
     A class that holds onto a potential Skill object and
     the the User who suggested it for verification
     """
+    accepted = models.BooleanField(default=False)
 
     # The user who created the potential skill
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
+    pending = models.BooleanField(default=True)
+
     # Skill is not unique in case a skill is denied, then accepted
     skill = models.CharField(max_length=35)
 
     def __str__(self):
-        return 'Pending: {}'.format(self.skill)
-
+        if self.pending:
+            return 'Pending skill: {}'.format(self.skill)
+        else:
+            return 'Non-pending skill: {}'.format(self.skill)
 
 class Project(models.Model):
     """This is the model for a Project"""

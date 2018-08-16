@@ -10,6 +10,24 @@ urlpatterns = [
     path('login_router', views.login_router, name='login_router'),
     path('new_skill', views.new_skill, name='new_skill'),
 
+    # Administrative related paths
+    path('administrative', views.administrative, name='administrative'),
+    path(
+        'administrative/non_pending',
+        views.administrative_non_pending,
+        name='administrative_non_pending'
+    ),
+    path(
+        'administrative/skill/<int:pk>/accept',
+        views.skill_accept,
+        name='skill_accept'
+    ),
+    path(
+        'administrative/skill/<int:pk>/deny',
+        views.skill_deny,
+        name='skill_deny'
+    ),
+
     # Applications related paths
     path('applications', views.applications, name='applications'),
 
