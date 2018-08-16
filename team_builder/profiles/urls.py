@@ -8,6 +8,7 @@ urlpatterns = [
     # Miscellaneous related paths
     path('', views.HomepageListView.as_view(), name='homepage'),
     path('login_router', views.login_router, name='login_router'),
+    path('new_skill', views.new_skill, name='new_skill'),
 
     # Applications related paths
     path('applications', views.applications, name='applications'),

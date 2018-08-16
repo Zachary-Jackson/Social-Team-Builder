@@ -20,6 +20,18 @@ CHOICES = [
 ]
 
 
+class NewSkillForm(forms.Form):
+    """Form for potential Skills"""
+    skill = forms.CharField(max_length=35)
+
+    def __init__(self, *args, **kwargs):
+        super(NewSkillForm, self).__init__(*args, **kwargs)
+        self.fields['skill'].widget.attrs['placeholder'] = 'New skill...'
+
+
+NewSkillFormSet = formset_factory(NewSkillForm, extra=0)
+
+
 class SkillForm(forms.ModelForm):
     """Form for the AllSkills model"""
 

@@ -1,0 +1,87 @@
+{% extends "nav_bar.html" %}
+
+{% block title_tag %}Team Builder | profile{% endblock %}
+
+{% block nav_bar %}
+  {% load static %}
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="{% static 'js/dynamicformsets.js' %}"></script>
+
+
+    <div class="bounds circle--page">
+      <div class="circle--page--header circle--fluid">
+        <div class="circle--fluid--cell circle--fluid--primary">
+
+          <h2>Request a new skill!</h2><br>
+
+          {% if request.user.is_admin or request.user.is_superuser %}
+            <p>
+              Because you are authorized to add skills to this website,
+              any skills you add here will instantly be available to everyone
+              and added to your account.
+            </p><br>
+            <p>Double check your spelling to reduce possible issues.</p>
+
+          {% else %}
+            <p>
+              Your skill request(s) will be sent to administration for
+              confirmation.
+              If accepted these skills will automatically be added to your
+              account and be available site-wide to everyone.
+            </p><br>
+            <p>
+              If the skills you enter already exist (case insensitive) they
+              will immediately be added to your account.
+            </p>
+
+          {% endif %}
+
+        </div>
+        <div class="circle--fluid--cell circle--fluid--secondary">
+          <button type="submit" class="button button-primary icon-on-left">
+              Save Changes
+          </button>
+        </div>
+      </div>
+
+
+
+    <h3>Your current skills:</h3>
+
+        {% for skill in request.user.allskills.skills.all %}
+          <span>[{{ skill }}]</span>
+        {% endfor %}
+
+
+<h3 class="top-padding">Add new skills</h3>
+
+<form class="form-horizontal" method="POST" action="">
+    {% csrf_token %}
+{{ skills_form.management_form }}
+
+{% for form in skills_form %}
+<div class="row form-row spacer">
+    <div class="col-2">
+        <label>{{form.skill.label}}</label>
+    </div>
+    <div class="col-4">
+        <div class="input-group">
+            {{form.skill}}
+            <div class="input-group-append">
+                <button class="btn btn-success add-form-row">Add Skill</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+        <div class="circle--fluid--cell circle--fluid--secondary top-padding">
+          <button type="submit" class="button button-primary icon-on-left">
+              Save Changes
+          </button>
+        </div>
+
+      </div>
+  </form>
+
+{% endblock nav_bar %}
