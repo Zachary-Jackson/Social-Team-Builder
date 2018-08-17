@@ -2150,6 +2150,9 @@ button.button-secondary {
 .drawing-options {
   float: left;
   background-color: beige;
+  border: 10px;
+  margin: 10px;
+  padding: 10px;
 }
 
 .canvas-image {

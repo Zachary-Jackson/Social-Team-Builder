@@ -11,17 +11,6 @@
   let drawingColor = $('drawing-color'),
       drawingLineWidth = $('drawing-line-width')
 
-  // Create the canvas element
-  let canvas = this.__canvas = new fabric.Canvas('c', {
-    isDrawingMode: true, width: 240, height: 340,
-    // This prevents the avatar image from going to the front of the canvas
-    // during rotation mode
-    preserveObjectStacking: true
-  });
-
-
-  // Gets the main html form
-  let form = $('theForm');
 
   // Get the hidden profile pic
   let imgElement = $('my-image')
@@ -30,12 +19,46 @@
       top: 0,
   });
 
+
+  if (imgElement) {
+    var imgHeight = imgElement.height;
+    var imgWidth= imgElement.width;
+  }
+
+
   // get the site wide profile pic
   let siteImgElement = $('site-image')
   let siteImgInstance = new fabric.Image(siteImgElement, {});
   siteImgInstance.set({
       top: 0,
   });
+
+  let siteImgHeight = siteImgElement.height;
+  let siteImgWidth = siteImgElement.width;
+
+
+  // Initializes the canvas element
+  // The canvas size is chosen based upon if the user has an avatar
+  if (imgElement) {
+    var canvas = this.__canvas = new fabric.Canvas('c', {
+      isDrawingMode: true, width: imgWidth, height: imgHeight,
+      // This prevents the avatar image from going to the front of the canvas
+      // during rotation mode
+      preserveObjectStacking: true
+    });
+  } else {
+      var canvas = this.__canvas = new fabric.Canvas('c', {
+      isDrawingMode: true, width: siteImgWidth, height: siteImgHeight,
+      // This prevents the avatar image from going to the front of the canvas
+      // during rotation mode
+      preserveObjectStacking: true
+    });
+  }
+
+
+
+  // Gets the main html form
+  let form = $('theForm');
 
   // Canvas drawing image options
   canvas.freeDrawingBrush.color = drawingColor.value;
@@ -59,6 +82,8 @@
      * A new white background will be added to the canvas and redrawn
      */
   clearCanvas.onclick = function() {
+      canvas.setHeight(siteImgHeight)
+      canvas.setWidth(siteImgWidth)
       canvas.clear()
       canvas.backgroundColor='white'
       canvas.renderAll;
@@ -74,7 +99,10 @@
         * Deletes all of the drawings the user has created
         *
         * Redraws the user's profile picture
+         * and scales the canvas accordingly
          */
+      canvas.setHeight(imgHeight)
+      canvas.setWidth(imgWidth)
       canvas.clear();
 
       // Get the hidden profile pic again to override imgInstance
@@ -96,8 +124,10 @@
      * Deletes all of the drawings the user has created
      *
      * A new canvas showing the site logo will be added to the canvas and
-     * redrawn
+     * redrawn. Scaled accordingly
      */
+      canvas.setHeight(siteImgHeight)
+      canvas.setWidth(siteImgWidth)
       canvas.clear()
       canvas.add(siteImgInstance)
       canvas.renderAll;
@@ -154,8 +184,8 @@
         left: 100,
         top: 100,
         fill: drawingColor.value,
-        width: 25,
-        height: 25,
+        width: 35,
+        height: 35,
       });
       canvas.add(rect)
   }
@@ -173,7 +203,7 @@
      */
     turnOffDrawingMode()
       let circle = new fabric.Circle({
-        radius: 20, fill: drawingColor.value, left: 100, top: 100
+        radius: 30, fill: drawingColor.value, left: 100, top: 100
       });
       canvas.add(circle)
   }
@@ -191,7 +221,7 @@
      */
     turnOffDrawingMode()
       let triangle = new fabric.Triangle({
-        width: 35, height: 35, fill: drawingColor.value,
+        width: 40, height: 40, fill: drawingColor.value,
         left: 100, top: 100
       });
       canvas.add(triangle)

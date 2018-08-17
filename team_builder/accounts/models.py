@@ -1,4 +1,5 @@
 import datetime
+from io import BytesIO
 
 from django.conf import settings
 from django.contrib.auth.models import (
@@ -6,8 +7,11 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin
 )
+from django.core.files.base import ContentFile
 from django.db import models
 from django.utils import timezone
+
+from PIL import Image
 
 # django-markdownx
 from markdownx.models import MarkdownxField
@@ -73,6 +77,47 @@ class User(AbstractBaseUser, PermissionsMixin):
         """This allows us to turn self.bio into markdown to send
         to a template for display."""
         return markdownify(self.bio)
+
+    def save(self, *args, **kwargs):
+        """
+        Double checks the size of the avatar. If the image is to big
+        shrink it down below 500x500
+        """
+
+        # This function was writen with help in part from this stack overflow
+        # post  (https://stackoverflow.com/questions/22035833/
+        # how-to-go-form-django-image-field-to-pil-image-and-back)
+        super(User, self).save(*args, **kwargs)
+
+        # Checks if the image is larger than 500 x 500
+        avatar = self.avatar
+
+        # If the user does not have an avatar pass
+        try:
+            height = avatar.height
+            width = avatar.width
+
+        except ValueError:
+            pass
+
+        else:
+            # If the height or width is lower than 500 we are good
+            if height > 500 or width > 500:
+                # Open the image in Pillow
+                image = Image.open(avatar.open())
+
+                size = (500, 500)
+                image.thumbnail(size)
+
+                file = BytesIO()
+
+                image.save(file, format='png')
+                # This will call this save() method recursively once
+                self.avatar.save(
+                    self.avatar.name, ContentFile(file.getvalue())
+                )
+
+
 
 
 class AuthenticationToken(models.Model):
