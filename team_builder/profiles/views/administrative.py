@@ -47,6 +47,9 @@ def administrative(request):
 def administrative_non_pending(request):
     """
     Shows an Admin/staff user the administrative page for non_pending items
+
+    :param request: Standard django request object
+    :return: render 'profiles/administrative_non_pending.html'
     """
     logged_in_user = request.user
     if not admin_or_staff(logged_in_user):

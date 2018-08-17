@@ -18,9 +18,9 @@ def get_applicant(position, profile_pk: int):
     Checks to see if an applicant is in a position if not 404
     Returns the found_applicant or 404
 
-    Keyword arguments:
-    position -- A Position model object
-    profile_pk -- A primary key associated with a profile
+    :param position -- A Position model object
+    :param profile_pk -- A primary key associated with a profile
+    :return: found applicant
     """
     # Get and update the Applicants model
     found_applicant = ''
@@ -43,9 +43,9 @@ def get_projects_with_filled_or_unfilled_positions(is_filled: bool, request):
     filled or unfilled positions in them
     Returns found projects
 
-    Keyword arguments:
-    is_filled -- Bool stating if a position is filled or not
-    request -- standard view request object
+    :param is_filled -- Bool stating if a position is filled or not
+    :param request -- Standard django view request
+    :return: found projects
     """
     projects = models.Project.objects.all().filter(
         Q(owner=request.user) & Q(positions__filled=is_filled))
@@ -59,9 +59,10 @@ def get_needed_skills_and_found_positions(
     Finds all of the applicants using is_filled
     returns the found_skills and needed_positions
 
-    Keyword arguments:
-    is_accepted -- Bool stating if an applicant is accepted
-    is_filled -- Bool stating if a position is filled or open
+    :param request -- Standard django view request
+    :param is_accepted -- Bool stating if an applicant is accepted
+    :param is_filled -- Bool stating if a position is filled or open
+    :return: found_positions and needed skills
     """
     # Get all of the desired skills for the projects
     found_positions = set()
@@ -85,14 +86,12 @@ def get_needed_skills_and_found_positions(
 
 def if_owned_get_position_profile(request, position_pk: int, profile_pk: int):
     """
-    If the logged in user owns the position
-    Return: position, and profile
-    else:
-    Http 404
+    Checks if the user owns the profile and position
 
-    Keyword arguments:
-    position_pk -- Position object's pk
-    profile_pk -- Profile object's pk
+    :param request -- Standard django view request
+    :param position_pk -- Position object's pk
+    :param profile_pk -- Profile object's pk
+    :return: positions and profile or 404
     """
     user = request.user
     position = get_object_or_404(models.Position, pk=position_pk)

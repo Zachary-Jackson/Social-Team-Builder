@@ -1,3 +1,9 @@
+"""
+All of the email confirmation type things could have been handled with
+a 3rd party package of some kind. For better security and efficiently
+most likely, but were is the fun in that. This is just a practice project.
+"""
+
 import datetime
 
 from django.contrib.auth import login, logout

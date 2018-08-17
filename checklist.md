@@ -37,7 +37,7 @@ after sign up
 
 
 - [x] Can see applications for a project position
-* - [ ]Allows user's to filter applicants
+* - [x]Allows user's to filter applicants
 
 
 - [x] Users can approve an applicant

@@ -8,11 +8,11 @@ def get_notification_and_authenticate(request, pk: int):
     Gets the logged in user and makes sure that the user owns
     the notification
 
-    Keyword Arguments:
-    pk -- The primary key of a user
+    :param request: The standard django request object
+    :param pk: The primary key of a user
 
-    If the user owns the notification, return notification
-    Else: raise 404
+    :return: If the user owns the notification, return notification
+    :else: raise 404
     """
     user = request.user
 
@@ -31,7 +31,13 @@ def get_notification_and_authenticate(request, pk: int):
 
 @login_required
 def notifications(request):
-    """This is the main notification view for a user"""
+    """
+    This is the main notification view for a user
+
+    :param request: The standard django request object
+
+    :return: render request for 'notifications.html'
+    """
     notification_query = request.user.notifications.all()\
         .prefetch_related("actor")
 
@@ -50,6 +56,11 @@ def delete(request, pk: int):
     """
     Marks a notification as read and reroute back to
     notification_hub:unread
+
+    :param request: The standard django request object
+    :param pk: The primary key of a notification
+
+    :return: redirect to 'notification_hub:deletion_view'
     """
     notification = get_notification_and_authenticate(request, pk)
 
@@ -61,7 +72,13 @@ def delete(request, pk: int):
 
 @login_required
 def deletion_view(request):
-    """Shows the user all read notifications that they can delete"""
+    """
+    Shows the user all read notifications that they can delete
+
+    :param request: The standard django request object
+
+    :return: render request for 'deletion.html'
+    """
     notification_query = request.user.notifications.read()
 
     return render(
@@ -79,6 +96,11 @@ def mark_read(request, pk: int):
     """
     Marks a notification as read and reroute back to
     notification_hub:unread
+
+    :param request: The standard django request object
+    :param pk: The primary key of a notification
+
+    :return: redirect to 'notification_hub:unread'
     """
     notification = get_notification_and_authenticate(request, pk)
 
@@ -93,6 +115,11 @@ def mark_unread(request, pk: int):
     """
     Marks a notification as unread and reroute back to the route
     'notification_hub:read'
+
+    :param request: The standard django request object
+    :param pk: The primary key of a notification
+
+    :return: redirect to 'notification_hub:read'
     """
     notification = get_notification_and_authenticate(request, pk)
 
@@ -104,7 +131,13 @@ def mark_unread(request, pk: int):
 
 @login_required
 def read(request):
-    """Shows the user all their opened notifications"""
+    """
+    Shows the user all their opened notifications
+
+    :param request: The standard django request object
+
+    :return: render request 'read.html'
+    """
     notification_query = request.user.notifications.read()
 
     return render(
@@ -119,7 +152,13 @@ def read(request):
 
 @login_required
 def unread(request):
-    """Shows the user all their unopened notifications"""
+    """
+    Shows the user all their unopened notifications
+
+    :param request: The standard django request object
+
+    :return: render request 'unread.html'
+    """
     notification_query = request.user.notifications.unread()
 
     return render(
