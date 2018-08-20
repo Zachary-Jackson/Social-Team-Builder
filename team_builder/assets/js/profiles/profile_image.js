@@ -3,17 +3,20 @@
      * Initialization settings
      *
      * Creates various constants and images
+     *
+     * Various bits of this code was created with the help of the FabricJS
+     * demos found here: http://fabricjs.com/demos/
      */
 
   // Create a getElementById shortcut
   const $ = function(id){return document.getElementById(id)};
 
   let drawingColor = $('drawing-color'),
-      drawingLineWidth = $('drawing-line-width')
+      drawingLineWidth = $('drawing-line-width');
 
 
   // Get the hidden profile pic
-  let imgElement = $('my-image')
+  let imgElement = $('my-image');
   let imgInstance = new fabric.Image(imgElement, {});
   imgInstance.set({
       top: 0,
@@ -27,7 +30,7 @@
 
 
   // get the site wide profile pic
-  let siteImgElement = $('site-image')
+  let siteImgElement = $('site-image');
   let siteImgInstance = new fabric.Image(siteImgElement, {});
   siteImgInstance.set({
       top: 0,
@@ -82,10 +85,10 @@
      * A new white background will be added to the canvas and redrawn
      */
   clearCanvas.onclick = function() {
-      canvas.setHeight(siteImgHeight)
-      canvas.setWidth(siteImgWidth)
+      canvas.setHeight(siteImgHeight);
+      canvas.setWidth(siteImgWidth);
       canvas.clear()
-      canvas.backgroundColor='white'
+      canvas.backgroundColor='white';
       canvas.renderAll;
   };
 
@@ -101,13 +104,13 @@
         * Redraws the user's profile picture
          * and scales the canvas accordingly
          */
-      canvas.setHeight(imgHeight)
-      canvas.setWidth(imgWidth)
+      canvas.setHeight(imgHeight);
+      canvas.setWidth(imgWidth);
       canvas.clear();
 
       // Get the hidden profile pic again to override imgInstance
       // If we use the old imgInstance it keeps position data
-      let imgElement = $('my-image')
+      let imgElement = $('my-image');
       let imgInstance = new fabric.Image(imgElement, {});
       imgInstance.set({
           top: 0,
@@ -126,10 +129,19 @@
      * A new canvas showing the site logo will be added to the canvas and
      * redrawn. Scaled accordingly
      */
-      canvas.setHeight(siteImgHeight)
-      canvas.setWidth(siteImgWidth)
-      canvas.clear()
-      canvas.add(siteImgInstance)
+      canvas.setHeight(siteImgHeight);
+      canvas.setWidth(siteImgWidth);
+      canvas.clear();
+
+      // Get the hidden site image again to override imgInstance
+      // If we use the old siteImgInstance it keeps position data
+      let siteImgElement = $('site-image');
+      let siteImgInstance = new fabric.Image(siteImgElement, {});
+      siteImgInstance.set({
+          top: 0,
+      });
+
+      canvas.add(siteImgInstance);
       canvas.renderAll;
   };
 
@@ -145,8 +157,8 @@
        * Then submits the form.
        */
       let dataUrl= $('data-url')
-      let imageInfo = canvas.toDataURL()
-      dataUrl.value =imageInfo
+      let imageInfo = canvas.toDataURL();
+      dataUrl.value = imageInfo;
       form.submit()
   }
 
@@ -168,27 +180,77 @@
       }
   }
 
-  // Adds the ability to add a square to the canvas
-  let addSquareButton = $('add-square');
-  addSquareButton.onclick = addSquare;
+  // Creates the saveImageButton which lets a user submit the html form
+  let rotate90 = $('rotate-90');
+  rotate90.onclick = rotate;
 
-  function addSquare () {
-    /**
-     * Adds a square to the canvas of a certain color
-     *
-     * Side Effects:
-     * Turns off drawing mode via function
-     */
-    turnOffDrawingMode()
-      let rect = new fabric.Rect({
-        left: 100,
-        top: 100,
-        fill: drawingColor.value,
-        width: 35,
-        height: 35,
-      });
-      canvas.add(rect)
-  }
+  function rotate() {
+      /**
+       * This function redraws and rotates the canvas and all the images on it
+       *
+       * The rotate90 button gets unchecked as well
+       */
+      // uncheck the rotate90
+      rotate90.checked = false;
+
+      // Get the old canvas's height and width so the canvas can be swapped
+      let oldHeight = canvas.height;
+      let oldWidth = canvas.width;
+
+      canvas.setHeight(oldWidth);
+      canvas.setWidth(oldHeight);
+
+      let height = canvas.height;
+      let width = canvas.width;
+
+      canvas.renderAll()
+
+      console.log(canvas.height, canvas.width)
+
+      let allObjects = canvas.getObjects();
+
+      // loop through each object in the canvas and flip it
+      for (let i = 0; i < allObjects.length; i++) {
+        // The first item on the canvas is the main image.
+        // It just needs to rotate. All other items rotate and move
+        // in relationship to this image. Thus we need to separate them.
+        if (i === 0) {
+
+          // rotate the main canvas
+          let object = allObjects[i];
+
+          let rotation = object.angle;
+
+          // Depending on the rotation the image will need to be
+          // placed in a different corner of the screen.
+          if (rotation === 0) {
+            object.rotate(90);
+            object.left = width;
+            object.top = 0;
+
+          } else if (rotation === 90) {
+            object.rotate(180);
+            object.left = width;
+            object.top = height;
+
+          } else if (rotation === 180) {
+            object.rotate(270);
+            object.left = 0;
+            object.top = height;
+
+          } else if (rotation === 270) {
+            object.rotate(0);
+            object.left = 0;
+            object.top = 0;
+          }
+
+
+        }
+
+      }
+      canvas.renderAll();
+    }
+
 
   // Adds the ability to add a circle to the canvas
   let addCircleButton = $('add-circle');
@@ -203,9 +265,35 @@
      */
     turnOffDrawingMode()
       let circle = new fabric.Circle({
-        radius: 30, fill: drawingColor.value, left: 100, top: 100
+        radius: 25,
+        fill: drawingColor.value,
+        originX: 'center',
+        originY: 'center',
       });
-      canvas.add(circle)
+      canvas.add(circle).centerObjectH(circle).centerObjectV(circle).renderAll();
+  }
+
+  // Adds the ability to add a square to the canvas
+  let addSquareButton = $('add-square');
+  addSquareButton.onclick = addSquare;
+
+  function addSquare () {
+    /**
+     * Adds a square to the canvas of a certain color
+     *
+     * Side Effects:
+     * Turns off drawing mode via function
+     */
+    turnOffDrawingMode()
+    let rect = new fabric.Rect({
+      fill: drawingColor.value,
+      width: 40,
+      height: 40,
+      originX: 'center',
+      originY: 'center',
+    });
+    canvas.add(rect).centerObjectH(rect).centerObjectV(rect).renderAll();
+
   }
 
   // Adds the ability to add a triangle to the canvas
@@ -221,15 +309,16 @@
      */
     turnOffDrawingMode()
       let triangle = new fabric.Triangle({
-        width: 40, height: 40, fill: drawingColor.value,
-        left: 100, top: 100
+        width: 43,
+        height: 43,
+        fill: drawingColor.value,
       });
-      canvas.add(triangle)
+      canvas.add(triangle).centerObjectH(triangle).centerObjectV(triangle).renderAll();
   }
 
 
   let removeSelectedButton = $('remove-selected');
-  removeSelectedButton.onclick = removeSelected
+  removeSelectedButton.onclick = removeSelected;
 
   function removeSelected () {
     /**
@@ -251,7 +340,7 @@
      *
      * It also checks the rotate/move mode box
      */
-    drawingToggle.checked = true
+    drawingToggle.checked = true;
     canvas.isDrawingMode = false
   }
 
@@ -259,9 +348,9 @@
     /**
      * Turns on the canvas drawing mode
      *
-     * It also unchecks the rotate/move mode box
+     * It also un-checks the rotate/move mode box
      */
-    drawingToggle.checked = false
+    drawingToggle.checked = false;
     canvas.isDrawingMode = true
   }
 
@@ -270,7 +359,7 @@
   };
 
   drawingLineWidth.onchange = function() {
-    turnOnDrawingMode()
+    turnOnDrawingMode();
     canvas.isDrawingMode = true;
     canvas.freeDrawingBrush.width = parseInt(this.value, 10) || 1;
     this.previousSibling.innerHTML = this.value;
