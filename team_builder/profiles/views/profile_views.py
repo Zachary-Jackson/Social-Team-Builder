@@ -14,8 +14,9 @@ def create_initial_data(user) -> list:
     Creates the initial data dictionary for a formset, based on a user
     Returns: a list of skill pks
 
-    Keyword arguments:
-    user -- User model object
+    :param user -- User model object
+
+    :return list of initial data
     """
 
     initial = []
@@ -38,7 +39,12 @@ def create_initial_data(user) -> list:
 
 @login_required
 def profile_edit(request):
-    """Allows a profile to be edited"""
+    """
+    Allows a profile to be edited
+
+    :param request: Standard django request object
+    :return: render 'profiles/profile_edit.html'
+    """
     instance = request.user
 
     if request.method == 'POST':
@@ -88,7 +94,13 @@ def profile_edit(request):
 
 @login_required
 def profile_edit_image(request):
-    """Allows a profile image to be edited"""
+    """
+    Allows a profile image to be edited
+
+    :param request: Standard django request object
+    :returns: render request 'profiles/profile_image_edit.html'
+    or a redirect to 'profiles:profile' on successful request.POST
+    """
     user = request.user
 
     if request.method == 'POST':
@@ -132,8 +144,10 @@ def profile_view(request, pk: int):
     """
     Lets any user view a person's profile
 
-    Keyword arguments:
-    pk -- primary key for a User model object
+    :param request: Standard django request object
+    :param pk: primary key for a User model object
+
+    :return render 'profiles/profile.html'
     """
     # Get the User model that matches the pk
     user_profile = get_object_or_404(get_user_model(), pk=pk)

@@ -9,8 +9,9 @@ profile showcasing interests and talents. Upon attempting to join a project
 the owner can accept or deny the application.
 
 Various resources can be found in the resources directory. JavaScript files
-need to be added to the static 'js' folder, while the image needs to be
-placed in the profiles_media directory
+need to be added to the static 'js' folder, 
+while the image needs to be placed in the profiles_media directory in the
+static files path. (only for new projects)
 
 ### Requirements
 

@@ -54,6 +54,7 @@ class SkillConfirmation(models.Model):
         else:
             return 'Non-pending skill: {}'.format(self.skill)
 
+
 class Project(models.Model):
     """This is the model for a Project"""
     owner = models.ForeignKey(

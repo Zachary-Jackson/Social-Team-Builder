@@ -118,8 +118,6 @@ class User(AbstractBaseUser, PermissionsMixin):
                 )
 
 
-
-
 class AuthenticationToken(models.Model):
     """
     Holds onto a token for user verification

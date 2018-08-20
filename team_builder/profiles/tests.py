@@ -216,8 +216,6 @@ class ProfileViewsTests(TestCase):
 
         self.assertFalse(found_skill)
 
-
-
     """Applications tests"""
 
     def test_applications(self):

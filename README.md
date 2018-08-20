@@ -18,7 +18,7 @@ Create a virtualenv and install the project requirements, which are listed in
 requirements.txt` while your virtualenv is activated.
 
 In order to run this project you need to create a SECRET_KEY. In the
-team_builder directory create a file `called secret_key.py` that has a
+team_builder directory create a file called `secret_key.py` that has a
 secret_key variable.
 Once this is done use the command `python manage.py migrate` to
 initialize the database. Then run `python manage.py runserver` to

@@ -90,6 +90,9 @@ def login_router(request):
 def new_skill(request):
     """
     Allows a user to request new skills.
+
+    :param request: Standard django request object
+    :return: redirect to 'profiles:profile'
     """
     user = request.user
     if request.POST:

@@ -11,9 +11,12 @@ def create_search_result_string(projects, search_term: str) -> str:
     """
     Creates a formatted string stating what results were found
 
-    Keyword arguments:
-    search_term -- The string version of the skill that was searched with
+    :param projects: A Project model queryset
+    :param search_term: The string version of the skill that was searched with
+
+    :return: A formatted string describing if any results were found
     """
+
     if not projects:
         search_results = 'No results were found with: {}'.format(search_term)
     else:

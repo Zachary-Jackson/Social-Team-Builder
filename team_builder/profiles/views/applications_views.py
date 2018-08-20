@@ -62,6 +62,7 @@ def get_needed_skills_and_found_positions(
     :param request -- Standard django view request
     :param is_accepted -- Bool stating if an applicant is accepted
     :param is_filled -- Bool stating if a position is filled or open
+
     :return: found_positions and needed skills
     """
     # Get all of the desired skills for the projects
@@ -91,6 +92,7 @@ def if_owned_get_position_profile(request, position_pk: int, profile_pk: int):
     :param request -- Standard django view request
     :param position_pk -- Position object's pk
     :param profile_pk -- Profile object's pk
+
     :return: positions and profile or 404
     """
     user = request.user
@@ -132,9 +134,11 @@ def applications_accept(request, position_pk: int, profile_pk: int):
     Allows the owner of a project to accept an applicant
     Redirects to main applications page
 
-    Keyword arguments:
-    position_pk -- Position object's pk
-    profile_pk -- Profile object's pk
+    :param request -- Standard django view request
+    :param position_pk -- Position object's pk
+    :param profile_pk -- Profile object's pk
+
+    :return: redirect to 'profiles:applications'
     """
 
     # Get position, profile or 404
@@ -168,9 +172,11 @@ def applications_reject(request, position_pk: int, profile_pk: int):
     Allows the owner of a project to reject an applicant
     Redirects to main applications page
 
-    Keyword arguments:
-    position_pk -- Position object's pk
-    profile_pk -- Profile object's pk
+    :param request -- Standard django view request
+    :param position_pk -- Position object's pk
+    :param profile_pk -- Profile object's pk
+
+    :return redirect to 'profiles:applications'
     """
 
     # Get position, profile or 404
@@ -200,8 +206,10 @@ def applications_request(request, pk: int):
     """
     Allows a user to submit an application request
 
-    Keyword arguments:
-    pk -- primary key for a Position object
+    :param request -- Standard django view request
+    :param pk -- primary key for a Position object
+
+    :return redirect to 'profiles:project'
     """
     # Ensures that the Position model exists or 404
     position = get_object_or_404(models.Position, pk=pk)
@@ -238,7 +246,13 @@ def applications_request(request, pk: int):
 
 @login_required
 def applications_view_accepted(request):
-    """Shows the user all of the applicants they have accepted"""
+    """
+    Shows the user all of the applicants they have accepted
+
+    :param request -- Standard django view request
+
+    :return render 'profiles:applicants_accepted.html'
+    """
     # Get projects that have all positions filled
     projects = get_projects_with_filled_or_unfilled_positions(True, request)
 
@@ -249,7 +263,7 @@ def applications_view_accepted(request):
 
     return render(
         request,
-        'profiles/templates/profiles/applicants_accepted.html',
+        'profiles/applicants_accepted.html',
         {
             'found_positions': found_positions,
             'current_tab': 'Applications',  # navigation bar selector
@@ -260,7 +274,13 @@ def applications_view_accepted(request):
 
 @login_required
 def applications_view_rejected(request):
-    """Shows the user all of the applicants they have rejected"""
+    """
+    Shows the user all of the applicants they have rejected
+
+    :param request -- Standard django view request
+
+    :return render 'profiles/applicants_rejected.html'
+    """
     projects = []
 
     # Get all of the desired skills for the projects
@@ -283,7 +303,7 @@ def applications_view_rejected(request):
 
     return render(
         request,
-        'profiles/templates/profiles/applicants_rejected.html',
+        'profiles/applicants_rejected.html',
         {
             'found_positions': found_positions,
             'current_tab': 'Applications',  # navigation bar selector

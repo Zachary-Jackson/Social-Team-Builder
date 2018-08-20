@@ -21,7 +21,7 @@ after sign up
 
 
 - [x] Users can upload an avatar
-* - [ ]The avatar image can be edited with tools like resize, crop, rotate and flip
+* - [x]The avatar image can be edited with tools like resize, crop, rotate and flip
 
 
 - [x] Users can pick multiple skills for their profile from a list
