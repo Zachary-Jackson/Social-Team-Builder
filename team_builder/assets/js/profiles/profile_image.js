@@ -200,55 +200,29 @@
       canvas.setHeight(oldWidth);
       canvas.setWidth(oldHeight);
 
-      let height = canvas.height;
-      let width = canvas.width;
-
       canvas.renderAll()
 
-      console.log(canvas.height, canvas.width)
+      canvas.discardActiveObject();
+        let allObjects = new fabric.ActiveSelection(canvas.getObjects(), {
+          canvas: canvas,
+        });
 
-      let allObjects = canvas.getObjects();
+      canvas.setActiveObject(allObjects);
 
-      // loop through each object in the canvas and flip it
-      for (let i = 0; i < allObjects.length; i++) {
-        // The first item on the canvas is the main image.
-        // It just needs to rotate. All other items rotate and move
-        // in relationship to this image. Thus we need to separate them.
-        if (i === 0) {
-
-          // rotate the main canvas
-          let object = allObjects[i];
-
-          let rotation = object.angle;
+      let rotation = 0;
 
           // Depending on the rotation the image will need to be
           // placed in a different corner of the screen.
           if (rotation === 0) {
-            object.rotate(90);
-            object.left = width;
-            object.top = 0;
+            allObjects.set('angle', 90);
+            allObjects.left = canvas.width;
+            allObjects.top = 0;
 
-          } else if (rotation === 90) {
-            object.rotate(180);
-            object.left = width;
-            object.top = height;
-
-          } else if (rotation === 180) {
-            object.rotate(270);
-            object.left = 0;
-            object.top = height;
-
-          } else if (rotation === 270) {
-            object.rotate(0);
-            object.left = 0;
-            object.top = 0;
           }
 
-
-        }
-
-      }
+      canvas.discardActiveObject();
       canvas.renderAll();
+
     }
 
 
