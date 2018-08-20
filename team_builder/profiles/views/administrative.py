@@ -30,7 +30,8 @@ def administrative(request):
     if not admin_or_staff(logged_in_user):
         raise Http404('You are not an admin or staff user!')
 
-    tasks = models.SkillConfirmation.objects.filter(pending=True)
+    tasks = models.SkillConfirmation.objects.filter(pending=True)\
+        .prefetch_related('creator')
 
     return render(
         request,
@@ -56,8 +57,11 @@ def administrative_non_pending(request):
         raise Http404('You are not an admin or staff user!')
 
     tasks = (
-        models.SkillConfirmation.objects.filter(pending=False).order_by('-pk')
-    )
+        models.SkillConfirmation.objects
+        .filter(pending=False)
+        .order_by('-pk')
+        .prefetch_related('creator')
+             )
 
     return render(
         request,

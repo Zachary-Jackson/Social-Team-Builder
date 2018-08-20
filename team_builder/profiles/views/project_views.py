@@ -39,7 +39,7 @@ def get_filled_and_unfilled_positions(project: models.Project):
     """
 
     # Get all of the positions for the project
-    all_positions = project.positions.all()
+    all_positions = project.positions.all().prefetch_related('skill')
 
     # Separate the filled and unfilled projects, so that users can't
     # edit the filled ones
@@ -49,18 +49,18 @@ def get_filled_and_unfilled_positions(project: models.Project):
     return filled_positions, unfilled_positions
 
 
-def get_project_and_authenticate(request, project_pk: int) -> models.Project:
+def get_project_and_authenticate(request, pk: int) -> models.Project:
     """
     Gets the logged in user and makes sure that the user owns
     the project
 
     :param request: Standard Django request object
-    :param project_pk: primary key for a project object
+    :param pk: primary key for a project object
 
     :returns: If authenticated a Project object
     Else: raise 404
     """
-    project = get_object_or_404(models.Project, pk=project_pk)
+    project = get_object_or_404(models.Project, pk=pk)
 
     # Checks if the logged in user owns the project. If not kick them out.
     if project.owner.pk != request.user.pk:
@@ -73,38 +73,38 @@ def get_project_and_authenticate(request, project_pk: int) -> models.Project:
 
 
 @login_required()
-def project_delete(request, project_pk: int):
+def project_delete(request, pk: int):
     """
     Allows a project owner to delete a project
 
     :param request: Standard Django request object
-    :param project_pk: -- Project object's primary key
+    :param pk: -- Project object's primary key
    """
-    project = get_project_and_authenticate(request, project_pk)
+    project = get_project_and_authenticate(request, pk)
 
     project.delete()
     return redirect('profiles:homepage')
 
 
 @login_required()
-def project_delete_confirmation(request, project_pk: int):
+def project_delete_confirmation(request, pk: int):
     """
     Checks if a user really wants to delete a project
 
     :param request: Standard django request object
-    :param project_pk: Project object's primary key
+    :param pk: Project object's primary key
     :return: render 'profiles/project_delete_confirmation.html'
     """
-    project = get_project_and_authenticate(request, project_pk)
+    project = get_project_and_authenticate(request, pk)
 
     if request.method == 'POST':
         # If the user deleted the project return to homepage
         if request.POST.get('delete'):
-            return redirect('profiles:project_delete', pk=project_pk)
+            return redirect('profiles:project_delete', pk)
 
         # If the user went back, go to the edit screen
         if request.POST.get('back'):
-            return redirect('profiles:project_edit', pk=project_pk)
+            return redirect('profiles:project_edit', pk=pk)
 
     return render(
         request,
@@ -113,18 +113,18 @@ def project_delete_confirmation(request, project_pk: int):
 
 
 @login_required()
-def project_edit(request, project_pk: int):
+def project_edit(request, pk: int):
     """
     Allows only the project's owner to edit a project
 
     :param request: Standard django request object
-    :param project_pk: Project's primary key value
+    :param pk: Project's primary key value
 
     :returns: If valid request.POST redirect to 'profiles:project'
     else: render 'profiles/project_edit.html'
     """
 
-    project = get_project_and_authenticate(request, project_pk)
+    project = get_project_and_authenticate(request, pk)
 
     filled_positions, unfilled_positions = (
         get_filled_and_unfilled_positions(project)
@@ -174,7 +174,7 @@ def project_edit(request, project_pk: int):
                 new_position.save()
                 project.positions.add(new_position)
 
-            return redirect('profiles:project', pk=project_pk)
+            return redirect('profiles:project', pk=pk)
 
     # Create the forms required for the project
     project_form = forms.ProjectForm(instance=project)
@@ -259,30 +259,23 @@ def project_new(request):
         {'project_form': project_form, 'position_form': position_form})
 
 
-def project_view(request, project_pk: int):
+def project_view(request, pk: int):
     """
     Checks to see if the logged in user owns this project.
     If so show special owner template. If not show normal project template
 
     :param request: Standard Django request object
-    :param project_pk:
+    :param pk: Primary key for a Position object
 
     :return: If owned render 'profiles/project_view_owned.html'
     else: render 'profiles/project.html'
-    """
-
-    """
-
-
-    Keyword arguments:
-    pk -- Project object's primary key
     """
 
     # If the owner is viewing the project the template changes
     template_name = 'profiles/project.html'
 
     # Get the Project that matches the pk
-    project = get_object_or_404(models.Project, pk=project_pk)
+    project = get_object_or_404(models.Project, pk=pk)
 
     filled_positions, unfilled_positions = (
         get_filled_and_unfilled_positions(project)

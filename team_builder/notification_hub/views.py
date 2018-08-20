@@ -38,8 +38,9 @@ def notifications(request):
 
     :return: render request for 'notifications.html'
     """
-    notification_query = request.user.notifications.all()\
-        .prefetch_related("actor")
+    notification_query = (
+        request.user.notifications.all().prefetch_related("actor")
+    )
 
     return render(
         request,
@@ -79,7 +80,9 @@ def deletion_view(request):
 
     :return: render request for 'deletion.html'
     """
-    notification_query = request.user.notifications.read()
+    notification_query = (
+        request.user.notifications.read().prefetch_related('actor')
+    )
 
     return render(
         request,
@@ -138,7 +141,9 @@ def read(request):
 
     :return: render request 'read.html'
     """
-    notification_query = request.user.notifications.read()
+    notification_query = (
+        request.user.notifications.read().prefetch_related('actor')
+    )
 
     return render(
         request,
@@ -159,7 +164,9 @@ def unread(request):
 
     :return: render request 'unread.html'
     """
-    notification_query = request.user.notifications.unread()
+    notification_query = (
+        request.user.notifications.unread().prefetch_related('actor')
+    )
 
     return render(
         request,

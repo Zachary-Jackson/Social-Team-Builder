@@ -48,7 +48,7 @@ def get_projects_with_filled_or_unfilled_positions(is_filled: bool, request):
     :return: found projects
     """
     projects = models.Project.objects.all().filter(
-        Q(owner=request.user) & Q(positions__filled=is_filled))
+        Q(owner=request.user) & Q(positions__filled=is_filled)).distinct()
     return projects
 
 
@@ -241,7 +241,7 @@ def applications_request(request, pk: int):
     notify.send(user, recipient=position.related_project.owner, verb=message)
 
     # Return the user back to the Project's page
-    return redirect('profiles:project', pk=pk)
+    return redirect('profiles:project', pk=project.pk)
 
 
 @login_required

@@ -37,13 +37,16 @@
           {% endif %}
 
         </div>
+
+<form class="form-horizontal" method="POST" action="">
+    {% csrf_token %}
+
         <div class="circle--fluid--cell circle--fluid--secondary">
           <button type="submit" class="button button-primary icon-on-left">
-              Save Changes
+              Request Skills
           </button>
         </div>
       </div>
-
 
 
     <h3>Your current skills:</h3>
@@ -55,8 +58,6 @@
 
 <h3 class="top-padding">Add new skills</h3>
 
-<form class="form-horizontal" method="POST" action="">
-    {% csrf_token %}
 {{ skills_form.management_form }}
 
 {% for form in skills_form %}
@@ -77,7 +78,7 @@
 
         <div class="circle--fluid--cell circle--fluid--secondary top-padding">
           <button type="submit" class="button button-primary icon-on-left">
-              Save Changes
+              Request Skills
           </button>
         </div>
 
