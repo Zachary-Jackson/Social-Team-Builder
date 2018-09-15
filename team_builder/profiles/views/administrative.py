@@ -1,24 +1,10 @@
-from django.contrib.auth.decorators import login_required
-from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
-
 from .. import models
+from ..decorators import logged_in_admin_or_staff_required
 
 
-def admin_or_staff(user) -> bool:
-    """
-    Checks to see if a user is an admin or staff
-
-    :param user: Standard User model
-    :return: Bool stating if the user is an admin or staff
-    """
-    if user.is_staff or user.is_superuser:
-        return True
-    return False
-
-
-@login_required
+@logged_in_admin_or_staff_required
 def administrative(request):
     """
     Shows an Admin/staff user the administrative page
@@ -26,9 +12,6 @@ def administrative(request):
     :param request: Standard django request object
     :return: render 'profiles/administrative.html'
     """
-    logged_in_user = request.user
-    if not admin_or_staff(logged_in_user):
-        raise Http404('You are not an admin or staff user!')
 
     tasks = models.SkillConfirmation.objects.filter(pending=True)\
         .prefetch_related('creator')
@@ -44,7 +27,7 @@ def administrative(request):
     )
 
 
-@login_required
+@logged_in_admin_or_staff_required
 def administrative_non_pending(request):
     """
     Shows an Admin/staff user the administrative page for non_pending items
@@ -52,9 +35,6 @@ def administrative_non_pending(request):
     :param request: Standard django request object
     :return: render 'profiles/administrative_non_pending.html'
     """
-    logged_in_user = request.user
-    if not admin_or_staff(logged_in_user):
-        raise Http404('You are not an admin or staff user!')
 
     tasks = (
         models.SkillConfirmation.objects
@@ -74,7 +54,7 @@ def administrative_non_pending(request):
     )
 
 
-@login_required
+@logged_in_admin_or_staff_required
 def skill_accept(request, pk: int):
     """
     Creates a Skill object From a SkillConfirmation object
@@ -84,9 +64,6 @@ def skill_accept(request, pk: int):
     :param pk: The pk of a SkillConfirmation object
     :return: redirect to 'profiles:administrative'
     """
-    logged_in_user = request.user
-    if not admin_or_staff(logged_in_user):
-        raise Http404('You are not an admin or staff user!')
 
     skill_confirmation = get_object_or_404(models.SkillConfirmation, pk=pk)
     skill = models.Skill.objects.get_or_create(skill=skill_confirmation.skill)
@@ -101,7 +78,7 @@ def skill_accept(request, pk: int):
     return redirect('profiles:administrative')
 
 
-@login_required
+@logged_in_admin_or_staff_required
 def skill_deny(request, pk: int):
     """
     Denys a SkillConfirmation request and closes the request
@@ -110,9 +87,6 @@ def skill_deny(request, pk: int):
     :param pk: The pk of a SkillConfirmation object
     :return: render redirect to 'profiles:administrative'
     """
-    logged_in_user = request.user
-    if not admin_or_staff(logged_in_user):
-        raise Http404('You are not an admin or staff user!')
 
     skill_confirmation = get_object_or_404(models.SkillConfirmation, pk=pk)
     skill_confirmation.pending = False
