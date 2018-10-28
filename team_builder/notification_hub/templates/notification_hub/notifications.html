@@ -3,81 +3,79 @@
 
 nav_bar.html takes one parameter
 1) current_tab
-    Allows the main profile header bar to change in html
+  Allows the main profile header bar to change in html
 
 
 Notifications.html takes a couple of parameters
 
 1) notification_query
-    The notifications that a user has
+  The notifications that a user has
 
 
 
 {% block title_tag %}Team Builder | Notifications{% endblock title_tag %}
-
-
 {% block header %}<h2>Notifications</h2>{% endblock header %}
 
 
 {% block first_sidebar %}
-    <li>
-      <a class="selected" href="{% url 'notification_hub:notifications' %}">
-          All Notifications
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'notification_hub:unread' %}">
-          Unread
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'notification_hub:read' %}">
-          Read
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'notification_hub:deletion_view' %}">
-          Deletion View
-      </a>
-    </li>
+  <li>
+    <a class="selected" href="{% url 'notification_hub:notifications' %}">
+      All Notifications
+    </a>
+  </li>
+  <li>
+    <a href="{% url 'notification_hub:unread' %}">
+      Unread
+    </a>
+  </li>
+  <li>
+    <a href="{% url 'notification_hub:read' %}">
+      Read
+    </a>
+  </li>
+  <li>
+    <a href="{% url 'notification_hub:deletion_view' %}">
+      Deletion View
+    </a>
+  </li>
 {% endblock first_sidebar %}
 
 
 {% block body_header %}
-    <th>Notifications</th>
-    <th class="circle--cell--right">Time of notification</th>
+  <th>Notifications</th>
+  <th class="circle--cell--right">Time of notification</th>
 {% endblock body_header %}
 
 
 {% block body %}
-    {% if not notification_query %}
-        <h2>You have no notifications.</h2>
-    {% endif %}
+  {% if not notification_query %}
+    <h2>You have no notifications.</h2>
+  {% endif %}
 
-    {% for notification in notification_query %}
-          <tr class="clickable-row" data-href="">
-            <td>
-                <h3>
-                    <a>
-                        {{ notification.verb }}
-                    </a>
-                </h3>
-                <p>
-                    <a href={% url 'profiles:profile' pk=notification.actor.pk%}>
-                        {% if notification.unread %}
-                            Unread from: {{ notification.actor}}
-                        {% else %}
-                            Read from: {{ notification.actor}}
-                        {% endif %}
-                    </a>
-                </p>
+  {% for notification in notification_query %}
+    <tr class="clickable-row" data-href="">
+      <td>
+        <h3>
+          <a>
+            {{ notification.verb }}
+          </a>
+        </h3>
+        <p>
+          <a href={% url 'profiles:profile' pk=notification.actor.pk %}>
+            {% if notification.unread %}
+              Unread from: {{ notification.actor }}
+            {% else %}
+              Read from: {{ notification.actor }}
+            {% endif %}
+          </a>
+        </p>
 
-            </td>
-            <td class="circle--cell--right">
+      </td>
+      <td class="circle--cell--right">
               <span class="secondary-label">
                   {{ notification.timestamp }}
               </span>
-            </td>
-          </tr>
-    {% endfor %}
+      </td>
+    </tr>
+  {% endfor %}
 {% endblock body %}

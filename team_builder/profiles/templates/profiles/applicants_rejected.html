@@ -3,17 +3,17 @@
 
 nav_bar.html takes one parameter
 1) current_tab
-    Allows the main profile header bar to change in html
+  Allows the main profile header bar to change in html
 
 
 applicants_rejected.html takes a couple of parameters
 
 1) found_positions
-    All of the Applicants that meet the search criteria
+  All of the Applicants that meet the search criteria
 2) needed skills
-    This is all of the skills that applicants have applied for
+  This is all of the skills that applicants have applied for
 3) projects
-    All of the projects that meet the search criteria
+  All of the projects that meet the search criteria
 
 
 {% block title_tag %}Team Builder | Applications{% endblock %}
@@ -22,92 +22,92 @@ applicants_rejected.html takes a couple of parameters
 {% block header %}<h2>Rejected Applications</h2>{% endblock header %}
 
 {% block first_sidebar %}
-    <li>
-      <a href="{% url 'profiles:applications' %}">
-          All Open Applications
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'profiles:applications_view_accepted' %}">
-          Accepted
-      </a>
-    </li>
-    <li>
-      <a class="selected" href="{% url 'profiles:applications_view_rejected' %}">
-          Rejected
-      </a>
-    </li>
+  <li>
+    <a href="{% url 'profiles:applications' %}">
+      All Open Applications
+    </a>
+  </li>
+  <li>
+    <a href="{% url 'profiles:applications_view_accepted' %}">
+      Accepted
+    </a>
+  </li>
+  <li>
+    <a class="selected" href="{% url 'profiles:applications_view_rejected' %}">
+      Rejected
+    </a>
+  </li>
 {% endblock first_sidebar %}
 
 
 {% block second_sidebar %}
-    <h4>Rejected Projects</h4>
-    <ul class="circle--filter--list">
-        {% for project in projects %}
-            <li>
-                <a href="{% url 'profiles:project' pk=project.pk %}">
-                    {{ project|truncatechars:25 }}
-                </a>
-            </li>
-        {% endfor %}
-        {% if not projects %}
-            <li>You have no projects with rejections.</li>
-        {% endif %}
-    </ul>
+  <h4>Rejected Projects</h4>
+  <ul class="circle--filter--list">
+    {% for project in projects %}
+      <li>
+        <a href="{% url 'profiles:project' pk=project.pk %}">
+          {{ project|truncatechars:25 }}
+        </a>
+      </li>
+    {% endfor %}
+    {% if not projects %}
+      <li>You have no projects with rejections.</li>
+    {% endif %}
+  </ul>
 {% endblock second_sidebar %}
 
 
 {% block third_sidebar %}
-    <div class="circle--filter circle--secondary--module">
-        <h4>Project Needs</h4>
-        <ul class="circle--filter--list">
-        <li><a class="selected">Rejected Needs</a></li>
-        {% for need in needed_skills %}
-         <li>
-             <a>{{ need }}</a>
-         </li>
-        {% endfor %}
+  <div class="circle--filter circle--secondary--module">
+    <h4>Project Needs</h4>
+    <ul class="circle--filter--list">
+      <li><a class="selected">Rejected Needs</a></li>
+      {% for need in needed_skills %}
+        <li>
+          <a>{{ need }}</a>
+        </li>
+      {% endfor %}
 
-        {% if not needed_skills %}
-            <p>There are no applicants</p>
-        {% endif %}
+      {% if not needed_skills %}
+        <p>There are no applicants</p>
+      {% endif %}
     </ul>
-    </div>
+  </div>
 {% endblock third_sidebar %}
 
 
 {% block body_header %}
-    <th>Applicant</th>
-    <th class="circle--cell--right">Applicant Position</th>
+  <th>Applicant</th>
+  <th class="circle--cell--right">Applicant Position</th>
 {% endblock body_header %}
 
 
 {% block body %}
-    {% if not found_positions %}
-        <h2>You have no rejected positions</h2>
-    {% endif %}
+  {% if not found_positions %}
+    <h2>You have no rejected positions</h2>
+  {% endif %}
 
-    {% for applicant in found_positions %}
-          <tr class="clickable-row" data-href="">
-            <td>
+  {% for applicant in found_positions %}
+    <tr class="clickable-row" data-href="">
+      <td>
 
-                <h3>
-                    <a href=" {% url 'profiles:profile' pk=applicant.pk %}">
-                        {{ applicant }}
-                    </a>
-                </h3>
-                <p>
-                    <a href=" {% url 'profiles:project' pk=applicant.position.related_project.pk  %}">
-                        {{ applicant.position.related_project }}
-                    </a>
-                </p>
+        <h3>
+          <a href=" {% url 'profiles:profile' pk=applicant.pk %}">
+            {{ applicant }}
+          </a>
+        </h3>
+        <p>
+          <a href=" {% url 'profiles:project' pk=applicant.position.related_project.pk %}">
+            {{ applicant.position.related_project }}
+          </a>
+        </p>
 
-            </td>
-            <td class="circle--cell--right">
+      </td>
+      <td class="circle--cell--right">
               <span class="secondary-label">
                   {{ applicant.position.skill }}
               </span>
-            </td>
-          </tr>
-    {% endfor %}
+      </td>
+    </tr>
+  {% endfor %}
 {% endblock body %}

@@ -4,13 +4,15 @@
 
 {% block nav_bar %}
   {% load static %}
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+          integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+          crossorigin="anonymous"></script>
   <script src="{% static 'js/dynamicformsets.js' %}"></script>
 
   <form method="post" enctype="multipart/form-data" action="">
     {% csrf_token %}
 
-      {{ profile_form.honey_pot }}
+    {{ profile_form.honey_pot }}
 
     <div class="bounds circle--page">
       <div class="circle--page--header circle--fluid">
@@ -19,17 +21,17 @@
         </div>
         <div class="circle--fluid--cell circle--fluid--secondary">
           <button type="submit" class="button button-primary icon-on-left">
-              Save Changes
+            Save Changes
           </button>
         </div>
       </div>
 
       <div class="grid-70">
         <p>Username</p>
-          {{ profile_form.username.errors }}
+        {{ profile_form.username.errors }}
         {{ profile_form.username }}
         <p>Website color</p>
-          {{ profile_form.color }}
+        {{ profile_form.color }}
         <div class="circle--article--body">
           <p>Bio (markdown preview bellow)</p>
           {{ profile_form.bio }}
@@ -55,31 +57,32 @@
           </h4>
 
 
-<form class="form-horizontal" method="POST" action="">
-    {% csrf_token %}
-{{ skills_form.management_form }}
-{% for form in skills_form %}
-<div class="row form-row spacer">
-    <div class="col-2">
-        <label>{{form.skills.label}}</label>
-    </div>
-    <div class="col-4">
-        <div class="input-group">
-            {{form.skills}}
-            <div class="input-group-append">
-                <button class="btn btn-success add-form-row">Add Skill</button>
-            </div>
+          <form class="form-horizontal" method="POST" action="">
+            {% csrf_token %}
+            {{ skills_form.management_form }}
+            {% for form in skills_form %}
+              <div class="row form-row spacer">
+                <div class="col-2">
+                  <label>{{ form.skills.label }}</label>
+                </div>
+                <div class="col-4">
+                  <div class="input-group">
+                    {{ form.skills }}
+                    <div class="input-group-append">
+                      <button class="btn btn-success add-form-row">Add Skill
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+
+
         </div>
-    </div>
-</div>
-{% endfor %}
-
-
       </div>
-    </div>
 
   </form>
 
-{{ profile_form.media }}
+  {{ profile_form.media }}
 
 {% endblock nav_bar %}

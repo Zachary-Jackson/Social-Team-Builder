@@ -2,110 +2,116 @@
 
 {% block content %}
   {% load static %}
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+          integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+          crossorigin="anonymous"></script>
   <script src="{% static 'js/dynamicformsets.js' %}"></script>
 
   <form method="post" enctype="multipart/form-data" action="">
-  {% csrf_token %}
+    {% csrf_token %}
 
-  <div class="circle--actions--bar">
-    <div class="bounds">
-      <div class="grid-100">
-        <input type="submit" class="button button-primary" href="project.html" value="Save Changes">
+    <div class="circle--actions--bar">
+      <div class="bounds">
+        <div class="grid-100">
+          <input type="submit" class="button button-primary"
+                 href="project.html" value="Save Changes">
 
-{#        This allows the delete button to only appear for saved projects#}
-        {% if project.pk %}
+          {#        This allows the delete button to only appear for saved projects#}
+          {% if project.pk %}
             <a class="button button-text"
-               href="{% url 'profiles:project_delete_confirmation' pk=project.pk%}">
-                Delete Project
+               href="{% url 'profiles:project_delete_confirmation' pk=project.pk %}">
+              Delete Project
             </a>
-        {% endif %}
+          {% endif %}
 
+        </div>
       </div>
     </div>
-  </div>
 
 
-  <div class="bounds circle--page circle--article">
-    <div class="grid-70">
-      <div class="circle--article--body">
-        <div class="circle--input--h1">
-          <h2>Project</h2>
-          {{ project_form.title.errors }}
-          {{ project_form.title }}
+    <div class="bounds circle--page circle--article">
+      <div class="grid-70">
+        <div class="circle--article--body">
+          <div class="circle--input--h1">
+            <h2>Project</h2>
+            {{ project_form.title.errors }}
+            {{ project_form.title }}
+          </div>
+          <p>Description (markdown preview bellow)</p>
+          {{ project_form.description }}
         </div>
-        <p>Description (markdown preview bellow)</p>
-        {{ project_form.description }}
-      </div>
 
-      <div class="circle--project--positions">
-        <h2>Positions</h2>
+        <div class="circle--project--positions">
+          <h2>Positions</h2>
 
-        <ul class="circle--group--list circle--clone--list">
+          <ul class="circle--group--list circle--clone--list">
 
 
-    <form class="form-horizontal" method="POST" action="">
-        {% csrf_token %}
-    {{ position_form.management_form }}
-    {% for form in position_form %}
-    <div class="row form-row spacer">
-        <div class="col-2">
-            <label>{{form.skill.label}}</label>
-        </div>
-        <div class="col-4">
-            <div class="input-group">
-                {{form.skill}}
-                {{ form.information }}
-                <p>Time commitment Markdown capable</p>
-                {{ form.time_commitment }}
-                <div class="input-group-append">
-                    <button class="btn btn-success add-form-row">Add Position</button>
+            <form class="form-horizontal" method="POST" action="">
+              {% csrf_token %}
+              {{ position_form.management_form }}
+              {% for form in position_form %}
+                <div class="row form-row spacer">
+                  <div class="col-2">
+                    <label>{{ form.skill.label }}</label>
+                  </div>
+                  <div class="col-4">
+                    <div class="input-group">
+                      {{ form.skill }}
+                      {{ form.information }}
+                      <p>Time commitment Markdown capable</p>
+                      {{ form.time_commitment }}
+                      <div class="input-group-append">
+                        <button class="btn btn-success add-form-row">Add
+                          Position
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
+              {% endfor %}
 
-    <input type="submit" class="button button-primary" href="project.html" value="Save Changes">
+              <input type="submit" class="button button-primary"
+                     href="project.html" value="Save Changes">
 
-{% if filled_positions %}
-    <h2>Filled Positions</h2>
+              {% if filled_positions %}
+                <h2>Filled Positions</h2>
 
-    {% for position in filled_positions %}
-                <li>
-                  <h3>{{ position.skill }}</h3>
-                  <p>{{ position.information|linebreaks }}</p>
+                {% for position in filled_positions %}
+                  <li>
+                    <h3>{{ position.skill }}</h3>
+                    <p>{{ position.information|linebreaks }}</p>
                     <a class="button button-primary button-inactive"
-           href="{% url 'profiles:profile' pk=position.filled_by.pk %}">
-            Position Filled by {{ position.filled_by }}
-        </a>
-                </li>
-    {% endfor %}
-{% endif %}
+                       href="{% url 'profiles:profile' pk=position.filled_by.pk %}">
+                      Position Filled by {{ position.filled_by }}
+                    </a>
+                  </li>
+                {% endfor %}
+              {% endif %}
 
 
-        </ul>
+          </ul>
 
-      </div>
-    </div>
-
-    <div class="grid-25 grid-push-5">
-      <div class="circle--secondary--module">
-        <h3>Project Timeline</h3>
-        <div class="circle--textarea--input">
-          {{ project_form.time_line }}
         </div>
       </div>
 
-      <div class="circle--secondary--module">
-        <h3>Application Requirements</h3>
-        {{ project_form.requirements }}
-      </div>
+      <div class="grid-25 grid-push-5">
+        <div class="circle--secondary--module">
+          <h3>Project Timeline</h3>
+          <div class="circle--textarea--input">
+            {{ project_form.time_line }}
+          </div>
+        </div>
 
+        <div class="circle--secondary--module">
+          <h3>Application Requirements</h3>
+          {{ project_form.requirements }}
+        </div>
+
+      </div>
     </div>
-  </div>
   </form>
 
-{{ project_form.media }}
+  {{ project_form.media }}
 
 {% endblock content %}

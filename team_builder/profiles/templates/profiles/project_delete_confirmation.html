@@ -1,23 +1,23 @@
 {% extends "profiles/project.html" %}
 
 {% block delete_confirmation_header %}
-    <h1>Are you sure you want to delete this Project?</h1>
+  <h1>Are you sure you want to delete this Project?</h1>
 {% endblock delete_confirmation_header %}
 
 {% block delete_confirmation %}
 
-      <form method="post" enctype="multipart/form-data" action="">
-          {% csrf_token %}
+  <form method="post" enctype="multipart/form-data" action="">
+    {% csrf_token %}
 
-        <input type="submit"
-               name="delete"
-               class="button button-secondary"
-               value="Confirm Delete">
+    <input type="submit"
+           name="delete"
+           class="button button-secondary"
+           value="Confirm Delete">
 
-        <input type="submit"
-               name="back"
-               class="button button-primary"
-               value="Go Back">
-      </form>
+    <input type="submit"
+           name="back"
+           class="button button-primary"
+           value="Go Back">
+  </form>
 
 {% endblock delete_confirmation %}

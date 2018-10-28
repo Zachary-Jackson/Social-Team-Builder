@@ -6,114 +6,114 @@
 {% block nav_bar %}
 
   <div class="bounds circle--page">
-    <div class="circle--page--header circle--fluid">
-      {% if user_profile.username == request.user.username %}
-          <div class="circle--fluid--cell circle--fluid--primary">
-            <h2>{{user_profile.username}}'s profile</h2>
-          </div>
-       {% else %}
-          <div class="circle--fluid--cell circle--fluid--primary">
-            <h2>Viewing {{user_profile.username}}'s profile</h2>
-          </div>
-      {% endif %}
+  <div class="circle--page--header circle--fluid">
+    {% if user_profile.username == request.user.username %}
+      <div class="circle--fluid--cell circle--fluid--primary">
+        <h2>{{ user_profile.username }}'s profile</h2>
+      </div>
+    {% else %}
+      <div class="circle--fluid--cell circle--fluid--primary">
+        <h2>Viewing {{ user_profile.username }}'s profile</h2>
+      </div>
+    {% endif %}
 
 
-{#      If the logged in user is not the same as the user_profile#}
-{#        don't show an edit button#}
-      {% if user_profile.username == request.user.username %}
-        <div class="circle--fluid--cell circle--fluid--secondary">
-          <a class="button icon-on-left" href="{% url 'profiles:edit' %}">
-              Edit
-          </a>
-        </div>
-      {% endif %}
+    {#      If the logged in user is not the same as the user_profile#}
+    {#        don't show an edit button#}
+    {% if user_profile.username == request.user.username %}
+      <div class="circle--fluid--cell circle--fluid--secondary">
+        <a class="button icon-on-left" href="{% url 'profiles:edit' %}">
+          Edit
+        </a>
+      </div>
+    {% endif %}
 
 
+  </div>
+
+  <div class="grid-70">
+    <div class="circle--article--body">
+      <h2>Bio:</h2>
+      <p>{{ user_profile.bio_markdown|safe }}</p>
     </div>
 
-    <div class="grid-70">
-      <div class="circle--article--body">
-        <h2>Bio:</h2>
-        <p>{{ user_profile.bio_markdown|safe }}</p>
-      </div>
+    <h2>Past Projects</h2>
+    <table class="u-full-width circle--table">
+      <thead>
+      <tr>
+        <th>Project Title</th>
+        <th class="circle--cell--right">Project Positions</th>
+      </tr>
+      </thead>
+      <tbody>
 
-      <h2>Past Projects</h2>
-      <table class="u-full-width circle--table">
-        <thead>
-          <tr>
-            <th>Project Title</th>
-            <th class="circle--cell--right">Project Positions</th>
-          </tr>
-        </thead>
-        <tbody>
+      {% for project in projects %}
+        <tr class="clickable-row"
+            data-href="{% url 'profiles:project' pk=project.pk %}">
+          <td>
+            <h3>{{ project }}</h3>
+          </td>
 
-        {% for project in projects %}
-          <tr class="clickable-row"
-              data-href="{% url 'profiles:project' pk=project.pk %}">
-            <td>
-              <h3>{{ project }}</h3>
-            </td>
+          {% with project.positions.all as positions %}
 
-            {% with project.positions.all as positions %}
-
-                {% if positions|length > 3 %}
-                    <td class="circle--cell--right">
+            {% if positions|length > 3 %}
+              <td class="circle--cell--right">
                     <span class="secondary-label">
                         <b><i>Many Positions</i></b>
                     </span>
-                    </td>
-                {% else %}
-                    {% for position in positions %}
-                        <td class="circle--cell--right">
+              </td>
+            {% else %}
+              {% for position in positions %}
+                <td class="circle--cell--right">
                           <span class="secondary-label">
                               {{ position.skill }}
                           </span>
-                        </td>
-                    {% endfor %}
-                {% endif %}
+                </td>
+              {% endfor %}
+            {% endif %}
 
-            {% endwith %}
+          {% endwith %}
 
-          </tr>
-        {% endfor %}
+        </tr>
+      {% endfor %}
 
 
-        </tbody>
-      </table>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-25 grid-push-5">
+
+  {#    Checks to see if the user has an avatar.#}
+  {#    If not use default profile media#}
+  {% if user_profile.avatar %}
+    <div class="circle--secondary--module">
+      <img class="circle--primary--avatar"
+           src="{% static user_profile.avatar.url %}">
     </div>
+  {% else %}
+    <div class="circle--secondary--module">
+      <img class="circle--primary--avatar"
+           src="{% static 'profiles_media/default_profile_image.png' %}"/>
+    </div>
+  {% endif %}
 
-    <div class="grid-25 grid-push-5">
+  {% if user_profile.username == request.user.username %}
+    <p>
+      <a href="{% url 'profiles:profile_edit_image' %}">
+        Image editor
+      </a>
+    </p>
+  {% endif %}
 
-{#    Checks to see if the user has an avatar.#}
-{#    If not use default profile media#}
-      {% if user_profile.avatar %}
-        <div class="circle--secondary--module">
-            <img class="circle--primary--avatar"
-                 src="{% static user_profile.avatar.url %}">
-        </div>
-      {% else %}
-        <div class="circle--secondary--module">
-            <img class="circle--primary--avatar"
-                 src="{% static 'profiles_media/default_profile_image.png' %}"/>
-        </div>
-      {% endif %}
-
-    {% if user_profile.username == request.user.username %}
-      <p>
-        <a href="{% url 'profiles:profile_edit_image' %}">
-          Image editor
-        </a>
-      </p>
-    {% endif %}
-
-      <div class="circle--secondary--module">
-        <h4>My Skills</h4>
-        <ul class="unloaded">
-          {% for skill in user_profile.allskills.skills.all %}
-            <li>{{ skill }}</li>
-          {% endfor %}
-        </ul>
-      </div>
+  <div class="circle--secondary--module">
+    <h4>My Skills</h4>
+    <ul class="unloaded">
+      {% for skill in user_profile.allskills.skills.all %}
+        <li>{{ skill }}</li>
+      {% endfor %}
+    </ul>
+  </div>
 
 
 {% endblock nav_bar %}

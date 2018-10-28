@@ -9,28 +9,28 @@
     <h1>Image editor!</h1>
   </div>
 
-          <button class="btn btn-info floated" id="clear-canvas">
-            New blank canvas
-          </button>
-        {% if profile.avatar %}
-          <button class="btn btn-info floated" id="clear-canvas-with-pic" >
-            Clear: Avatar image
-          </button>
-        {% endif %}
-          <button class="btn btn-info floated" id="clear-canvas-with-site-pic">
-            Clear: Use site profile image
-          </button><br>
+  <button class="btn btn-info floated" id="clear-canvas">
+    New blank canvas
+  </button>
+  {% if profile.avatar %}
+    <button class="btn btn-info floated" id="clear-canvas-with-pic">
+      Clear: Avatar image
+    </button>
+  {% endif %}
+  <button class="btn btn-info floated" id="clear-canvas-with-site-pic">
+    Clear: Use site profile image
+  </button><br>
 
   <form action="{% url 'profiles:profile_edit_image' %}"
         id="theForm" method="post">
-  {% csrf_token %}
-    <input name="data-url" type="hidden" id="data-url" />
-      <button
-          class="floated button button-secondary"
-          type="button"
-          id="save-image">
-        Save Image
-      </button>
+    {% csrf_token %}
+    <input name="data-url" type="hidden" id="data-url"/>
+    <button
+        class="floated button button-secondary"
+        type="button"
+        id="save-image">
+      Save Image
+    </button>
   </form>
 
   <div class="min-height bounds">
@@ -40,7 +40,7 @@
         No canvas support
       </canvas>
 
-{#      Create one or two images for the JavaScript application#}
+      {#      Create one or two images for the JavaScript application#}
       {% if profile.avatar %}
         <img src="{% static profile.avatar.url %}"
              id="my-image" style="display: none;">
@@ -55,12 +55,12 @@
       <div style="margin-left: 10px; display: inline-block;">
 
         <label class="top-padding">
-          <input type="checkbox" id="drawing-toggle" />
+          <input type="checkbox" id="drawing-toggle"/>
           Move object mode
         </label>
 
-        <input type="checkbox" id="rotate-90" />
-          Rotate image 90 degrees
+        <input type="checkbox" id="rotate-90"/>
+        Rotate image 90 degrees
         </label>
 
         <p>Drawing Options</p>
@@ -72,9 +72,6 @@
         <input id="drawing-line-width" value="10"
                type="range" min="0" max="50"
         >
-
-
-
 
 
       </div>

@@ -16,27 +16,30 @@
 
   <!-- FONTS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,500' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Cousine' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,500'
+        rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Cousine' rel='stylesheet'
+        type='text/css'>
 
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="{% static 'css/global.css' %}">
 
-{#  Check to see if the user is logged in. If so grab their preferred stylesheet  #}
-{% if user.is_authenticated %}
+  {#  Check to see if the user is logged in. If so grab their preferred stylesheet  #}
+  {% if user.is_authenticated %}
 
-{#    Creates a stylesheet from user.color and renders it#}
+    {#    Creates a stylesheet from user.color and renders it#}
     {% with 'css/'|add:user.color|add:'.css' as stylesheet %}
-        <link rel="stylesheet" href="{% static stylesheet %}">
+      <link rel="stylesheet" href="{% static stylesheet %}">
     {% endwith %}
 
 
-{% endif %}
+  {% endif %}
 
   <!-- JS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script type="text/javascript"
+          src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
   <script type="text/javascript" src="{% static 'js/autogrow.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/global.js' %}"></script>
 
@@ -48,11 +51,14 @@
     <div class="bounds">
       <div class="circle--fluid">
         <div class="circle--fluid--cell">
-          <h1 class="hide-text circle--logo"><a class="logo" href="{% url 'profiles:homepage' %}">Circle</a></h1>
+          <h1 class="hide-text circle--logo"><a class="logo"
+                                                href="{% url 'profiles:homepage' %}">Circle</a>
+          </h1>
         </div>
         <div class="circle--fluid--cell circle--fluid--primary">
           <div class="circle--search">
-            <input type="text" placeholder="Search Projects..." name="search_term">
+            <input type="text" placeholder="Search Projects..."
+                   name="search_term">
             <button>
               <svg version="1.1" class="search" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 12 12" xml:space="preserve">
                 <path d="M12,10.6L8.3,6.9C8.7,6.2,9,5.4,9,4.5C9,2,7,0,4.5,0S0,2,0,4.5S2,9,4.5,9c0.9,0,1.7-0.3,2.4-0.7l3.7,3.7L12,10.6z M2,4.5
@@ -67,38 +73,39 @@
 
               {% if not user.is_authenticated %}
                 <li>
-                    <a href="{% url 'password_reset' %}">
-                        Forgot password?
-                    </a>
+                  <a href="{% url 'password_reset' %}">
+                    Forgot password?
+                  </a>
                 </li>
                 <li>
-                    <a href="{% url 'accounts:signup' %}">
-                        Sign Up
-                    </a>
+                  <a href="{% url 'accounts:signup' %}">
+                    Sign Up
+                  </a>
                 </li>
                 <li>
-                    <a href="{% url 'login' %}">
-                        Sign In
-                    </a>
+                  <a href="{% url 'login' %}">
+                    Sign In
+                  </a>
                 </li>
               {% else %}
-                  {% if request.user.notifications.unread %}
-                      <li>
-                          <a style="color:white"  href="{% url 'notification_hub:unread' %}">
-                              <u >Unread Notifications!</u>
-                          </a>
-                      </li>
-                  {% endif %}
+                {% if request.user.notifications.unread %}
                   <li>
-                      <a href="{% url 'profiles:profile' pk=user.pk %}">
-                          Your profile
-                      </a>
+                    <a style="color:white"
+                       href="{% url 'notification_hub:unread' %}">
+                      <u>Unread Notifications!</u>
+                    </a>
                   </li>
-                  <li>
-                      <a href="{% url 'accounts:logout' %}">
-                          Log out
-                      </a>
-                  </li>
+                {% endif %}
+                <li>
+                  <a href="{% url 'profiles:profile' pk=user.pk %}">
+                    Your profile
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'accounts:logout' %}">
+                    Log out
+                  </a>
+                </li>
               {% endif %}
 
 
@@ -110,7 +117,7 @@
   </header>
 </form>
 
-  {% block content %}{% endblock %}
+{% block content %}{% endblock %}
 
 
 </body>

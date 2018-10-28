@@ -4,47 +4,51 @@
 
 {% block content %}
 
-{#    If the user is not logged in, don't show the nav bar#}
-    {% if request.user.is_authenticated %}
-      <div class="circle--actions--bar">
-        <nav class="bounds">
-          <ul class="circle--pill--list">
+  {#    If the user is not logged in, don't show the nav bar#}
+  {% if request.user.is_authenticated %}
+    <div class="circle--actions--bar">
+      <nav class="bounds">
+        <ul class="circle--pill--list">
 
+          <li>
+            <a {% if current_tab == "Applications" %}
+              class="selected" {% endif %}
+              href={% url 'profiles:applications' %}>Applications</a>
+          </li>
+          <li>
+            <a {% if current_tab == "Profile" %} class="selected" {% endif %}
+                                                 href={% url 'profiles:profile' pk=user.pk %}>
+              Profile
+            </a>
+          </li>
+          <li>
+            <a {% if current_tab == "My Projects" %}
+              class="selected" {% endif %}
+              href={% url 'profiles:project_view_all' %}>
+              My Projects
+            </a>
+          </li>
+          <li>
+            <a {% if current_tab == "Notifications" %}
+              class="selected" {% endif %}
+              href={% url 'notification_hub:unread' %}>
+              Notifications
+            </a>
+          </li>
+          {% if request.user.is_staff or request.user.is_superuser %}
             <li>
-              <a {% if current_tab == "Applications" %} class="selected" {% endif %}
-                      href={% url 'profiles:applications'%}>Applications</a>
+              <a {% if current_tab == "Administrative" %}
+                class="selected" {% endif %}
+                href={% url 'profiles:administrative' %}>
+                Administrative
+              </a>
             </li>
-            <li>
-                <a {% if current_tab == "Profile" %} class="selected" {% endif %}
-                        href={% url 'profiles:profile' pk=user.pk %}>
-                    Profile
-                </a>
-            </li>
-            <li>
-                <a {% if current_tab == "My Projects" %} class="selected" {% endif %}
-                        href={% url 'profiles:project_view_all' %}>
-                    My Projects
-                </a>
-            </li>
-            <li>
-                <a {% if current_tab == "Notifications" %} class="selected" {% endif %}
-                        href={% url 'notification_hub:unread' %}>
-                    Notifications
-                </a>
-            </li>
-            {% if request.user.is_staff or request.user.is_superuser %}
-              <li>
-                <a {% if current_tab == "Administrative" %} class="selected" {% endif %}
-                        href={% url 'profiles:administrative' %}>
-                    Administrative
-                </a>
-            </li>
-            {% endif %}
+          {% endif %}
 
-          </ul>
-        </nav>
-      </div>
-    {% endif %}
+        </ul>
+      </nav>
+    </div>
+  {% endif %}
 
   {% block nav_bar %}{% endblock nav_bar %}
 
